@@ -1,8 +1,8 @@
 {
-  "name": "com.example.hello",
-  "displayName": "HelloWorld",
+  "name": "com.shaoan.iroute",
+  "displayName": "iRoute",
   "version": "1.0.0",
-  "description": "A sample Apache Cordova application that responds to the deviceready event.",
+  "description": "Plan your own route more efficiently!",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
