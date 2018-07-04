@@ -22,11 +22,9 @@
     height:100%;
 }
 
-
 #omnibox.vasquette-margin-enabled {
     margin: 8px 0 8px 8px;
 }
-
 
 .searchbox
 {
@@ -41,7 +39,6 @@
     transition-property: background,box-shadow;
     transition-duration: 0.3s;
 }
-
 
 .searchbox-shadow
 {
@@ -108,8 +105,6 @@
     height: 28px;
 }
 
-
-
 .searchbox-searchbutton::before {
     content: '';
     display: block;
@@ -120,15 +115,11 @@
     opacity:.5
 }
 
-
-
-
 button::-moz-focus-inner, input::-moz-focus-inner, textarea::-moz-focus-inner {
     margin: 0;
     padding: 0;
     border: 0;
 }
-
 
 a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     margin: 0;
@@ -142,9 +133,6 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     overflow: visible;
 }
 
-
-
-
 .panel {
 	width:300px;
 	float:left;
@@ -152,7 +140,6 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 	background:white;
 	position:relative;
 	display:none;
-
 }
 
 .panel-header {
@@ -205,9 +192,8 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 
 .panel-list-item
 {
-  padding: 10px 20px 20px 20px;
-  
-  cursor:pointer;
+    padding: 10px 20px 20px 20px;
+    cursor:pointer;
 }
 
 .panel-list-item-icon
@@ -216,12 +202,8 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     height: 22px;
     display:inline-block;
     opacity:.5;
-    
     margin-right:25px;
 }
-
-
-
 
 .panel-content a,button,li:hover
 {
@@ -230,7 +212,6 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     font-size: 14px;
     line-height:22px;
     vertical-align:top;
-    
 }
 .panel-content a {
     text-decoration: none ;
@@ -246,7 +227,6 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     background:url('image/ic_folder_black_24dp_2x.png');
     background-size: 100%;
 }
-
 
 .icon-cloudy
 {
@@ -275,4 +255,20 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 {
     background:url('image/ic_local_car_wash_black_24dp_2x.png');
     background-size: 100%;
+}
+
+/********** Large devices only **********/
+@media (min-width: 992px) {
+}
+
+/********** Medium devices only **********/
+@media (min-width: 768px) and (max-width: 991px) {
+}
+
+/********** Minimum devices only **********/
+@media (max-width: 767px) {
+	.searchbox
+	{
+		width: 300px;
+	}
 }
