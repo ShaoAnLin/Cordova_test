@@ -1,33 +1,61 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-        <title>iRoute</title>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+		<title>iRoute</title>
 
-        <style>
-            #map {
-                height: 100%;
-            }
-            html, body {
-                height: 100%;
-                margin: 0;
-                padding: 0;
-            }
-        </style>
+		<style>
+			#map {
+				height: 100%;
+			}
+			html, body {
+				height: 100%;
+				margin: 0;
+				padding: 0;
+			}
+		</style>
 		<link rel="stylesheet" type="text/css" href="leaflet.css">
+		<link rel="stylesheet" type="text/css" href="searchbox.css">
+		
+		<!--<script data-main="main.js" src="require.js"></script>-->
+		<script type="text/javascript" src="jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="jquery-ui.min.js"></script>
 		<script type="text/javascript" src="leaflet.js"></script>
+		<script type="text/javascript" src="leaflet-customer-searchbox.js"></script>
 		<script type="text/javascript" src="Leaflet.GoogleMutant.js"></script>
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4BOUHAJHQLFcg4OPRvvF3SeTsGThYZZs" async defer></script>
-    </head>
-    <body>
-        <div id="map"></div>
+	</head>
+	<body>
+		<div id="map"></div>
 		<script>
 			var map = L.map('map', {}).setView([25,121], 8);
 			var roadMutant = L.gridLayer.googleMutant({
 				maxZoom: 24,
 				type:'roadmap'
 			}).addTo(map);
+			
+			var searchboxControl = createSearchboxControl();
+			var control = new searchboxControl({
+				sidebarTitleText: 'Header',
+				sidebarMenuItems: {
+					Items: [
+						{ type: "link", name: "Link 1 (github.com)", href: "http://github.com", icon: "icon-local-carwash" },
+						{ type: "link", name: "Link 2 (google.com)", href: "http://google.com", icon: "icon-cloudy" },
+						{ type: "button", name: "Button 1", onclick: "alert('button 1 clicked !')", icon: "icon-potrait" },
+						{ type: "button", name: "Button 2", onclick: "button2_click();", icon: "icon-local-dining" },
+						{ type: "link", name: "Link 3 (stackoverflow.com)", href: 'http://stackoverflow.com', icon: "icon-bike" },
+					]
+				}
+			});
+			control._searchfunctionCallBack = function (searchkeywords)
+			{
+				if (!searchkeywords) {
+					searchkeywords = "The search call back is clicked !!"
+				}
+				alert(searchkeywords);
+			}
+			map.addControl(control);
 		</script>
-    </body>
+	</body>
 </html>
