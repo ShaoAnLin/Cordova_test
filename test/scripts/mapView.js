@@ -10,8 +10,28 @@ define("mapView", [], function() {
 			var roadMutant = L.gridLayer.googleMutant({
 				maxZoom: 24,
 				type:'roadmap'
-			}).addTo(self.map);
-			
+            }).addTo(self.map);
+            
+            self.addSearchBox();
+
+            // Test google search
+            var directionsService = new google.maps.DirectionsService;
+            directionsService.route({
+                origin: "Taipei 101",
+                destination: "基隆火車站",
+                // origin: {lat: 25.033964, lng: 121.564215},
+                // destination: {lat: 25.041845, lng: 121.557781},
+                travelMode: 'TRANSIT'
+            }, function(response, status) {
+                if (status === 'OK') {
+                    console.log(response);
+                } else {
+                    window.alert('Directions request failed due to ' + status);
+                }
+            });
+        }
+
+        self.addSearchBox = function(){
 			var searchboxControl = createSearchboxControl();
 			var control = new searchboxControl({
 				sidebarTitleText: 'Header',
