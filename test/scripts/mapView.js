@@ -45,15 +45,14 @@ define("mapView", [], function() {
 					]
 				}
 			});
-			control._searchfunctionCallBack = function (searchkeywords)
-			{
-				if (!searchkeywords) {
-					searchkeywords = "The search call back is clicked !!"
-				}
-				alert(searchkeywords);
-			}
+			control._searchfunctionCallBack = self.searchPlace;
             self.map.addControl(control);
         }
+		
+		self.searchPlace = function(keyword){
+			$('#map').height('70%');
+			$('#search-result-title').text(keyword);
+		}
     }
     return new MapView();
 });

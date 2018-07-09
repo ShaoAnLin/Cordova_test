@@ -81,11 +81,11 @@ html, body {
 
 #searchboxinput{
     width:100%;
+	font-size: 18px;
 }
 
 .searchbox-searchbutton
 {
-
     display: block;
     padding: 2px 15px;
     cursor:pointer;
@@ -264,6 +264,26 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 {
     background:url('image/ic_local_car_wash_black_24dp_2x.png');
     background-size: 100%;
+}
+
+#search-detail {
+	width: 100%;
+	height: 30%;
+}
+
+#search-result-title {
+	margin: 20px;
+	height: 50px;
+	width: 80%;
+	font-size: 36px;
+}
+
+#navigate {
+	margin: 20px;
+	padding: 5px;
+	background-color: #4285f4;
+	color: white;
+	font-size: 20px;
 }
 
 /********** Large devices only **********/
