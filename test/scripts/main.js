@@ -1,12 +1,14 @@
 requirejs.config({
     paths: {
-        app: "scripts"
+        async: 'lib/async',
+        app: 'scripts'
     },
     shim: {
         'mapView': [
             'lib/leaflet',
             'lib/leaflet-customer-searchbox',
-            'lib/Leaflet.GoogleMutant'],
+            'lib/Leaflet.GoogleMutant',
+            'async!https://maps.googleapis.com/maps/api/js?key=AIzaSyC4BOUHAJHQLFcg4OPRvvF3SeTsGThYZZs&libraries=geometry,places'],
         'lib/leaflet-customer-searchbox': ['lib/leaflet'],
         'lib/Leaflet.GoogleMutant': [
             'lib/leaflet',

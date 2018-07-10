@@ -14,6 +14,11 @@ define("mapView", [], function() {
             
             self.addSearchBox();
 
+            self.map.on('click', function(e) {
+                console.log("Click: " + e.latlng);
+			    self.hideSearchResult();
+            });
+
             // Test google search
             var directionsService = new google.maps.DirectionsService;
             directionsService.route({
@@ -50,9 +55,33 @@ define("mapView", [], function() {
         }
 		
 		self.searchPlace = function(keyword){
-			$('#map').height('70%');
+            var service = new google.maps.places.PlacesService();
+            console.log(service);
+            // service.nearbySearch({
+            //     location: '-33.8670522,151.1957362',
+            //     radius: 500,
+            //     type: ['store']
+            // }, self.searchDone);
+
+			self.showSearchResult();
 			$('#search-result-title').text(keyword);
-		}
+        }
+
+        self.searchDone = function(results, status) {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                for (var i = 0; i < results.length; i++) {
+                    console.log(results[i]);
+                }
+            }
+        }
+        
+        self.showSearchResult = function(){
+			$('#map').height('70%');
+        }
+
+        self.hideSearchResult = function(){
+			$('#map').height('100%');
+        }
     }
     return new MapView();
 });
