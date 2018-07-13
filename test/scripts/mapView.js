@@ -18,6 +18,29 @@ define("mapView", [], function() {
                 console.log("Click: " + e.latlng);
 			    self.hideSearchResult();
             });
+            
+            var currentBound = self.map.getBounds();
+            
+            var defaultBounds = new google.maps.LatLngBounds(
+  				new google.maps.LatLng(-33.8902, 151.1759),
+  				new google.maps.LatLng(-33.8474, 151.2631));
+            var testDefaultBounds = new google.maps.LatLngBounds(
+  				new google.maps.LatLng(currentBound.getSouth(), currentBound.getWest()),
+  				new google.maps.LatLng(currentBound.getNorth(), currentBound.getEast()));
+  			console.log(currentBound);
+  			console.log(defaultBounds);
+  			console.log(testDefaultBounds);
+			var input = document.getElementById('searchboxinput');
+			var searchBox = new google.maps.places.SearchBox(input, {
+  				bounds: defaultBounds
+			});
+			searchBox.addListener('places_changed', function() {
+  				var places = searchBox.getPlaces();
+  				console.log(places);
+  				if (places.length == 0) {
+    				return;
+  				}
+  			});
 
             // Test google search
             var directionsService = new google.maps.DirectionsService;
@@ -57,11 +80,11 @@ define("mapView", [], function() {
 		self.searchPlace = function(keyword){
             var service = new google.maps.places.PlacesService();
             console.log(service);
-            // service.nearbySearch({
-            //     location: '-33.8670522,151.1957362',
-            //     radius: 500,
-            //     type: ['store']
-            // }, self.searchDone);
+             service.nearbySearch({
+                 location: '-33.8670522,151.1957362',
+                 radius: 500,
+                 type: ['store']
+             }, self.searchDone);
 
 			self.showSearchResult();
 			$('#search-result-title').text(keyword);
