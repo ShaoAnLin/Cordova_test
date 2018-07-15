@@ -20,7 +20,9 @@ define("mapView", [], function() {
                 console.log("Click: " + e.latlng);
 			    self.hideSearchResult();
             });
-            
+
+            L.control.location({position: 'bottomright'}).addTo(self.map);
+
             // Test google search
             // var directionsService = new google.maps.DirectionsService;
             // directionsService.route({
@@ -61,7 +63,6 @@ define("mapView", [], function() {
                 var currentBound = new google.maps.LatLngBounds(
                     new google.maps.LatLng(bounds.getSouth(), bounds.getWest()),
                     new google.maps.LatLng(bounds.getNorth(), bounds.getEast()));
-                console.log(currentBound);
 
                 if (self.searchbox == null){
                     self.searchbox = new google.maps.places.SearchBox(this, {
