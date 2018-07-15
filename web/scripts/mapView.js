@@ -83,7 +83,6 @@ define("mapView", [], function() {
         }
 
         self.searchDone = function(place) {
-			self.showSearchResult();
             $('#search-result-title').text(place.name);
             $('#search-result-address').text(place.formatted_address);
             $('#search-result-rating-val').text(place.rating);
@@ -92,6 +91,7 @@ define("mapView", [], function() {
                 console.log("has phone: " + place.formatted_phone_number);
                 $('#search-result-phone-icon').show();
             }
+            self.showSearchResult();
         }
         
         self.showSearchResult = function(){
