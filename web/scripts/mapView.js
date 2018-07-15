@@ -3,12 +3,13 @@ define("mapView", [], function() {
         var self = this,
             map = null,
             searchbox = null;
+
         self.init = function(){
             var mapOptions = {
 			    zoomControl: false
 		    };
 			self.map = L.map('map', mapOptions).setView([25,121], 8);
-			var roadMutant = L.gridLayer.googleMutant({
+			L.gridLayer.googleMutant({
 				maxZoom: 24,
 				type:'roadmap'
             }).addTo(self.map);
@@ -21,20 +22,20 @@ define("mapView", [], function() {
             });
             
             // Test google search
-            var directionsService = new google.maps.DirectionsService;
-            directionsService.route({
-                origin: "Taipei 101",
-                destination: "基隆火車站",
-                // origin: {lat: 25.033964, lng: 121.564215},
-                // destination: {lat: 25.041845, lng: 121.557781},
-                travelMode: 'TRANSIT'
-            }, function(response, status) {
-                if (status === 'OK') {
-                    console.log(response);
-                } else {
-                    window.alert('Directions request failed due to ' + status);
-                }
-            });
+            // var directionsService = new google.maps.DirectionsService;
+            // directionsService.route({
+            //     origin: "Taipei 101",
+            //     destination: "基隆火車站",
+            //     // origin: {lat: 25.033964, lng: 121.564215},
+            //     // destination: {lat: 25.041845, lng: 121.557781},
+            //     travelMode: 'TRANSIT'
+            // }, function(response, status) {
+            //     if (status === 'OK') {
+            //         console.log(response);
+            //     } else {
+            //         window.alert('Directions request failed due to ' + status);
+            //     }
+            // });
         }
 
         self.addSearchBox = function(){
@@ -84,8 +85,15 @@ define("mapView", [], function() {
 
         self.searchDone = function(place) {
             $('#search-result-title').text(place.name);
-            $('#search-result-address').text(place.formatted_address);
+            if (typeof(place.opening_hours) != "undefined"){
+                $('#search-result-open').text(place.opening_hours.open_now
+                    ? "營業中" : "休息中");
+            }
+            if (typeof(place.rating) != "undefined"){
+                $('#search-result-rating-star').show();
+            }
             $('#search-result-rating-val').text(place.rating);
+            $('#search-result-address').text(place.formatted_address);
             $('#search-result-phone-number').text(place.formatted_phone_number);
             if (typeof(place.formatted_phone_number) != "undefined"){
                 console.log("has phone: " + place.formatted_phone_number);

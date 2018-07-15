@@ -289,13 +289,22 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     font-size: 12px;
     float: left;
     padding-right: 3px;
+    display: none;
 }
 #search-result-rating {
     color: orange;
     flex: initial;
+    float: left;
 }
 #search-result-rating-val {
+    padding: 0px 5px 0px 5px;
     font-size: 10px;
+    float: left;
+}
+
+#search-result-open {
+    font-size: 10px;
+    color: gray;
 }
 
 #search-result-address {
