@@ -2,15 +2,16 @@ define("mapView", [], function() {
     function MapView(){
         var self = this,
             map = null,
-            searchbox = null;
+            searchbox = null,
+            searchMarker = null;
 
         self.init = function(){
             var mapOptions = {
 			    zoomControl: false
 		    };
-			self.map = L.map('map', mapOptions).setView([25,121], 10);
+			self.map = L.map('map', mapOptions).setView([25.0879,121.5858], 10);
 			L.gridLayer.googleMutant({
-                minZoom: 10,
+                minZoom: 3,
 				maxZoom: 24,
 				type:'roadmap'
             }).addTo(self.map);
@@ -82,7 +83,7 @@ define("mapView", [], function() {
 		
 		self.searchPlace = function(keyword){
 			self.showSearchResult();
-			$('#search-result-title').text(keyword);
+			//$('#search-result-title').text(keyword);
         }
 
         self.searchDone = function(place) {
@@ -95,13 +96,13 @@ define("mapView", [], function() {
                 
                 var popup = "<img src='" + place.icon + "' style='width: 20px; float: left; padding: 10px'/><span style='font-size: 14px'>"
                     + place.name + "</span>";
-                var marker = L.marker([location.lat(), location.lng()])
+                self.searchMarker = L.marker([location.lat(), location.lng()])
                     .bindPopup(popup)
                     .on('popupopen', function (popup) {
                         self.showSearchResult();
                     });;
-                marker.addTo(self.map);
-                marker.openPopup();
+                self.searchMarker.addTo(self.map);
+                self.searchMarker.openPopup();
                 self.map.fitBounds(bounds);
             }
             $('#search-result-title').text(place.name);
@@ -126,7 +127,9 @@ define("mapView", [], function() {
         }
 
         self.hideSearchResult = function(){
-			$('#map').height('100%');
+            $('#map').height('100%');
+            $('#searchboxinput').val('');
+            self.searchMarker.remove();
         }
     }
     return new MapView();
