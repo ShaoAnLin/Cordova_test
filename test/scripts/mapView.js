@@ -1,7 +1,8 @@
 define("mapView", [], function() {
     function MapView(){
         var self = this,
-            map = null;
+            map = null,
+            searchbox = null;
         self.init = function(){
             var mapOptions = {
 			    zoomControl: false
@@ -19,29 +20,6 @@ define("mapView", [], function() {
 			    self.hideSearchResult();
             });
             
-            var currentBound = self.map.getBounds();
-            
-            var defaultBounds = new google.maps.LatLngBounds(
-  				new google.maps.LatLng(-33.8902, 151.1759),
-  				new google.maps.LatLng(-33.8474, 151.2631));
-            var testDefaultBounds = new google.maps.LatLngBounds(
-  				new google.maps.LatLng(currentBound.getSouth(), currentBound.getWest()),
-  				new google.maps.LatLng(currentBound.getNorth(), currentBound.getEast()));
-  			console.log(currentBound);
-  			console.log(defaultBounds);
-  			console.log(testDefaultBounds);
-			var input = document.getElementById('searchboxinput');
-			var searchBox = new google.maps.places.SearchBox(input, {
-  				bounds: defaultBounds
-			});
-			searchBox.addListener('places_changed', function() {
-  				var places = searchBox.getPlaces();
-  				console.log(places);
-  				if (places.length == 0) {
-    				return;
-  				}
-  			});
-
             // Test google search
             var directionsService = new google.maps.DirectionsService;
             directionsService.route({
@@ -75,31 +53,42 @@ define("mapView", [], function() {
 			});
 			control._searchfunctionCallBack = self.searchPlace;
             self.map.addControl(control);
+
+            $('#searchboxinput').focus(function(){
+                // Use google searchbox
+                var bounds = self.map.getBounds();
+                var currentBound = new google.maps.LatLngBounds(
+                    new google.maps.LatLng(bounds.getSouth(), bounds.getWest()),
+                    new google.maps.LatLng(bounds.getNorth(), bounds.getEast()));
+                console.log(currentBound);
+
+                if (self.searchbox == null){
+                    self.searchbox = new google.maps.places.SearchBox(this, {
+                        bounds: currentBound
+                    });
+                }
+                self.searchbox.addListener('places_changed', function() {
+                    var places = self.searchbox.getPlaces();
+                    console.log(places);
+                    if (places.length > 0) {
+                        self.searchDone(places[0]);
+                    }
+                });
+            });
         }
 		
 		self.searchPlace = function(keyword){
-            var service = new google.maps.places.PlacesService();
-            console.log(service);
-             service.nearbySearch({
-                 location: '-33.8670522,151.1957362',
-                 radius: 500,
-                 type: ['store']
-             }, self.searchDone);
-
 			self.showSearchResult();
 			$('#search-result-title').text(keyword);
         }
 
-        self.searchDone = function(results, status) {
-            if (status === google.maps.places.PlacesServiceStatus.OK) {
-                for (var i = 0; i < results.length; i++) {
-                    console.log(results[i]);
-                }
-            }
+        self.searchDone = function(place) {
+			self.showSearchResult();
+			$('#search-result-title').text(place.name);
         }
         
         self.showSearchResult = function(){
-			$('#map').height('70%');
+			$('#map').height('80%');
         }
 
         self.hideSearchResult = function(){

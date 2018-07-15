@@ -9,9 +9,7 @@ requirejs.config({
             'lib/leaflet-customer-searchbox',
             'lib/Leaflet.GoogleMutant',
             'async!https://maps.googleapis.com/maps/api/js?key=AIzaSyC4BOUHAJHQLFcg4OPRvvF3SeTsGThYZZs&libraries=geometry,places'],
-        //'lib/leaflet-customer-searchbox': ['lib/leaflet'],
         'lib/Leaflet.GoogleMutant': [
-            //'lib/leaflet',
             'lib/jquery-3.3.1.min',
             'lib/jquery-ui.min']
     }
