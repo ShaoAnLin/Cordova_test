@@ -7,6 +7,7 @@
 
 		<link rel="stylesheet" type="text/css" href="css/leaflet.css">
 		<link rel="stylesheet" type="text/css" href="css/index.css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 		
 		<script data-main="scripts/main.js" src="scripts/requirejs.js"></script>
 	</head>
@@ -15,9 +16,21 @@
 		<div id="search-result">
 			<div id="search-result-detail">
 				<div id="search-result-title"></div>
+				<div id="search-result-rating">
+					<i id="search-result-rating-star" class="fas fa-star"></i>
+					<div id="search-result-rating-val"></div>
+				</div>
+				<div id="search-result-address"></div>
 			</div>
 			<div id="search-result-navigate">
-				<button id="navigate">路線</button>
+				<div id="search-result-phone">
+					<i id="search-result-phone-icon" class="fas fa-phone"></i>
+					<div id="search-result-phone-number"></div>
+				</div>
+				<button id="navigate">
+					<i class="fas fa-arrow-circle-right"></i>
+					<span>路線</span>
+				</button>
 			</div>
 		</div>
 	</body>

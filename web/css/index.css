@@ -281,21 +281,58 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 }
 
 #search-result-title {
-	width: 90%;
 	font-size: 20px;
+}
+
+#search-result-rating-star {
+    color: orange;
+    font-size: 12px;
+    float: left;
+    padding-right: 3px;
+}
+#search-result-rating {
+    color: orange;
+    flex: initial;
+}
+#search-result-rating-val {
+    font-size: 10px;
+}
+
+#search-result-address {
+    padding-top: 3px;
+    font-size: 14px;
+    color: gray;
 }
 
 #search-result-navigate {
     flex: initial;
 	padding: 5px;
-    background-color: #e6ffff;
+    background-color: #f5f5f5;;
+}
+#search-result-phone-icon {
+    float: left;
+    padding: 5px;
+    color: #4285f4;
+    display: none;
+    font-size: 16px;
+}
+#search-result-phone {
+    flex: 1;
+}
+
+#search-result-phone-number{
+    float: left;
+    font-size: 14px;
+    padding: 5px;
+    color: gray;
 }
 
 #navigate {
-    padding: 3px;
+    padding: 3px 5px 3px 5px;
 	background-color: #4285f4;
 	color: white;
-	font-size: 10px;
+    font-size: 10px;
+    float: right;
 }
 
 /********** Large devices only **********/
