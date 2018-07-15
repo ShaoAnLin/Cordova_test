@@ -70,8 +70,8 @@ define("mapView", [], function() {
                 }
                 self.searchbox.addListener('places_changed', function() {
                     var places = self.searchbox.getPlaces();
-                    console.log(places);
                     if (places.length > 0) {
+                        console.log(places[0]);
                         self.searchDone(places[0]);
                     }
                 });
@@ -84,6 +84,17 @@ define("mapView", [], function() {
         }
 
         self.searchDone = function(place) {
+            if (typeof(place.geometry) != "undefined"){
+                var viewport = place.geometry.viewport,
+                    location = place.geometry.location,
+                    bounds = L.latLngBounds(
+                        L.latLng(viewport.f.b, viewport.b.b), 
+                        L.latLng(viewport.f.f, viewport.b.f));
+
+                var marker = L.marker([location.lat(), location.lng()]);
+                marker.addTo(self.map);
+                self.map.fitBounds(bounds);
+            }
             $('#search-result-title').text(place.name);
             if (typeof(place.opening_hours) != "undefined"){
                 $('#search-result-open').text(place.opening_hours.open_now
@@ -96,7 +107,6 @@ define("mapView", [], function() {
             $('#search-result-address').text(place.formatted_address);
             $('#search-result-phone-number').text(place.formatted_phone_number);
             if (typeof(place.formatted_phone_number) != "undefined"){
-                console.log("has phone: " + place.formatted_phone_number);
                 $('#search-result-phone-icon').show();
             }
             self.showSearchResult();
