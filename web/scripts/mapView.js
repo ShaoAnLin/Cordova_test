@@ -48,8 +48,8 @@ define("mapView", [], function() {
 				sidebarTitleText: 'Header',
 				sidebarMenuItems: {
 					Items: [
-						{ type: "link", name: "Link 1 (github.com)", href: "http://github.com", icon: "icon-local-carwash" },
-						{ type: "link", name: "Link 2 (google.com)", href: "http://google.com", icon: "icon-cloudy" },
+						{ type: "link", name: "iRoute (github)", href: "https://github.com/ShaoAnLin/iRoute", icon: "icon-cloudy" },
+						{ type: "link", name: "Link 2 (google.com)", href: "http://google.com", icon: "icon-local-carwash" },
 						{ type: "button", name: "Button 1", onclick: "alert('button 1 clicked !')", icon: "icon-potrait" },
 						{ type: "button", name: "Button 2", onclick: "button2_click();", icon: "icon-local-dining" },
 						{ type: "link", name: "Link 3 (stackoverflow.com)", href: 'http://stackoverflow.com', icon: "icon-bike" },
@@ -81,11 +81,14 @@ define("mapView", [], function() {
                     }
                 });
             });
+
+            $('#navigate').on('click', function(){
+                console.log("navigate");
+            });
         }
 		
 		self.searchPlace = function(keyword){
 			self.showSearchResult();
-			//$('#search-result-title').text(keyword);
         }
 
         self.searchDone = function(place) {
@@ -96,10 +99,10 @@ define("mapView", [], function() {
                         L.latLng(viewport.f.b, viewport.b.b), 
                         L.latLng(viewport.f.f, viewport.b.f));
                 
-                var popup = "<img src='" + place.icon + "' style='width: 20px; float: left; padding: 10px'/><span style='font-size: 14px'>"
+                var popup = "<img src='" + place.icon + "' style='width: 20px; float: left; padding-right: 10px'/><span style='font-size: 14px'>"
                     + place.name + "</span>";
                 self.searchMarker = L.marker([location.lat(), location.lng()])
-                    .bindPopup(popup)
+                    .bindPopup(popup, {minWidth : 100})
                     .on('popupopen', function (popup) {
                         self.showSearchResult();
                     });;

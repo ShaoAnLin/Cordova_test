@@ -330,9 +330,9 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 }
 
 #search-result-navigate {
-    flex: initial;
 	padding: 5px;
-    background-color: #f5f5f5;;
+    background-color: #f5f5f5;
+    margin-top: -30px;
 }
 #search-result-phone-icon {
     float: left;
@@ -370,8 +370,4 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 
 /********** Minimum devices only **********/
 @media (max-width: 767px) {
-	.searchbox
-	{
-		width: 300px;
-	}
 }
