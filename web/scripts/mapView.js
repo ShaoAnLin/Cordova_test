@@ -8,8 +8,9 @@ define("mapView", [], function() {
             var mapOptions = {
 			    zoomControl: false
 		    };
-			self.map = L.map('map', mapOptions).setView([25,121], 8);
+			self.map = L.map('map', mapOptions).setView([25,121], 10);
 			L.gridLayer.googleMutant({
+                minZoom: 10,
 				maxZoom: 24,
 				type:'roadmap'
             }).addTo(self.map);
