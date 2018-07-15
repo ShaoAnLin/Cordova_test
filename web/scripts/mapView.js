@@ -59,8 +59,10 @@ define("mapView", [], function() {
 			control._searchfunctionCallBack = self.searchPlace;
             self.map.addControl(control);
 
+            $('#boxcontainer').width($(window).width() - 170 + 'px');
             $('#searchboxinput').focus(function(){
                 // Use google searchbox
+                $('#searchboxinput').attr('placeholder', '輸入地點');
                 var bounds = self.map.getBounds();
                 var currentBound = new google.maps.LatLngBounds(
                     new google.maps.LatLng(bounds.getSouth(), bounds.getWest()),
@@ -129,7 +131,10 @@ define("mapView", [], function() {
         self.hideSearchResult = function(){
             $('#map').height('100%');
             $('#searchboxinput').val('');
-            self.searchMarker.remove();
+            if (self.searchMarker){
+                self.searchMarker.remove();
+            }
+            $('#searchboxinput').attr('placeholder', '');
         }
     }
     return new MapView();
