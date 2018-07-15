@@ -90,9 +90,16 @@ define("mapView", [], function() {
                     bounds = L.latLngBounds(
                         L.latLng(viewport.f.b, viewport.b.b), 
                         L.latLng(viewport.f.f, viewport.b.f));
-
-                var marker = L.marker([location.lat(), location.lng()]);
+                
+                var popup = "<img src='" + place.icon + "' style='width: 20px; float: left; padding: 10px'/><span style='font-size: 14px'>"
+                    + place.name + "</span>";
+                var marker = L.marker([location.lat(), location.lng()])
+                    .bindPopup(popup)
+                    .on('popupopen', function (popup) {
+                        self.showSearchResult();
+                    });;
                 marker.addTo(self.map);
+                marker.openPopup();
                 self.map.fitBounds(bounds);
             }
             $('#search-result-title').text(place.name);
