@@ -26,29 +26,25 @@ function generateHtmlContent(menuItems){
 
 function createSearchboxControl(){
 	var searchboxControl = L.Control.extend({
-		_sideBarHeaderTitle: 'Sample Title',
+		_sideBarHeaderTitle: 'iRoute',
 		_sideBarMenuItems: {
 			Items: [
-						{ type: "link", name: "Link 1 (github.com)", href: "http://github.com", icon: "icon-local-carwash" },
-						{ type: "link", name: "Link 2 (google.com)", href: "http://google.com", icon: "icon-cloudy" },
-						{ type: "button", name: "Button 1", onclick: "alert('button 1 clicked !')", icon: "icon-potrait" },
-						{ type: "button", name: "Button 2", onclick: "alert('button 2 clicked !')", icon: "icon-local-dining" },
-						{ type: "link", name: "Link 3 (stackoverflow.com)", href: 'http://stackoverflow.com', icon: "icon-bike" },
-			],
-			_searchfunctionCallBack: function(x){
-				alert('calling the default search call back');
-			}
+				{ type: "link", name: "iRoute (github)", href: "https://github.com/ShaoAnLin/iRoute", icon: "icon-cloudy" },
+				{ type: "link", name: "Link 2 (google.com)", href: "http://google.com", icon: "icon-local-carwash" },
+				{ type: "button", name: "Button 1", onclick: "alert('button 1 clicked !')", icon: "icon-potrait" },
+				{ type: "button", name: "Button 2", onclick: "button2_click();", icon: "icon-local-dining" },
+				{ type: "link", name: "Link 3 (stackoverflow.com)", href: 'http://stackoverflow.com', icon: "icon-bike" },
+			]
 		},   
 		options: {
 			position: 'topleft'
 		},
 		initialize: function(options) {
 			L.Util.setOptions(this, options);
-			if (options.sidebarTitleText){
+			if (options && options.sidebarTitleText){
 				this._sideBarHeaderTitle = options.sidebarTitleText;
 			}
-
-			if (options.sidebarMenuItems){
+			if (options && options.sidebarMenuItems){
 				this._sideBarMenuItems = options.sidebarMenuItems;
 			}
 		},
@@ -61,7 +57,6 @@ function createSearchboxControl(){
 
 			$(container).html(getControlHrmlContent());
 			setTimeout(function () {
-				
 				$("#searchbox-searchbutton").click(function () {
 					var searchkeywords = $("#searchboxinput").val();
 					searchCallBack(searchkeywords);

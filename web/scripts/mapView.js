@@ -44,18 +44,7 @@ define("mapView", [], function() {
 
         self.addSearchBox = function(){
 			var searchboxControl = createSearchboxControl();
-			var control = new searchboxControl({
-				sidebarTitleText: 'Header',
-				sidebarMenuItems: {
-					Items: [
-						{ type: "link", name: "iRoute (github)", href: "https://github.com/ShaoAnLin/iRoute", icon: "icon-cloudy" },
-						{ type: "link", name: "Link 2 (google.com)", href: "http://google.com", icon: "icon-local-carwash" },
-						{ type: "button", name: "Button 1", onclick: "alert('button 1 clicked !')", icon: "icon-potrait" },
-						{ type: "button", name: "Button 2", onclick: "button2_click();", icon: "icon-local-dining" },
-						{ type: "link", name: "Link 3 (stackoverflow.com)", href: 'http://stackoverflow.com', icon: "icon-bike" },
-					]
-				}
-			});
+			var control = new searchboxControl();
 			control._searchfunctionCallBack = self.searchPlace;
             self.map.addControl(control);
 
@@ -84,11 +73,16 @@ define("mapView", [], function() {
 
             $('#navigate').on('click', function(){
                 console.log("navigate");
+                $('#route-search').css('display', 'flex');
+                $('#boxcontainer').hide();
+                self.hideSearchResult();
             });
         }
 		
 		self.searchPlace = function(keyword){
-			self.showSearchResult();
+            if (keyword != ''){
+                self.showSearchResult();
+            }
         }
 
         self.searchDone = function(place) {
