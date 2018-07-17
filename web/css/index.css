@@ -397,6 +397,10 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     color: white;
 }
 
+#route-origin-input::placeholder{
+	color: #b7d1fb;
+}
+
 #route-destination {
     width: 100%;
     height: calc(50% - 15px);
@@ -409,6 +413,9 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 	font-size: 20px;
     padding: 10px;
     color: white;
+}
+#route-destination-input::placeholder{
+	color: #b7d1fb;
 }
 
 #route-search-right {

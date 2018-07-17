@@ -38,10 +38,12 @@ define("mapView", [], function() {
 					routeMode = false;
             		self.showSearchResult();
             	});
+				
+				self.setRouteSearchBox();
             });
 
             L.control.location({position: 'bottomright'}).addTo(self.map);
-
+			
             // Test google search
             // var directionsService = new google.maps.DirectionsService;
             // directionsService.route({
@@ -67,15 +69,9 @@ define("mapView", [], function() {
 
             $('#boxcontainer').width($(window).width() - 170 + 'px');
             $('#searchboxinput').focus(function(){
-                // Use google searchbox
                 $('#searchboxinput').attr('placeholder', '輸入地點');
-                var bounds = self.map.getBounds();
-                var currentBound = new google.maps.LatLngBounds(
-                    new google.maps.LatLng(bounds.getSouth(), bounds.getWest()),
-                    new google.maps.LatLng(bounds.getNorth(), bounds.getEast()));
-
                 var searchbox = new google.maps.places.SearchBox(this, {
-                    bounds: currentBound
+                    bounds: self.getCurrentBound()
                 });
                 searchbox.addListener('places_changed', function() {
                     var places = searchbox.getPlaces();
@@ -87,6 +83,23 @@ define("mapView", [], function() {
             });
         }
 		
+		self.getCurrentBound = function(){
+			var bounds = self.map.getBounds();
+			return new google.maps.LatLngBounds(
+				new google.maps.LatLng(bounds.getSouth(), bounds.getWest()),
+				new google.maps.LatLng(bounds.getNorth(), bounds.getEast()));
+		}
+
+		self.setRouteSearchBox = function(){
+			$('#route-origin-input').attr('placeholder', '輸入起點');
+			$('#route-destination-input').attr('placeholder', '輸入終點');
+			var option = {
+                bounds: self.getCurrentBound()
+            };
+			var originSearchbox = new google.maps.places.SearchBox(document.getElementById('route-origin-input'), option);
+			var destinationSearchbox = new google.maps.places.SearchBox(document.getElementById('route-destination-input'), option);
+		}
+
 		self.searchPlace = function(keyword){
             if (keyword != ''){
                 self.showSearchResult();
