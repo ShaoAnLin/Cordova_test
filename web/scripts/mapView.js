@@ -76,6 +76,11 @@ define("mapView", [], function() {
                 $('#route-search').css('display', 'flex');
                 $('#boxcontainer').hide();
                 self.hideSearchResult();
+                
+            	$('#route-search-back').on('click', function(){
+            		console.log("Go back");
+            		self.showSearchResult();
+            	});
             });
         }
 		
@@ -123,6 +128,9 @@ define("mapView", [], function() {
         
         self.showSearchResult = function(){
 			$('#map').height('80%');
+			$('#route-search').hide();
+			$('#boxcontainer').show();
+			$('#searchboxinput').val($('#search-result-title').text());
         }
 
         self.hideSearchResult = function(){

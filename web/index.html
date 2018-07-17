@@ -6,7 +6,7 @@
 		<meta name="description" content="A mobile website allowing users to plan routes with their preference.">
 		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
 		<title>iRoute</title>
-		<link rel="icon" href="css/image/logo.png">
+		<link rel="icon" href="css/images/logo.png">
 
 		<link rel="stylesheet" type="text/css" href="css/leaflet.css">
 		<link rel="stylesheet" type="text/css" href="css/index.css">
@@ -17,14 +17,18 @@
 	<body>
 		<div id="route-search">
 			<div id="route-search-left">
-				<i id="route-search-back" class="fas fa-arrow-circle-left"></i>
+				<button id="route-search-back" class="fas fa-arrow-circle-left"></button>
 			</div>
 			<div id="route-search-center">
-				<div id="route-origin"></div>
-				<div id="route-destination"></div>
+				<div id="route-origin">
+					<input id="route-origin-input"></input>
+				</div>
+				<div id="route-destination">
+					<input id="route-destination-input"></input>
+				</div>
 			</div>
 			<div id="route-search-right">
-				<i id="route-search-switch" class="fas fa-exchange-alt"></i>
+				<button id="route-search-switch" class="fas fa-exchange-alt"></button>
 			</div>
 		</div>
 		<div id="map"></div>

@@ -297,14 +297,14 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 }
 
 #search-result-title {
-	font-size: 20px;
+	font-size: 22px;
 }
 
 #search-result-rating-star {
     color: orange;
     font-size: 12px;
     float: left;
-    padding-right: 3px;
+    padding: 3px;
     display: none;
 }
 #search-result-rating {
@@ -314,18 +314,18 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 }
 #search-result-rating-val {
     padding: 0px 5px 0px 5px;
-    font-size: 10px;
+    font-size: 14px;
     float: left;
 }
 
 #search-result-open {
-    font-size: 10px;
+    font-size: 14px;
     color: gray;
 }
 
 #search-result-address {
     padding-top: 3px;
-    font-size: 14px;
+    font-size: 16px;
     color: gray;
 }
 
@@ -347,7 +347,7 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 
 #search-result-phone-number{
     float: left;
-    font-size: 14px;
+    font-size: 16px;
     padding: 5px;
     color: gray;
 }
@@ -356,28 +356,31 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     padding: 3px 5px 3px 5px;
 	background-color: #4285F4;
 	color: white;
-    font-size: 10px;
+    font-size: 16px;
     float: right;
 }
 
 #route-search{
-    height: 15%;
+    height: 120px;
+    width: 100%;
     display: none;
     background-color: #4285F4;
-    flex-direction: row;
 }
 
 #route-search-left{
+    height: 120px;
     width: 60px;
 }
 
 #route-search-back {
-    padding: 25px;
+    padding: 25px 20px 0px 20px;
     color: white;
+    font-size: 20px;
 }
 
 #route-search-center {
-    flex: 1;
+    height: 120px;
+    width: calc(100% - 120px);
 }
 
 #route-origin {
@@ -388,6 +391,12 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     background-clip: content-box, padding-box;
 }
 
+#route-origin-input {
+	font-size: 24px;
+    padding: 10px;
+    color: white;
+}
+
 #route-destination {
     width: 100%;
     height: calc(50% - 15px);
@@ -396,14 +405,21 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     background-clip: content-box, padding-box;
 }
 
+#route-destination-input {
+	font-size: 24px;
+    padding: 10px;
+    color: white;
+}
+
 #route-search-right {
+    height: 120px;
     width: 60px;
 }
 
 #route-search-switch {
     color: white;
-    padding: 15px;
-    margin-top: calc(100%);
+    font-size: 20px;
+    padding: 75px 20px 0px 20px;
 }
 
 /********** Large devices only **********/
