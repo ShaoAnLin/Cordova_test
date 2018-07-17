@@ -392,7 +392,7 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 }
 
 #route-origin-input {
-	font-size: 24px;
+	font-size: 20px;
     padding: 10px;
     color: white;
 }
@@ -406,7 +406,7 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 }
 
 #route-destination-input {
-	font-size: 24px;
+	font-size: 20px;
     padding: 10px;
     color: white;
 }

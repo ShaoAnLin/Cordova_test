@@ -2,8 +2,8 @@ define("mapView", [], function() {
     function MapView(){
         var self = this,
             map = null,
-            searchbox = null,
-            searchMarker = null;
+            searchMarker = null,
+			routeMode = false;
 
         self.init = function(){
             var mapOptions = {
@@ -21,6 +21,23 @@ define("mapView", [], function() {
             self.map.on('click', function(e) {
                 console.log("Click: " + e.latlng);
 			    self.hideSearchResult();
+            });
+
+            $('#navigate').on('click', function(){
+                console.log("navigate");
+				routeMode = true;
+                $('#route-search').css('display', 'flex');
+                $('#boxcontainer').hide();
+				$('#route-destination-input').val($('#search-result-title').text());
+                self.hideSearchResult();
+				
+				$('#route-origin-input').focus();
+                
+            	$('#route-search-back').on('click', function(){
+            		console.log("Go back");
+					routeMode = false;
+            		self.showSearchResult();
+            	});
             });
 
             L.control.location({position: 'bottomright'}).addTo(self.map);
@@ -57,30 +74,16 @@ define("mapView", [], function() {
                     new google.maps.LatLng(bounds.getSouth(), bounds.getWest()),
                     new google.maps.LatLng(bounds.getNorth(), bounds.getEast()));
 
-                if (self.searchbox == null){
-                    self.searchbox = new google.maps.places.SearchBox(this, {
-                        bounds: currentBound
-                    });
-                }
-                self.searchbox.addListener('places_changed', function() {
-                    var places = self.searchbox.getPlaces();
+                var searchbox = new google.maps.places.SearchBox(this, {
+                    bounds: currentBound
+                });
+                searchbox.addListener('places_changed', function() {
+                    var places = searchbox.getPlaces();
                     if (places.length > 0) {
                         console.log(places[0]);
                         self.searchDone(places[0]);
                     }
                 });
-            });
-
-            $('#navigate').on('click', function(){
-                console.log("navigate");
-                $('#route-search').css('display', 'flex');
-                $('#boxcontainer').hide();
-                self.hideSearchResult();
-                
-            	$('#route-search-back').on('click', function(){
-            		console.log("Go back");
-            		self.showSearchResult();
-            	});
             });
         }
 		
@@ -103,7 +106,9 @@ define("mapView", [], function() {
                 self.searchMarker = L.marker([location.lat(), location.lng()])
                     .bindPopup(popup, {minWidth : 100})
                     .on('popupopen', function (popup) {
-                        self.showSearchResult();
+						if (!routeMode){
+							self.showSearchResult();
+						}
                     });;
                 self.searchMarker.addTo(self.map);
                 self.searchMarker.openPopup();
