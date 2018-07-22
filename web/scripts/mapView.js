@@ -2,8 +2,11 @@ define("mapView", [], function() {
     function MapView(){
         var self = this,
             map = null,
-            searchMarker = null,
-			routeMode = false;
+            routeOriginMarker = null,
+            routeDestinationMarker = null,
+            routeMode = false,
+            routeOrigin = null,
+            routeDestination = null;
 
         self.init = function(){
             var mapOptions = {
@@ -34,8 +37,7 @@ define("mapView", [], function() {
 				$('#route-origin-input').focus();
                 
             	$('#route-search-back').on('click', function(){
-            		console.log("Go back");
-					self.routeMode = false;
+                    self.routeMode = false;
             		self.showSearchResult();
                 });
 
@@ -78,7 +80,7 @@ define("mapView", [], function() {
                     bounds: self.getCurrentBound()
                 });
                 searchbox.addListener('places_changed', function() {
-                    var places = searchbox.getPlaces();
+                    var places = this.getPlaces();
                     if (places.length > 0) {
                         console.log(places[0]);
                         self.searchDone(places[0]);
@@ -101,7 +103,15 @@ define("mapView", [], function() {
                 bounds: self.getCurrentBound()
             };
 			var originSearchbox = new google.maps.places.SearchBox($('#route-origin-input')[0], option);
-			var destinationSearchbox = new google.maps.places.SearchBox($('#route-destination-input')[0], option);
+            var destinationSearchbox = new google.maps.places.SearchBox($('#route-destination-input')[0], option);
+
+            originSearchbox.addListener('places_changed', function() {
+                var places = this.getPlaces();
+                if (places.length > 0) {
+                    console.log(places[0]);
+                    self.originSet(places[0]);
+                }
+            });
 		}
 
 		self.searchPlace = function(keyword){
@@ -112,23 +122,20 @@ define("mapView", [], function() {
 
         self.searchDone = function(place) {
             if (typeof(place.geometry) != "undefined"){
-                var viewport = place.geometry.viewport,
-                    location = place.geometry.location,
-                    bounds = L.latLngBounds(
-                        L.latLng(viewport.f.b, viewport.b.b), 
-                        L.latLng(viewport.f.f, viewport.b.f));
+                self.routeDestination = place;
+                var location = place.geometry.location,
+                    bounds = self.getPlaceBound(place);
                 
-                var popup = "<img src='" + place.icon + "' style='width: 20px; float: left; padding-right: 10px'/><span style='font-size: 14px'>"
-                    + place.name + "</span>";
-                self.searchMarker = L.marker([location.lat(), location.lng()])
+                var popup = self.getPopupDiv(place.icon, place.name);
+                self.routeDestinationMarker = L.marker([location.lat(), location.lng()], {icon: self.getIcon('red')})
                     .bindPopup(popup, {minWidth : 100})
                     .on('popupopen', function (popup) {
 						if (!self.routeMode){
 							self.showSearchResult();
 						}
-                    });;
-                self.searchMarker.addTo(self.map);
-                self.searchMarker.openPopup();
+                    });
+                self.routeDestinationMarker.addTo(self.map);
+                self.routeDestinationMarker.openPopup();
                 self.map.fitBounds(bounds);
             }
             $('#search-result-title').text(place.name);
@@ -147,6 +154,12 @@ define("mapView", [], function() {
             }
             self.showSearchResult();
         }
+
+        self.getPlaceBound = function(place){
+            var viewport = place.geometry.viewport;
+            return L.latLngBounds(L.latLng(viewport.f.b, viewport.b.b),
+                                  L.latLng(viewport.f.f, viewport.b.f));
+        }
         
         self.showSearchResult = function(){
 			$('#map').height('80%');
@@ -158,10 +171,44 @@ define("mapView", [], function() {
         self.hideSearchResult = function(){
             $('#map').height('100%');
             $('#searchboxinput').val('');
-            if (self.searchMarker && !self.routeMode){
-                self.searchMarker.remove();
+            if (self.routeDestinationMarker && !self.routeMode){
+                self.routeDestinationMarker.remove();
             }
             $('#searchboxinput').attr('placeholder', '');
+        }
+
+        self.originSet = function(place){
+            self.routeOrigin = place;
+            var location = place.geometry.location,
+                popup = self.getPopupDiv(place.icon, place.name);
+            self.routeOriginMarker = L.marker([location.lat(), location.lng()], {icon: self.getIcon('green')})
+                .bindPopup(popup, {minWidth : 100})
+                .on('popupopen', function (popup) {
+                    console.log('origin!');
+            });;
+            self.routeOriginMarker.addTo(self.map).openPopup();
+            self.setRouteViewport();
+        }
+
+        self.setRouteViewport = function(){
+            var bound = self.getPlaceBound(self.routeOrigin);
+            var newBound = self.map.getBounds().extend(bound);
+            self.map.fitBounds(newBound);
+        }
+
+        self.getPopupDiv = function(icon, name){
+            return "<img src='" + icon + "' style='width: 20px; float: left; padding-right: 10px'/><span style='font-size: 14px'>"
+                + name + "</span>";
+        }
+
+        self.getIcon = function(color){
+            return L.icon({
+                iconUrl: 'css/images/marker-' + color + '.svg',
+                iconSize: [30, 40],
+                popupAnchor: [0, -10],
+                shadowAnchor: [12, 20],
+                shadowUrl: 'css/images/marker-shadow.png',
+            });
         }
     }
     return new MapView();
