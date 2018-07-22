@@ -42,6 +42,7 @@ define("mapView", [], function() {
                 });
 
                 $('#route-search-switch').on('click', function(){
+                    // TODO: switch the leaflet marker
                     var origin = $('#route-origin-input').val();
                     $('#route-origin-input').val($('#route-destination-input').val());
                     $('#route-destination-input').val(origin);
@@ -127,6 +128,7 @@ define("mapView", [], function() {
                     self.originSet(places[0]);
                 }
             });
+            // TODO: add listener for destination searchbox
 		}
 
 		self.searchPlace = function(keyword){
@@ -209,6 +211,7 @@ define("mapView", [], function() {
         }
 
         self.setRouteViewport = function(){
+            // TODO: improve the bounding, check if there are one or two location
             var bound = self.getPlaceBound(self.routeOrigin);
             var newBound = self.map.getBounds().extend(bound);
             self.map.fitBounds(newBound);
