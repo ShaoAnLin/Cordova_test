@@ -268,7 +268,8 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 }
 
 .pac-container {
-    margin-left: -70px;
+    position: absolute !important;
+    left: 16px !important;
     width: calc(100% - 30px) !important;
 }
 
@@ -373,7 +374,6 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 }
 
 #route-search-back {
-    padding: 25px 20px 0px 20px;
     color: white;
     font-size: 20px;
 }
@@ -426,7 +426,6 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 #route-search-switch {
     color: white;
     font-size: 20px;
-    padding: 75px 20px 0px 20px;
 }
 
 /********** Large devices only **********/

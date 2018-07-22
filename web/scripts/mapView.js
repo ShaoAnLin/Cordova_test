@@ -24,22 +24,26 @@ define("mapView", [], function() {
             });
 
             $('#navigate').on('click', function(){
-                console.log("navigate");
-				routeMode = true;
+				self.routeMode = true;
                 $('#route-search').css('display', 'flex');
                 $('#boxcontainer').hide();
 				$('#route-destination-input').val($('#search-result-title').text());
                 self.hideSearchResult();
+				self.setRouteSearchBox();
 				
 				$('#route-origin-input').focus();
                 
             	$('#route-search-back').on('click', function(){
             		console.log("Go back");
-					routeMode = false;
+					self.routeMode = false;
             		self.showSearchResult();
-            	});
-				
-				self.setRouteSearchBox();
+                });
+
+                $('#route-search-switch').on('click', function(){
+                    var origin = $('#route-origin-input').val();
+                    $('#route-origin-input').val($('#route-destination-input').val());
+                    $('#route-destination-input').val(origin);
+                });
             });
 
             L.control.location({position: 'bottomright'}).addTo(self.map);
@@ -96,8 +100,8 @@ define("mapView", [], function() {
 			var option = {
                 bounds: self.getCurrentBound()
             };
-			var originSearchbox = new google.maps.places.SearchBox(document.getElementById('route-origin-input'), option);
-			var destinationSearchbox = new google.maps.places.SearchBox(document.getElementById('route-destination-input'), option);
+			var originSearchbox = new google.maps.places.SearchBox($('#route-origin-input')[0], option);
+			var destinationSearchbox = new google.maps.places.SearchBox($('#route-destination-input')[0], option);
 		}
 
 		self.searchPlace = function(keyword){
@@ -119,7 +123,7 @@ define("mapView", [], function() {
                 self.searchMarker = L.marker([location.lat(), location.lng()])
                     .bindPopup(popup, {minWidth : 100})
                     .on('popupopen', function (popup) {
-						if (!routeMode){
+						if (!self.routeMode){
 							self.showSearchResult();
 						}
                     });;
@@ -154,7 +158,7 @@ define("mapView", [], function() {
         self.hideSearchResult = function(){
             $('#map').height('100%');
             $('#searchboxinput').val('');
-            if (self.searchMarker){
+            if (self.searchMarker && !self.routeMode){
                 self.searchMarker.remove();
             }
             $('#searchboxinput').attr('placeholder', '');
