@@ -370,7 +370,15 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 
 #route-search-left{
     height: 120px;
-    width: 60px;
+    width: 40px;
+}
+#route-search-center {
+    height: 120px;
+    width: calc(100% - 80px);
+}
+#route-search-right {
+    height: 120px;
+    width: 40px;
 }
 
 #route-search-back {
@@ -378,29 +386,30 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     font-size: 20px;
 }
 
-#route-search-center {
-    height: 120px;
-    width: calc(100% - 120px);
+.route-icon {
+    padding: 12px 5px 10px 5px;
+    float: left;
+    font-size: 18px;
 }
+.input-remove-icon{
+    padding: 12px 5px 10px 5px;
+    color: white;
+    font-size: 18px;
+}
+.route-input {
+    width: calc(100% - 55px);
+	font-size: 20px;
+    padding: 10px 0px 10px 0px;
+    color: white;
+    float: left;
+}
+
 #route-origin {
     width: 100%;
     height: calc(50% - 15px);
     padding: 10px 0px 5px 0px;
     background-color: #5E97F6;
     background-clip: content-box, padding-box;
-}
-
-.route-icon {
-    padding: 12px 0px 10px 5px;
-    float: left;
-    font-size: 18px;
-}
-
-#route-origin-input {
-    width: calc(100% - 30px);
-	font-size: 20px;
-    padding: 10px 5px 10px 5px;
-    color: white;
 }
 
 #route-origin-input::placeholder{
@@ -415,19 +424,8 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     background-clip: content-box, padding-box;
 }
 
-#route-destination-input {
-    width: calc(100% - 30px);
-	font-size: 20px;
-    padding: 10px 5px 10px 5px;
-    color: white;
-}
 #route-destination-input::placeholder{
 	color: #b7d1fb;
-}
-
-#route-search-right {
-    height: 120px;
-    width: 60px;
 }
 
 #route-search-switch {

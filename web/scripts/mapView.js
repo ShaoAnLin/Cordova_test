@@ -46,6 +46,21 @@ define("mapView", [], function() {
                     $('#route-origin-input').val($('#route-destination-input').val());
                     $('#route-destination-input').val(origin);
                 });
+
+                $('#route-origin-clear').on('click', function(){
+                    $('#route-origin-input').val('');
+                    if (self.routeOriginMarker){
+                        self.routeOriginMarker.remove();
+                        self.routeOrigin = null;
+                    }
+                });
+                $('#route-destination-clear').on('click', function(){
+                    $('#route-destination-input').val('');
+                    if (self.routeDestinationMarker){
+                        self.routeDestinationMarker.remove();
+                        self.routeDestination = null;
+                    }
+                });
             });
 
             L.control.location({position: 'bottomright'}).addTo(self.map);
