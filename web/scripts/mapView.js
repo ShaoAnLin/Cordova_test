@@ -30,11 +30,11 @@ define("mapView", [], function() {
 				self.routeMode = true;
                 $('#route-search').css('display', 'flex');
                 $('#boxcontainer').hide();
-				$('#route-destination-input').val($('#search-result-title').text());
+                $('#route-destination-input').val($('#search-result-title').text());
+                $('#route-origin-input').focus();
                 self.hideSearchResult();
 				self.setRouteSearchBox();
-				
-				$('#route-origin-input').focus();
+                self.routeDestinationMarker.closePopup();
                 
             	$('#route-search-back').on('click', function(){
                     self.routeMode = false;
@@ -165,7 +165,10 @@ define("mapView", [], function() {
 			$('#map').height('80%');
 			$('#route-search').hide();
 			$('#boxcontainer').show();
-			$('#searchboxinput').val($('#search-result-title').text());
+            $('#searchboxinput').val($('#search-result-title').text());
+            if (self.routeOriginMarker){
+                self.routeOriginMarker.remove();
+            }
         }
 
         self.hideSearchResult = function(){
@@ -186,7 +189,7 @@ define("mapView", [], function() {
                 .on('popupopen', function (popup) {
                     console.log('origin!');
             });;
-            self.routeOriginMarker.addTo(self.map).openPopup();
+            self.routeOriginMarker.addTo(self.map);
             self.setRouteViewport();
         }
 
