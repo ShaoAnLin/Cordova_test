@@ -43,9 +43,19 @@ define("mapView", [], function() {
 
                 $('#route-search-switch').on('click', function(){
                     // TODO: switch the leaflet marker
-                    var origin = $('#route-origin-input').val();
+                    var originText = $('#route-origin-input').val(),
+                        originPlace = self.routeOrigin,
+                        originMarker = self.routeOriginMarker;
+
                     $('#route-origin-input').val($('#route-destination-input').val());
-                    $('#route-destination-input').val(origin);
+                    self.routeOrigin = self.routeDestination;
+                    self.routeOriginMarker = self.routeDestinationMarker;
+                    self.routeOriginMarker.setIcon(self.getIcon('green'));
+
+                    $('#route-destination-input').val(originText);
+                    self.routeDestination = originPlace;
+                    self.routeDestinationMarker = originMarker;
+                    self.routeDestinationMarker.setIcon(self.getIcon('red'));
                 });
 
                 $('#route-origin-clear').on('click', function(){
