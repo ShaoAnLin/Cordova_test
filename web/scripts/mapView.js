@@ -50,6 +50,7 @@ define("mapView", [], function() {
 
                 $('#route-origin-clear').on('click', function(){
                     $('#route-origin-input').val('');
+                    $('#route-origin-input').focus();
                     self.routeOrigin = null;
                     if (self.routeOriginMarker){
                         self.routeOriginMarker.remove();
@@ -57,6 +58,7 @@ define("mapView", [], function() {
                 });
                 $('#route-destination-clear').on('click', function(){
                     $('#route-destination-input').val('');
+                    $('#route-destination-input').focus();
                     self.routeDestination = null;
                     if (self.routeDestinationMarker){
                         self.routeDestinationMarker.remove();
@@ -239,7 +241,16 @@ define("mapView", [], function() {
                 var location = self.routeDestination.geometry.location;
                 points.push(new L.LatLng(location.lat(), location.lng()));
             }
-            self.map.fitBounds(new L.LatLngBounds(points), {padding: [5, 5]});
+            if (points.length == 2){
+                self.map.fitBounds(new L.LatLngBounds(points), {padding: [5, 5]});
+            }
+            else if (points.length == 1){
+                var place = self.routeOrigin ? self.routeOrigin : self.routeDestination;
+                self.map.fitBounds(self.getPlaceBound(place));
+            }
+            // TODO: Fix leaflet map layout
+            //       The map is exceed the windows height, so that it would cause problem
+            //       when fitting bounds of two points
         }
 
         self.getPopupDiv = function(icon, name){
