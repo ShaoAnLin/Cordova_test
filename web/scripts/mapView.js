@@ -50,16 +50,16 @@ define("mapView", [], function() {
 
                 $('#route-origin-clear').on('click', function(){
                     $('#route-origin-input').val('');
+                    self.routeOrigin = null;
                     if (self.routeOriginMarker){
                         self.routeOriginMarker.remove();
-                        self.routeOrigin = null;
                     }
                 });
                 $('#route-destination-clear').on('click', function(){
                     $('#route-destination-input').val('');
+                    self.routeDestination = null;
                     if (self.routeDestinationMarker){
                         self.routeDestinationMarker.remove();
-                        self.routeDestination = null;
                     }
                 });
             });
@@ -211,10 +211,16 @@ define("mapView", [], function() {
         }
 
         self.setRouteViewport = function(){
-            // TODO: improve the bounding, check if there are one or two location
-            var bound = self.getPlaceBound(self.routeOrigin);
-            var newBound = self.map.getBounds().extend(bound);
-            self.map.fitBounds(newBound);
+            var points = [];
+            if (self.routeOrigin){
+                var location = self.routeOrigin.geometry.location;
+                points.push(new L.LatLng(location.lat(), location.lng()));
+            }
+            if (self.routeDestination){
+                var location = self.routeDestination.geometry.location;
+                points.push(new L.LatLng(location.lat(), location.lng()));
+            }
+            self.map.fitBounds(new L.LatLngBounds(points), {padding: [5, 5]});
         }
 
         self.getPopupDiv = function(icon, name){
