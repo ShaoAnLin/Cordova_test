@@ -2,9 +2,10 @@ define("mapView", [], function() {
     function MapView(){
         var self = this,
             map = null,
+            locateMe = null,
+            routeMode = false,
             routeOriginMarker = null,
             routeDestinationMarker = null,
-            routeMode = false,
             routeOrigin = null,
             routeDestination = null;
 
@@ -35,14 +36,15 @@ define("mapView", [], function() {
                 self.hideSearchResult();
 				self.setRouteSearchBox();
                 self.routeDestinationMarker.closePopup();
+                self.locateMe.remove();
                 
             	$('#route-search-back').on('click', function(){
                     self.routeMode = false;
-            		self.showSearchResult();
+                    self.showSearchResult();
+                    self.locateMe.addTo(self.map);
                 });
 
                 $('#route-search-switch').on('click', function(){
-                    // TODO: switch the leaflet marker
                     var originText = $('#route-origin-input').val(),
                         originPlace = self.routeOrigin,
                         originMarker = self.routeOriginMarker;
@@ -76,7 +78,8 @@ define("mapView", [], function() {
                 });
             });
 
-            L.control.location({position: 'bottomright'}).addTo(self.map);
+            self.locateMe = L.control.location({position: 'bottomright'});
+            self.locateMe.addTo(self.map);
 			
             // Test google search
             // var directionsService = new google.maps.DirectionsService;
@@ -207,7 +210,12 @@ define("mapView", [], function() {
         }
 
         self.hideSearchResult = function(){
-            $('#map').height('100%');
+            if (self.routeMode){
+                $('#map').height('calc(100% - 120px)');
+            }
+            else{
+                $('#map').height('100%');
+            }
             $('#searchboxinput').val('');
             if (self.routeDestinationMarker && !self.routeMode){
                 self.routeDestinationMarker.remove();
@@ -258,9 +266,6 @@ define("mapView", [], function() {
                 var place = self.routeOrigin ? self.routeOrigin : self.routeDestination;
                 self.map.fitBounds(self.getPlaceBound(place));
             }
-            // TODO: Fix leaflet map layout
-            //       The map is exceed the windows height, so that it would cause problem
-            //       when fitting bounds of two points
         }
 
         self.getPopupDiv = function(icon, name){
