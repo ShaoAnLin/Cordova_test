@@ -128,7 +128,13 @@ define("mapView", [], function() {
                     self.originSet(places[0]);
                 }
             });
-            // TODO: add listener for destination searchbox
+            destinationSearchbox.addListener('places_changed', function() {
+                var places = this.getPlaces();
+                if (places.length > 0) {
+                    console.log(places[0]);
+                    self.destinationSet(places[0]);
+                }
+            });
 		}
 
 		self.searchPlace = function(keyword){
@@ -207,6 +213,19 @@ define("mapView", [], function() {
                     console.log('origin!');
             });;
             self.routeOriginMarker.addTo(self.map);
+            self.setRouteViewport();
+        }
+
+        self.destinationSet = function(place){
+            self.routeDestination = place;
+            var location = place.geometry.location,
+                popup = self.getPopupDiv(place.icon, place.name);
+            self.routeDestinationMarker = L.marker([location.lat(), location.lng()], {icon: self.getIcon('red')})
+                .bindPopup(popup, {minWidth : 100})
+                .on('popupopen', function (popup) {
+                    console.log('desination!');
+            });;
+            self.routeDestinationMarker.addTo(self.map);
             self.setRouteViewport();
         }
 
