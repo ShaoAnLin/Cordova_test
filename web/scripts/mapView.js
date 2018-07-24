@@ -42,6 +42,7 @@ define("mapView", [], function() {
                     self.routeMode = false;
                     self.showSearchResult();
                     self.locateMe.addTo(self.map);
+                    $('#route-origin-input').val('');
                 });
 
                 $('#route-search-switch').on('click', function(){
@@ -51,13 +52,17 @@ define("mapView", [], function() {
 
                     $('#route-origin-input').val($('#route-destination-input').val());
                     self.routeOrigin = self.routeDestination;
+                    if (self.routeDestinationMarker){
+                        self.routeDestinationMarker.setIcon(self.getIcon('green'));
+                    }
                     self.routeOriginMarker = self.routeDestinationMarker;
-                    self.routeOriginMarker.setIcon(self.getIcon('green'));
 
                     $('#route-destination-input').val(originText);
                     self.routeDestination = originPlace;
+                    if (originMarker){
+                        originMarker.setIcon(self.getIcon('red'));
+                    }
                     self.routeDestinationMarker = originMarker;
-                    self.routeDestinationMarker.setIcon(self.getIcon('red'));
                 });
 
                 $('#route-origin-clear').on('click', function(){
@@ -66,6 +71,7 @@ define("mapView", [], function() {
                     self.routeOrigin = null;
                     if (self.routeOriginMarker){
                         self.routeOriginMarker.remove();
+                        self.routeOriginMarker = null;
                     }
                 });
                 $('#route-destination-clear').on('click', function(){
@@ -74,6 +80,7 @@ define("mapView", [], function() {
                     self.routeDestination = null;
                     if (self.routeDestinationMarker){
                         self.routeDestinationMarker.remove();
+                        self.routeDestinationMarker = null;
                     }
                 });
             });
@@ -200,12 +207,18 @@ define("mapView", [], function() {
         }
         
         self.showSearchResult = function(){
-			$('#map').height('80%');
-			$('#route-search').hide();
-			$('#boxcontainer').show();
-            $('#searchboxinput').val($('#search-result-title').text());
+            $('#route-search').hide();
+            $('#boxcontainer').show();
+            if (self.routeDestinationMarker){
+                $('#map').height('calc(100% - 140px)');
+                $('#searchboxinput').val($('#search-result-title').text());
+            }
+            else{
+                $('#map').height('100%');
+            }
             if (self.routeOriginMarker){
                 self.routeOriginMarker.remove();
+                self.routeOriginMarker = null;
             }
         }
 
@@ -217,10 +230,12 @@ define("mapView", [], function() {
                 $('#map').height('100%');
             }
             $('#searchboxinput').val('');
+            $('#searchboxinput').attr('placeholder', '');
+            self.routeDestination = null;
             if (self.routeDestinationMarker && !self.routeMode){
                 self.routeDestinationMarker.remove();
+                self.routeDestinationMarker = null;
             }
-            $('#searchboxinput').attr('placeholder', '');
         }
 
         self.originSet = function(place){
