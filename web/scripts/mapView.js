@@ -19,28 +19,12 @@ define("mapView", [], function() {
 				maxZoom: 24,
 				type:'roadmap'
             }).addTo(self.map);
-            
-            self.addSearchBox();
-            self.eventBinding();
 
             self.locateMe = L.control.location({position: 'bottomright'});
             self.locateMe.addTo(self.map);
-			
-            // Test google search
-            // var directionsService = new google.maps.DirectionsService;
-            // directionsService.route({
-            //     origin: "Taipei 101",
-            //     destination: "基隆火車站",
-            //     // origin: {lat: 25.033964, lng: 121.564215},
-            //     // destination: {lat: 25.041845, lng: 121.557781},
-            //     travelMode: 'TRANSIT'
-            // }, function(response, status) {
-            //     if (status === 'OK') {
-            //         console.log(response);
-            //     } else {
-            //         window.alert('Directions request failed due to ' + status);
-            //     }
-            // });
+
+            self.addSearchBox();
+            self.eventBinding();
         }
         
         self.eventBinding = function(){
@@ -88,6 +72,8 @@ define("mapView", [], function() {
                 self.routeDestinationMarker = originMarker;
             });
             
+            // TODO: Show the button only if the input text is not empty
+            //       Add the clear funtion in searchbox
             $('#route-origin-clear').on('click', function(){
                 $('#route-origin-input').val('');
                 $('#route-origin-input').focus();
@@ -254,7 +240,7 @@ define("mapView", [], function() {
                     console.log('origin!');
             });;
             self.routeOriginMarker.addTo(self.map);
-            self.setRouteViewport();
+            self.searchRouteAndUpdateView();
         }
 
         self.destinationSet = function(place){
@@ -267,21 +253,36 @@ define("mapView", [], function() {
                     console.log('desination!');
             });;
             self.routeDestinationMarker.addTo(self.map);
-            self.setRouteViewport();
+            self.searchRouteAndUpdateView();
         }
 
-        self.setRouteViewport = function(){
-            var points = [];
+        self.searchRouteAndUpdateView = function(){
+            var points = [],
+            	originLocation = null,
+            	destinationLocation = null;
             if (self.routeOrigin){
-                var location = self.routeOrigin.geometry.location;
-                points.push(new L.LatLng(location.lat(), location.lng()));
+                originLocation = self.routeOrigin.geometry.location;
+                points.push(new L.LatLng(originLocation.lat(), originLocation.lng()));
             }
             if (self.routeDestination){
-                var location = self.routeDestination.geometry.location;
-                points.push(new L.LatLng(location.lat(), location.lng()));
+                destinationLocation = self.routeDestination.geometry.location;
+                points.push(new L.LatLng(destinationLocation.lat(), destinationLocation.lng()));
             }
             if (points.length == 2){
                 self.map.fitBounds(new L.LatLngBounds(points), {padding: [5, 5]});
+                
+	            var directionsService = new google.maps.DirectionsService;
+	            directionsService.route({
+	            	origin: {lat: originLocation.lat(), lng: originLocation.lng()},
+	                destination: {lat: destinationLocation.lat(), lng: destinationLocation.lng()},
+	                travelMode: 'TRANSIT'
+	            }, function(response, status) {
+	                if (status === 'OK') {
+	                    console.log(response);
+	                } else {
+	                    window.alert('Directions request failed due to ' + status);
+	                }
+	            });
             }
             else if (points.length == 1){
                 var place = self.routeOrigin ? self.routeOrigin : self.routeDestination;
