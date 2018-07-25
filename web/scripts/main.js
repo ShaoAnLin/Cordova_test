@@ -4,16 +4,18 @@ requirejs.config({
         app: 'scripts'
     },
     shim: {
+        'lib/Polyline.encoded': ['lib/leaflet'],
+        'lib/leaflet-location': ['lib/leaflet'],
+        'lib/Leaflet.GoogleMutant': [
+            'lib/jquery-3.3.1.min',
+            'lib/jquery-ui.min'],
         'mapView': [
             'lib/leaflet',
             'lib/leaflet-location',
             'lib/leaflet-customer-searchbox',
             'lib/Leaflet.GoogleMutant',
-            'async!https://maps.googleapis.com/maps/api/js?key=AIzaSyC4BOUHAJHQLFcg4OPRvvF3SeTsGThYZZs&libraries=geometry,places'],
-        'lib/leaflet-location': ['lib/leaflet'],
-        'lib/Leaflet.GoogleMutant': [
-            'lib/jquery-3.3.1.min',
-            'lib/jquery-ui.min']
+            'lib/Polyline.encoded',
+            'async!https://maps.googleapis.com/maps/api/js?key=AIzaSyC4BOUHAJHQLFcg4OPRvvF3SeTsGThYZZs&libraries=geometry,places']
     }
 });
 

@@ -278,7 +278,18 @@ define("mapView", [], function() {
 	                travelMode: 'TRANSIT'
 	            }, function(response, status) {
 	                if (status === 'OK') {
+	                	// TODO: need work
 	                    console.log(response);
+	                    var polylines = [];
+	                    var steps = response.routes[0].legs[0].steps;
+	                    for (var i = 0; i < steps.length; ++i){
+	                    	var points = steps[i].polyline.points;
+	                    	console.log(points);
+	                    	var polyline = L.Polyline.fromEncoded(points, {
+	                    		weight: 6,
+	                    		color: '#f30'})
+	                    		.addTo(self.map);
+	                    }
 	                } else {
 	                    window.alert('Directions request failed due to ' + status);
 	                }
