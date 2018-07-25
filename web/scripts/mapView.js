@@ -21,69 +21,7 @@ define("mapView", [], function() {
             }).addTo(self.map);
             
             self.addSearchBox();
-
-            self.map.on('click', function(e) {
-                console.log("Click: " + e.latlng);
-			    self.hideSearchResult();
-            });
-
-            $('#navigate').on('click', function(){
-				self.routeMode = true;
-                $('#route-search').css('display', 'flex');
-                $('#boxcontainer').hide();
-                $('#route-destination-input').val($('#search-result-title').text());
-                $('#route-origin-input').focus();
-                self.hideSearchResult();
-				self.setRouteSearchBox();
-                self.routeDestinationMarker.closePopup();
-                self.locateMe.remove();
-                
-            	$('#route-search-back').on('click', function(){
-                    self.routeMode = false;
-                    self.showSearchResult();
-                    self.locateMe.addTo(self.map);
-                    $('#route-origin-input').val('');
-                });
-
-                $('#route-search-switch').on('click', function(){
-                    var originText = $('#route-origin-input').val(),
-                        originPlace = self.routeOrigin,
-                        originMarker = self.routeOriginMarker;
-
-                    $('#route-origin-input').val($('#route-destination-input').val());
-                    self.routeOrigin = self.routeDestination;
-                    if (self.routeDestinationMarker){
-                        self.routeDestinationMarker.setIcon(self.getIcon('green'));
-                    }
-                    self.routeOriginMarker = self.routeDestinationMarker;
-
-                    $('#route-destination-input').val(originText);
-                    self.routeDestination = originPlace;
-                    if (originMarker){
-                        originMarker.setIcon(self.getIcon('red'));
-                    }
-                    self.routeDestinationMarker = originMarker;
-                });
-
-                $('#route-origin-clear').on('click', function(){
-                    $('#route-origin-input').val('');
-                    $('#route-origin-input').focus();
-                    self.routeOrigin = null;
-                    if (self.routeOriginMarker){
-                        self.routeOriginMarker.remove();
-                        self.routeOriginMarker = null;
-                    }
-                });
-                $('#route-destination-clear').on('click', function(){
-                    $('#route-destination-input').val('');
-                    $('#route-destination-input').focus();
-                    self.routeDestination = null;
-                    if (self.routeDestinationMarker){
-                        self.routeDestinationMarker.remove();
-                        self.routeDestinationMarker = null;
-                    }
-                });
-            });
+            self.eventBinding();
 
             self.locateMe = L.control.location({position: 'bottomright'});
             self.locateMe.addTo(self.map);
@@ -103,6 +41,72 @@ define("mapView", [], function() {
             //         window.alert('Directions request failed due to ' + status);
             //     }
             // });
+        }
+        
+        self.eventBinding = function(){
+            self.map.on('click', function(e) {
+                console.log("Click: " + e.latlng);
+			    self.hideSearchResult();
+            });
+            
+            $('#navigate').on('click', function(){
+				self.routeMode = true;
+                $('#route-search').css('display', 'flex');
+                $('#boxcontainer').hide();
+                $('#route-destination-input').val($('#search-result-title').text());
+                $('#route-origin-input').focus();
+                self.hideSearchResult();
+				self.setRouteSearchBox();
+                self.routeDestinationMarker.closePopup();
+                self.locateMe.remove();
+            });
+            
+        	$('#route-search-back').on('click', function(){
+                self.routeMode = false;
+                self.showSearchResult();
+                self.locateMe.addTo(self.map);
+                $('#route-origin-input').val('');
+            });
+
+            $('#route-search-switch').on('click', function(e){
+                var originText = $('#route-origin-input').val(),
+                    originPlace = self.routeOrigin,
+                    originMarker = self.routeOriginMarker;
+
+                $('#route-origin-input').val($('#route-destination-input').val());
+                self.routeOrigin = self.routeDestination;
+                if (self.routeDestinationMarker){
+                    self.routeDestinationMarker.setIcon(self.getIcon('green'));
+                }
+                self.routeOriginMarker = self.routeDestinationMarker;
+
+                $('#route-destination-input').val(originText);
+                self.routeDestination = originPlace;
+                if (originMarker){
+                    originMarker.setIcon(self.getIcon('red'));
+                }
+                self.routeDestinationMarker = originMarker;
+            });
+            
+            $('#route-origin-clear').on('click', function(){
+                $('#route-origin-input').val('');
+                $('#route-origin-input').focus();
+                self.routeOrigin = null;
+                if (self.routeOriginMarker){
+                    self.routeOriginMarker.remove();
+                    self.routeOriginMarker = null;
+                }
+            });
+            
+            $('#route-destination-clear').on('click', function(){
+                $('#route-destination-input').val('');
+                $('#route-destination-input').focus();
+                self.routeDestination = null;
+                if (self.routeDestinationMarker){
+                    self.routeDestinationMarker.remove();
+                    self.routeDestinationMarker = null;
+                }
+            });
         }
 
         self.addSearchBox = function(){
@@ -231,11 +235,13 @@ define("mapView", [], function() {
             }
             $('#searchboxinput').val('');
             $('#searchboxinput').attr('placeholder', '');
-            self.routeDestination = null;
-            if (self.routeDestinationMarker && !self.routeMode){
-                self.routeDestinationMarker.remove();
-                self.routeDestinationMarker = null;
-            }
+            if (!self.routeMode){
+	            self.routeDestination = null;
+	            if (self.routeDestinationMarker){
+	                self.routeDestinationMarker.remove();
+	                self.routeDestinationMarker = null;
+	            }
+        	}
         }
 
         self.originSet = function(place){
