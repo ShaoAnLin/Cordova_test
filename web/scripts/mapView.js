@@ -7,7 +7,8 @@ define("mapView", [], function() {
             routeOriginMarker = null,
             routeDestinationMarker = null,
             routeOrigin = null,
-            routeDestination = null;
+            routeDestination = null,
+			routePolylines = [];
 
         self.init = function(){
             var mapOptions = {
@@ -30,7 +31,9 @@ define("mapView", [], function() {
         self.eventBinding = function(){
             self.map.on('click', function(e) {
                 console.log("Click: " + e.latlng);
-			    self.hideSearchResult();
+				if (!self.routeMode){
+					self.hideSearchResult();
+				}
             });
             
             $('#navigate').on('click', function(){
@@ -50,6 +53,7 @@ define("mapView", [], function() {
                 self.showSearchResult();
                 self.locateMe.addTo(self.map);
                 $('#route-origin-input').val('');
+				self.clearRouteResult();
             });
 
             $('#route-search-switch').on('click', function(e){
@@ -70,6 +74,11 @@ define("mapView", [], function() {
                     originMarker.setIcon(self.getIcon('red'));
                 }
                 self.routeDestinationMarker = originMarker;
+				
+				if (self.routeOrigin && self.routeDestination){
+					self.clearRouteResult();
+					self.searchRouteAndUpdateView();
+				}
             });
             
             // TODO: Show the button only if the input text is not empty
@@ -82,6 +91,7 @@ define("mapView", [], function() {
                     self.routeOriginMarker.remove();
                     self.routeOriginMarker = null;
                 }
+				self.clearRouteResult();
             });
             
             $('#route-destination-clear').on('click', function(){
@@ -92,6 +102,7 @@ define("mapView", [], function() {
                     self.routeDestinationMarker.remove();
                     self.routeDestinationMarker = null;
                 }
+				self.clearRouteResult();
             });
         }
 
@@ -280,9 +291,8 @@ define("mapView", [], function() {
 	                travelMode: 'TRANSIT'
 	            }, function(response, status) {
 	                if (status === 'OK') {
-	                	// TODO: need work
 	                    console.log(response);
-	                    var polylines = [];
+	                    self.routePolylines = [];
 	                    var steps = response.routes[0].legs[0].steps;
 						var routeBriefHtml = '';
 	                    for (var i = 0; i < steps.length; ++i){
@@ -291,15 +301,15 @@ define("mapView", [], function() {
 							}
 							var mode = steps[i].travel_mode;
 	                    	var points = steps[i].polyline.points;
-	                    	console.log(points);
 							routeBriefHtml += self.getHtmlElement(mode);
 							if (mode == 'TRANSIT'){
 								var shortName = steps[i].transit.line.short_name;
 								// var busName = steps[i].transit.line.name;
 								routeBriefHtml += shortName;
 							}
-	                    	var polyline = L.Polyline.fromEncoded(points, self.getLineStyle(mode))
-	                    		.addTo(self.map);
+	                    	var polyline = L.Polyline.fromEncoded(points, self.getLineStyle(mode));
+							polyline.addTo(self.map);
+							self.routePolylines.push(polyline);
 	                    }
 						self.showRouteBrief(routeBriefHtml);
 	                } else {
@@ -312,6 +322,19 @@ define("mapView", [], function() {
                 self.map.fitBounds(self.getPlaceBound(place));
             }
         }
+		
+		self.clearRouteResult = function(){
+			if (self.routePolylines){
+				self.routePolylines.forEach(function(polyline){
+					polyline.remove();
+				});
+			}
+			self.routePolylines = [];
+			$('#route-brief-result').hide();
+			if (self.routeMode){
+				$('#map').height('calc(100% - 120px)');
+			}
+		}
 
         self.getPopupDiv = function(icon, name){
             return "<img src='" + icon + "' style='width: 20px; float: left; padding-right: 10px'/><span style='font-size: 14px'>"
