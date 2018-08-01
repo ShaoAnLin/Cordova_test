@@ -283,11 +283,10 @@ define("mapView", [], function() {
 	                    var polylines = [];
 	                    var steps = response.routes[0].legs[0].steps;
 	                    for (var i = 0; i < steps.length; ++i){
+							var mode = steps[i].travel_mode;
 	                    	var points = steps[i].polyline.points;
 	                    	console.log(points);
-	                    	var polyline = L.Polyline.fromEncoded(points, {
-	                    		weight: 6,
-	                    		color: '#f30'})
+	                    	var polyline = L.Polyline.fromEncoded(points, self.getLineStyle(mode))
 	                    		.addTo(self.map);
 	                    }
 	                } else {
@@ -315,6 +314,16 @@ define("mapView", [], function() {
                 shadowUrl: 'css/images/marker-shadow.png',
             });
         }
+		
+		self.getLineStyle = function(mode){
+			if (mode == 'TRANSIT'){
+				return {weight: 4, color: '#f30'};
+			}
+			else if (mode == 'WALKING'){
+				return {weight: 3, color: '#5f6060', dashArray: "5 5",};
+			}
+		}
+		
     }
     return new MapView();
 });
