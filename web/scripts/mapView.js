@@ -199,6 +199,7 @@ define("mapView", [], function() {
         self.showSearchResult = function(){
             $('#route-search').hide();
             $('#boxcontainer').show();
+			$('#search-result').show();
             if (self.routeDestinationMarker){
                 $('#map').height('calc(100% - 140px)');
                 $('#searchboxinput').val($('#search-result-title').text());
@@ -219,6 +220,7 @@ define("mapView", [], function() {
             else{
                 $('#map').height('100%');
             }
+			$('#search-result').hide();
             $('#searchboxinput').val('');
             $('#searchboxinput').attr('placeholder', '');
             if (!self.routeMode){
@@ -282,13 +284,24 @@ define("mapView", [], function() {
 	                    console.log(response);
 	                    var polylines = [];
 	                    var steps = response.routes[0].legs[0].steps;
+						var routeBriefHtml = '';
 	                    for (var i = 0; i < steps.length; ++i){
+							if (i != 0){
+								routeBriefHtml += self.getHtmlElement('RIGHT');
+							}
 							var mode = steps[i].travel_mode;
 	                    	var points = steps[i].polyline.points;
 	                    	console.log(points);
+							routeBriefHtml += self.getHtmlElement(mode);
+							if (mode == 'TRANSIT'){
+								var shortName = steps[i].transit.line.short_name;
+								// var busName = steps[i].transit.line.name;
+								routeBriefHtml += shortName;
+							}
 	                    	var polyline = L.Polyline.fromEncoded(points, self.getLineStyle(mode))
 	                    		.addTo(self.map);
 	                    }
+						self.showRouteBrief(routeBriefHtml);
 	                } else {
 	                    window.alert('Directions request failed due to ' + status);
 	                }
@@ -315,13 +328,29 @@ define("mapView", [], function() {
             });
         }
 		
+		self.getHtmlElement = function(type){
+			if (type == 'WALKING'){
+				return '<i class="fas fa-walking"></i>';
+			}else if (type == 'RIGHT'){
+				return '<i class="fas fa-angle-right"></i>';
+			} else if (type == 'TRANSIT'){
+				return '<i class="fas fa-subway"></i>';
+			}
+		}
+		
 		self.getLineStyle = function(mode){
 			if (mode == 'TRANSIT'){
 				return {weight: 4, color: '#f30'};
 			}
 			else if (mode == 'WALKING'){
-				return {weight: 3, color: '#5f6060', dashArray: "5 5",};
+				return {weight: 3, color: '#5f6060', dashArray: "10 5",};
 			}
+		}
+		
+		self.showRouteBrief = function(innerHtml){
+			$('#map').height('calc(100% - 170px)');
+			$('#route-brief-result').html(innerHtml);
+			$('#route-brief-result').show();
 		}
 		
     }
