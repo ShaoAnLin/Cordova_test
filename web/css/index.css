@@ -439,10 +439,15 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     height: 50px;
 	padding: 10px;
 	text-align: center;
+    flex-direction: row;
 }
 
 #route-brief-result > .fas{
 	padding: 5px;
+}
+
+.transit-name{
+	font-size: 20px;
 }
 
 .fa-walking{

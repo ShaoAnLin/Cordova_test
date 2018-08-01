@@ -297,15 +297,15 @@ define("mapView", [], function() {
 						var routeBriefHtml = '';
 	                    for (var i = 0; i < steps.length; ++i){
 							if (i != 0){
-								routeBriefHtml += self.getHtmlElement('RIGHT');
+								routeBriefHtml += self.getIconHtml('RIGHT');
 							}
 							var mode = steps[i].travel_mode;
 	                    	var points = steps[i].polyline.points;
-							routeBriefHtml += self.getHtmlElement(mode);
-							if (mode == 'TRANSIT'){
+							routeBriefHtml += self.getIconHtml(mode);
+							if (mode == 'TRANSIT' && steps.length < 5){
 								var shortName = steps[i].transit.line.short_name;
 								// var busName = steps[i].transit.line.name;
-								routeBriefHtml += shortName;
+								routeBriefHtml += self.getTransitNameHtml(shortName);
 							}
 	                    	var polyline = L.Polyline.fromEncoded(points, self.getLineStyle(mode));
 							polyline.addTo(self.map);
@@ -351,7 +351,7 @@ define("mapView", [], function() {
             });
         }
 		
-		self.getHtmlElement = function(type){
+		self.getIconHtml = function(type){
 			if (type == 'WALKING'){
 				return '<i class="fas fa-walking"></i>';
 			}else if (type == 'RIGHT'){
@@ -359,6 +359,10 @@ define("mapView", [], function() {
 			} else if (type == 'TRANSIT'){
 				return '<i class="fas fa-subway"></i>';
 			}
+		}
+		
+		self.getTransitNameHtml = function(text){
+			return '<div class="transit-name">' + text + '</div>';
 		}
 		
 		self.getLineStyle = function(mode){
@@ -373,7 +377,8 @@ define("mapView", [], function() {
 		self.showRouteBrief = function(innerHtml){
 			$('#map').height('calc(100% - 170px)');
 			$('#route-brief-result').html(innerHtml);
-			$('#route-brief-result').show();
+			$('#route-brief-result').css('display', 'flex');
+			// $('#route-brief-result').show();
 		}
 		
     }
