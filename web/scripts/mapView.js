@@ -296,12 +296,22 @@ define("mapView", [], function() {
 	                    var steps = response.routes[0].legs[0].steps;
 						var routeBriefHtml = '';
 	                    for (var i = 0; i < steps.length; ++i){
-							if (i != 0){
+							var mode = steps[i].travel_mode;
+							if (steps.length > 7 && mode == 'WALKING'){
+								continue;
+							}
+							if (self.routePolylines.length > 0){
 								routeBriefHtml += self.getIconHtml('RIGHT');
 							}
-							var mode = steps[i].travel_mode;
 	                    	var points = steps[i].polyline.points;
 							routeBriefHtml += self.getIconHtml(mode);
+							if (mode == 'TRANSIT'){
+								// TODO: Distinguish transit type, use different color and icon
+								//       Get the type from: steps[i].transit.line.vehicle.type
+								//       Categories: HEAVY_RAIL, BUS, SUBWAY
+								console.log(steps[i].transit.line.vehicle.type);
+							}
+							// TODO: add markers between two transition?
 							if (mode == 'TRANSIT' && steps.length < 5){
 								var shortName = steps[i].transit.line.short_name;
 								// var busName = steps[i].transit.line.name;
@@ -322,7 +332,7 @@ define("mapView", [], function() {
                 self.map.fitBounds(self.getPlaceBound(place));
             }
         }
-		
+
 		self.clearRouteResult = function(){
 			if (self.routePolylines){
 				self.routePolylines.forEach(function(polyline){
@@ -335,7 +345,8 @@ define("mapView", [], function() {
 				$('#map').height('calc(100% - 120px)');
 			}
 		}
-
+		
+		// TODO: add another .js for getting html, style, icon etc.
         self.getPopupDiv = function(icon, name){
             return "<img src='" + icon + "' style='width: 20px; float: left; padding-right: 10px'/><span style='font-size: 14px'>"
                 + name + "</span>";
@@ -375,10 +386,10 @@ define("mapView", [], function() {
 		}
 		
 		self.showRouteBrief = function(innerHtml){
+			// TODO: layout: transit name position?
 			$('#map').height('calc(100% - 170px)');
 			$('#route-brief-result').html(innerHtml);
 			$('#route-brief-result').css('display', 'flex');
-			// $('#route-brief-result').show();
 		}
 		
     }
