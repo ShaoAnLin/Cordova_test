@@ -1,4 +1,4 @@
-define("mapView", [], function() {
+define("mapView", ['util'], function(util) {
     function MapView(){
         var self = this,
             map = null,
@@ -64,14 +64,14 @@ define("mapView", [], function() {
                 $('#route-origin-input').val($('#route-destination-input').val());
                 self.routeOrigin = self.routeDestination;
                 if (self.routeDestinationMarker){
-                    self.routeDestinationMarker.setIcon(self.getIcon('green'));
+                    self.routeDestinationMarker.setIcon(util.getIcon('green'));
                 }
                 self.routeOriginMarker = self.routeDestinationMarker;
 
                 $('#route-destination-input').val(originText);
                 self.routeDestination = originPlace;
                 if (originMarker){
-                    originMarker.setIcon(self.getIcon('red'));
+                    originMarker.setIcon(util.getIcon('red'));
                 }
                 self.routeDestinationMarker = originMarker;
 				
@@ -172,8 +172,8 @@ define("mapView", [], function() {
                 var location = place.geometry.location,
                     bounds = self.getPlaceBound(place);
                 
-                var popup = self.getPopupDiv(place.icon, place.name);
-                self.routeDestinationMarker = L.marker([location.lat(), location.lng()], {icon: self.getIcon('red')})
+                var popup = util.getPopupDiv(place.icon, place.name);
+                self.routeDestinationMarker = L.marker([location.lat(), location.lng()], {icon: util.getIcon('red')})
                     .bindPopup(popup, {minWidth : 100})
                     .on('popupopen', function (popup) {
 						if (!self.routeMode){
@@ -246,8 +246,8 @@ define("mapView", [], function() {
         self.originSet = function(place){
             self.routeOrigin = place;
             var location = place.geometry.location,
-                popup = self.getPopupDiv(place.icon, place.name);
-            self.routeOriginMarker = L.marker([location.lat(), location.lng()], {icon: self.getIcon('green')})
+                popup = util.getPopupDiv(place.icon, place.name);
+            self.routeOriginMarker = L.marker([location.lat(), location.lng()], {icon: util.getIcon('green')})
                 .bindPopup(popup, {minWidth : 100})
                 .on('popupopen', function (popup) {
                     console.log('origin!');
@@ -259,8 +259,8 @@ define("mapView", [], function() {
         self.destinationSet = function(place){
             self.routeDestination = place;
             var location = place.geometry.location,
-                popup = self.getPopupDiv(place.icon, place.name);
-            self.routeDestinationMarker = L.marker([location.lat(), location.lng()], {icon: self.getIcon('red')})
+                popup = util.getPopupDiv(place.icon, place.name);
+            self.routeDestinationMarker = L.marker([location.lat(), location.lng()], {icon: util.getIcon('red')})
                 .bindPopup(popup, {minWidth : 100})
                 .on('popupopen', function (popup) {
                     console.log('desination!');
@@ -301,10 +301,10 @@ define("mapView", [], function() {
 								continue;
 							}
 							if (self.routePolylines.length > 0){
-								routeBriefHtml += self.getIconHtml('RIGHT');
+								routeBriefHtml += util.getIconHtml('RIGHT');
 							}
 	                    	var points = steps[i].polyline.points;
-							routeBriefHtml += self.getIconHtml(mode);
+							routeBriefHtml += util.getIconHtml(mode);
 							if (mode == 'TRANSIT'){
 								// TODO: Distinguish transit type, use different color and icon
 								//       Get the type from: steps[i].transit.line.vehicle.type
@@ -315,9 +315,9 @@ define("mapView", [], function() {
 							if (mode == 'TRANSIT' && steps.length < 5){
 								var shortName = steps[i].transit.line.short_name;
 								// var busName = steps[i].transit.line.name;
-								routeBriefHtml += self.getTransitNameHtml(shortName);
+								routeBriefHtml += util.getTransitNameHtml(shortName);
 							}
-	                    	var polyline = L.Polyline.fromEncoded(points, self.getLineStyle(mode));
+	                    	var polyline = L.Polyline.fromEncoded(points, util.getLineStyle(mode));
 							polyline.addTo(self.map);
 							self.routePolylines.push(polyline);
 	                    }
@@ -346,51 +346,13 @@ define("mapView", [], function() {
 			}
 		}
 		
-		// TODO: add another .js for getting html, style, icon etc.
-        self.getPopupDiv = function(icon, name){
-            return "<img src='{0}' style='width: 20px; float: left; padding-right: 10px'/><span style='font-size: 14px'>{1}</span>".format(icon, name);
-        }
-
-        self.getIcon = function(color){
-            return L.icon({
-                iconUrl: 'css/images/marker-{0}.svg'.format(color),
-                iconSize: [30, 40],
-                popupAnchor: [0, -10],
-                shadowAnchor: [12, 20],
-                shadowUrl: 'css/images/marker-shadow.png',
-            });
-        }
-		
-		self.getIconHtml = function(type){
-			if (type == 'WALKING'){
-				return '<i class="fas fa-walking"></i>';
-			}else if (type == 'RIGHT'){
-				return '<i class="fas fa-angle-right"></i>';
-			} else if (type == 'TRANSIT'){
-				return '<i class="fas fa-subway"></i>';
-			}
-		}
-		
-		self.getTransitNameHtml = function(text){
-			return '<div class="transit-name">{0}</div>'.format(text);
-		}
-		
-		self.getLineStyle = function(mode){
-			if (mode == 'TRANSIT'){
-				return {weight: 4, color: '#f30'};
-			}
-			else if (mode == 'WALKING'){
-				return {weight: 3, color: '#5f6060', dashArray: "10 5",};
-			}
-		}
-		
 		self.showRouteBrief = function(innerHtml){
-			// TODO: layout: transit name position?
+			// TODO: layout: Transit name position?
+			//               Add arrival time
 			$('#map').height('calc(100% - 170px)');
 			$('#route-brief-result').html(innerHtml);
 			$('#route-brief-result').css('display', 'flex');
 		}
-		
     }
     return new MapView();
 });
