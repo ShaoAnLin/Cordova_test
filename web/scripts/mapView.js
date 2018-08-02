@@ -30,7 +30,7 @@ define("mapView", [], function() {
         
         self.eventBinding = function(){
             self.map.on('click', function(e) {
-                console.log("Click: " + e.latlng);
+                console.log("Click: {0}".format(e.latlng));
 				if (!self.routeMode){
 					self.hideSearchResult();
 				}
@@ -112,7 +112,7 @@ define("mapView", [], function() {
 			control._searchfunctionCallBack = self.searchPlace;
             self.map.addControl(control);
 
-            $('#boxcontainer').width($(window).width() - 170 + 'px');
+            $('#boxcontainer').width('{0}px'.format($(window).width() - 170));
             $('#searchboxinput').focus(function(){
                 $('#searchboxinput').attr('placeholder', '輸入地點');
                 var searchbox = new google.maps.places.SearchBox(this, {
@@ -210,7 +210,7 @@ define("mapView", [], function() {
         self.showSearchResult = function(){
             $('#route-search').hide();
             $('#boxcontainer').show();
-			$('#search-result').show();
+			$('#search-result').css('display', 'flex');
             if (self.routeDestinationMarker){
                 $('#map').height('calc(100% - 140px)');
                 $('#searchboxinput').val($('#search-result-title').text());
@@ -348,13 +348,12 @@ define("mapView", [], function() {
 		
 		// TODO: add another .js for getting html, style, icon etc.
         self.getPopupDiv = function(icon, name){
-            return "<img src='" + icon + "' style='width: 20px; float: left; padding-right: 10px'/><span style='font-size: 14px'>"
-                + name + "</span>";
+            return "<img src='{0}' style='width: 20px; float: left; padding-right: 10px'/><span style='font-size: 14px'>{1}</span>".format(icon, name);
         }
 
         self.getIcon = function(color){
             return L.icon({
-                iconUrl: 'css/images/marker-' + color + '.svg',
+                iconUrl: 'css/images/marker-{0}.svg'.format(color),
                 iconSize: [30, 40],
                 popupAnchor: [0, -10],
                 shadowAnchor: [12, 20],
@@ -373,7 +372,7 @@ define("mapView", [], function() {
 		}
 		
 		self.getTransitNameHtml = function(text){
-			return '<div class="transit-name">' + text + '</div>';
+			return '<div class="transit-name">{0}</div>'.format(text);
 		}
 		
 		self.getLineStyle = function(mode){
