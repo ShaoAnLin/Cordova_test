@@ -296,28 +296,28 @@ define("mapView", ['util'], function(util) {
 	                    var steps = response.routes[0].legs[0].steps;
 						var routeBriefHtml = '';
 	                    for (var i = 0; i < steps.length; ++i){
-							var mode = steps[i].travel_mode;
+                            var mode = steps[i].travel_mode,
+                                transitMode = mode;
 							if (steps.length > 7 && mode == 'WALKING'){
 								continue;
 							}
 							if (self.routePolylines.length > 0){
 								routeBriefHtml += util.getIconHtml('RIGHT');
-							}
-	                    	var points = steps[i].polyline.points;
-							routeBriefHtml += util.getIconHtml(mode);
+                            }
 							if (mode == 'TRANSIT'){
-								// TODO: Distinguish transit type, use different color and icon
-								//       Get the type from: steps[i].transit.line.vehicle.type
-								//       Categories: HEAVY_RAIL, BUS, SUBWAY
-								console.log(steps[i].transit.line.vehicle.type);
-							}
+                                console.log(steps[i].transit.line.vehicle.type);
+                                transitMode = steps[i].transit.line.vehicle.type;
+                            }
+	                    	var points = steps[i].polyline.points;
+                            routeBriefHtml += util.getIconHtml(transitMode);
+
 							// TODO: add markers between two transition?
 							if (mode == 'TRANSIT' && steps.length < 5){
-								var shortName = steps[i].transit.line.short_name;
-								// var busName = steps[i].transit.line.name;
-								routeBriefHtml += util.getTransitNameHtml(shortName);
-							}
-	                    	var polyline = L.Polyline.fromEncoded(points, util.getLineStyle(mode));
+                                var shortName = steps[i].transit.line.short_name;
+                                routeBriefHtml += util.getTransitNameHtml(shortName);
+                            }
+
+	                    	var polyline = L.Polyline.fromEncoded(points, util.getLineStyle(transitMode));
 							polyline.addTo(self.map);
 							self.routePolylines.push(polyline);
 	                    }

@@ -443,19 +443,23 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 }
 
 #route-brief-result > .fas{
-	padding: 5px;
+	padding: 3px;
 }
 
 .transit-name{
 	font-size: 20px;
 }
-
 .fa-walking{
 	color: #5f6060;
 }
-
 .fa-subway{
-	color: #f30;
+	color: green;
+}
+.fa-train{
+	color: blue;
+}
+.fa-bus{
+	color: orangered;
 }
 
 /********** Large devices only **********/

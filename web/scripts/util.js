@@ -21,8 +21,12 @@ define("util", [], function() {
 				return '<i class="fas fa-walking"></i>';
 			}else if (type == 'RIGHT'){
 				return '<i class="fas fa-angle-right"></i>';
-			} else if (type == 'TRANSIT'){
+			} else if (type == 'SUBWAY'){
 				return '<i class="fas fa-subway"></i>';
+			} else if (type == 'BUS'){
+				return '<i class="fas fa-bus"></i>';
+			} else if (type == 'HEAVY_RAIL'){
+				return '<i class="fas fa-train"></i>';
 			}
 		}
 		
@@ -31,8 +35,14 @@ define("util", [], function() {
 		}
 		
 		self.getLineStyle = function(mode){
-			if (mode == 'TRANSIT'){
-				return {weight: 4, color: '#f30'};
+			if (mode == 'SUBWAY'){
+				return {weight: 4, color: '#008800'};
+			}
+			else if (mode == 'BUS'){
+				return {weight: 4, color: '#FFA500'};
+			}
+			else if (mode == 'HEAVY_RAIL'){
+				return {weight: 4, color: '#0000FF'};
 			}
 			else if (mode == 'WALKING'){
 				return {weight: 3, color: '#5f6060', dashArray: "10 5",};
