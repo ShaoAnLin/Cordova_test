@@ -1,8 +1,8 @@
 L.Control.Location = L.Control.extend({
     onAdd: function(map) {
         var img = L.DomUtil.create('img');
-        img.src = 'css/images/marker-blue.svg';
-        img.style.width = '20px';
+        img.src = 'css/images/locate-me.svg';
+        img.style.width = '30px';
         img.onclick = function(){
             var geoSuccess = function(pos) {
                 var latlng = L.latLng(pos.coords.latitude, pos.coords.longitude);
