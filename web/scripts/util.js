@@ -38,7 +38,7 @@ define("util", [], function() {
 			return {weight: 4, color: '#008800'};
 		}
 		else if (mode == 'BUS'){
-			return {weight: 4, color: '#FFA500'};
+			return {weight: 4, color: '#FF4500'};
 		}
 		else if (mode == 'HEAVY_RAIL'){
 			return {weight: 4, color: '#0000FF'};
