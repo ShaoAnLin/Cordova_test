@@ -291,40 +291,7 @@ define("mapView", ['util'], function(util) {
 	                travelMode: 'TRANSIT'
 	            }, function(response, status) {
 	                if (status === 'OK') {
-                        // TODO: add markers between two transition?
-	                    console.log(response);
-	                    self.routePolylines = [];
-                        var steps = response.routes[0].legs[0].steps,
-                            routeBriefHtml = '';
-	                    for (var i = 0; i < steps.length; ++i){
-                            var mode = steps[i].travel_mode,
-                                transitMode = mode;
-							if (steps.length > 7 && mode == 'WALKING'){
-								continue;
-							}
-							if (self.routePolylines.length > 0){
-                                routeBriefHtml += util.getIconHtml('RIGHT');
-                            }
-							if (mode == 'TRANSIT'){
-                                console.log(steps[i].transit.line.vehicle.type);
-                                transitMode = steps[i].transit.line.vehicle.type;
-                            }
-
-                            routeBriefHtml += util.getIconHtml(transitMode);
-							if (mode == 'TRANSIT'){
-                                var shortName = steps[i].transit.line.short_name;
-                                routeBriefHtml += util.getTransitNameHtml(shortName);
-                            }
-
-	                    	var points = steps[i].polyline.points;
-	                    	var polyline = L.Polyline.fromEncoded(points, util.getLineStyle(transitMode));
-							polyline.addTo(self.map);
-							self.routePolylines.push(polyline);
-                        }
-                        self.showRouteBrief(routeBriefHtml);
-                        if ($('#route-brief-result')[0].clientHeight > 50){
-                            $('.transit-name').hide();
-                        }
+                        self.routeSearchDone(response);
 	                } else {
 	                    window.alert('Directions request failed due to ' + status);
 	                }
@@ -336,6 +303,49 @@ define("mapView", ['util'], function(util) {
             }
         }
 
+        self.routeSearchDone = function(response){
+            // TODO: (1) Add markers between two transition?
+            //       (2) Show more results
+            //       (3) Show detail result
+            console.log(response);
+            self.routePolylines = [];
+            var steps = response.routes[0].legs[0].steps,
+                duration = response.routes[0].legs[0].duration.text,
+                routeBriefHtml = '';
+            for (var i = 0; i < steps.length; ++i){
+                var mode = steps[i].travel_mode,
+                    transitMode = mode;
+                if (steps.length > 7 && mode == 'WALKING'){
+                    continue;
+                }
+                if (self.routePolylines.length > 0){
+                    routeBriefHtml += util.getIconHtml('RIGHT');
+                }
+                if (mode == 'TRANSIT'){
+                    console.log(steps[i].transit.line.vehicle.type);
+                    transitMode = steps[i].transit.line.vehicle.type;
+                }
+
+                routeBriefHtml += util.getIconHtml(transitMode);
+                if (mode == 'TRANSIT'){
+                    var shortName = steps[i].transit.line.short_name;
+                    routeBriefHtml += util.getTransitNameHtml(shortName);
+                }
+
+                var points = steps[i].polyline.points;
+                var polyline = L.Polyline.fromEncoded(points, util.getLineStyle(transitMode));
+                polyline.addTo(self.map);
+                self.routePolylines.push(polyline);
+            }
+            self.showRouteBrief(routeBriefHtml);
+            if ($('#route-brief-result')[0].scrollHeight > 50){
+                $('.transit-name').hide();
+            } else {
+                $('.transit-name').show();
+            }
+            $('#route-brief-duration').text(duration);
+        }
+
 		self.clearRouteResult = function(){
 			if (self.routePolylines){
 				self.routePolylines.forEach(function(polyline){
@@ -343,18 +353,16 @@ define("mapView", ['util'], function(util) {
 				});
 			}
 			self.routePolylines = [];
-			$('#route-brief-result').hide();
+			$('#route-brief-container').hide();
 			if (self.routeMode){
 				$('#map').height('calc(100% - 120px)');
 			}
 		}
 		
 		self.showRouteBrief = function(innerHtml){
-			// TODO: layout: Transit name position?
-			//               Add arrival time
 			$('#map').height('calc(100% - 170px)');
 			$('#route-brief-result').html(innerHtml);
-			$('#route-brief-result').css('display', 'flex');
+			$('#route-brief-container').show();
 		}
     }
     return new MapView();

@@ -44,7 +44,7 @@ define("util", [], function() {
 			return {weight: 4, color: '#0000FF'};
 		}
 		else if (mode == 'WALKING'){
-			return {weight: 3, color: '#5f6060', dashArray: "10 5",};
+			return {weight: 2, color: '#5f6060', dashArray: "5 10",};
 		}
 	}
     return util;
