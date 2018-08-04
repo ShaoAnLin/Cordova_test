@@ -167,6 +167,10 @@ define("mapView", ['util'], function(util) {
         }
 
         self.searchDone = function(place) {
+            if (self.routeDestinationMarker){
+                self.routeDestinationMarker.remove();
+            }
+
             if (typeof(place.geometry) != "undefined"){
                 self.routeDestination = place;
                 var location = place.geometry.location,
@@ -244,6 +248,10 @@ define("mapView", ['util'], function(util) {
         }
 
         self.originSet = function(place){
+            if (self.routeOriginMarker){
+                self.routeOriginMarker.remove();
+            }
+
             self.routeOrigin = place;
             var location = place.geometry.location,
                 popup = util.getPopupDiv(place.icon, place.name);
@@ -257,6 +265,10 @@ define("mapView", ['util'], function(util) {
         }
 
         self.destinationSet = function(place){
+            if (self.routeDestinationMarker){
+                self.routeDestinationMarker.remove();
+            }
+
             self.routeDestination = place;
             var location = place.geometry.location,
                 popup = util.getPopupDiv(place.icon, place.name);
