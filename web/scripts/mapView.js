@@ -291,10 +291,11 @@ define("mapView", ['util'], function(util) {
 	                travelMode: 'TRANSIT'
 	            }, function(response, status) {
 	                if (status === 'OK') {
+                        // TODO: add markers between two transition?
 	                    console.log(response);
 	                    self.routePolylines = [];
-	                    var steps = response.routes[0].legs[0].steps;
-						var routeBriefHtml = '';
+                        var steps = response.routes[0].legs[0].steps,
+                            routeBriefHtml = '';
 	                    for (var i = 0; i < steps.length; ++i){
                             var mode = steps[i].travel_mode,
                                 transitMode = mode;
@@ -302,26 +303,28 @@ define("mapView", ['util'], function(util) {
 								continue;
 							}
 							if (self.routePolylines.length > 0){
-								routeBriefHtml += util.getIconHtml('RIGHT');
+                                routeBriefHtml += util.getIconHtml('RIGHT');
                             }
 							if (mode == 'TRANSIT'){
                                 console.log(steps[i].transit.line.vehicle.type);
                                 transitMode = steps[i].transit.line.vehicle.type;
                             }
-	                    	var points = steps[i].polyline.points;
-                            routeBriefHtml += util.getIconHtml(transitMode);
 
-							// TODO: add markers between two transition?
-							if (mode == 'TRANSIT' && steps.length < 5){
+                            routeBriefHtml += util.getIconHtml(transitMode);
+							if (mode == 'TRANSIT'){
                                 var shortName = steps[i].transit.line.short_name;
                                 routeBriefHtml += util.getTransitNameHtml(shortName);
                             }
 
+	                    	var points = steps[i].polyline.points;
 	                    	var polyline = L.Polyline.fromEncoded(points, util.getLineStyle(transitMode));
 							polyline.addTo(self.map);
 							self.routePolylines.push(polyline);
-	                    }
-						self.showRouteBrief(routeBriefHtml);
+                        }
+                        self.showRouteBrief(routeBriefHtml);
+                        if ($('#route-brief-result')[0].clientHeight > 50){
+                            $('.transit-name').hide();
+                        }
 	                } else {
 	                    window.alert('Directions request failed due to ' + status);
 	                }
