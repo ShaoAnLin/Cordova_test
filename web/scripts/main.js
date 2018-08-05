@@ -16,7 +16,8 @@ requirejs.config({
             'lib/Leaflet.GoogleMutant',
             'lib/Polyline.encoded',
             'lib/_JavascriptStrings',
-            'async!https://maps.googleapis.com/maps/api/js?key=AIzaSyC4BOUHAJHQLFcg4OPRvvF3SeTsGThYZZs&libraries=geometry,places']
+            'async!https://maps.googleapis.com/maps/api/js?key=AIzaSyC4BOUHAJHQLFcg4OPRvvF3SeTsGThYZZs&libraries=geometry,places'],
+        'util': ['lib/_JavascriptStrings']
     }
 });
 
