@@ -8,7 +8,8 @@ define("mapView", ['util'], function(util) {
             routeDestinationMarker = null,
             routeOrigin = null,
             routeDestination = null,
-			routePolylines = [];
+			routePolylines = [],
+			transitMarkers = [];
 
         self.init = function(){
             var mapOptions = {
@@ -316,11 +317,11 @@ define("mapView", ['util'], function(util) {
         }
 
         self.routeSearchDone = function(response){
-            // TODO: (1) Add markers between two transition?
-            //       (2) Show more results
-            //       (3) Show detail result
+            // TODO: (1) Show more results
+            //       (2) Show detail result
             console.log(response);
             self.routePolylines = [];
+			self.transitMarkers = [];
             var steps = response.routes[0].legs[0].steps,
                 duration = response.routes[0].legs[0].duration.text,
                 routeBriefHtml = '';
@@ -336,6 +337,11 @@ define("mapView", ['util'], function(util) {
                 if (mode == 'TRANSIT'){
                     console.log(steps[i].transit.line.vehicle.type);
                     transitMode = steps[i].transit.line.vehicle.type;
+					// TODO: bind popup and show transit details!
+					var transitMarker = L.marker([steps[i].start_location.lat(), steps[i].start_location.lng()],
+						{icon: util.getTransitIcon(transitMode)});
+					transitMarker.addTo(self.map);
+					self.transitMarkers.push(transitMarker);
                 }
 
                 routeBriefHtml += util.getIconHtml(transitMode);
@@ -365,6 +371,12 @@ define("mapView", ['util'], function(util) {
 				});
 			}
 			self.routePolylines = [];
+			if (self.transitMarkers){
+				self.transitMarkers.forEach(function(marker){
+					marker.remove();
+				});
+			}
+			self.transitMarkers = [];
 			$('#route-brief-container').hide();
 			if (self.routeMode){
 				$('#map').height('calc(100% - 120px)');
@@ -379,3 +391,6 @@ define("mapView", ['util'], function(util) {
     }
     return new MapView();
 });
+
+// TODO list:
+// 1. Able to zoom in/out (either by adding zoom control or enable double click to zoom in?)

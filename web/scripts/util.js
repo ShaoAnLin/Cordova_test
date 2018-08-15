@@ -11,7 +11,17 @@ define("util", [], function() {
 			iconSize: [30, 40],
 			popupAnchor: [0, -10],
 			shadowAnchor: [12, 20],
-			shadowUrl: 'css/images/marker-shadow.png',
+			shadowUrl: 'css/images/marker-shadow.png'
+		});
+	}
+	
+	util.getTransitIcon = function(type){
+		return L.icon({
+			iconUrl: 'css/images/marker-transit-{0}.svg'.format(type),
+			iconSize: [20, 20],
+			popupAnchor: [0, -10]
+			//shadowAnchor: [12, 20],
+			//shadowUrl: 'css/images/marker-shadow.png',
 		});
 	}
 	
