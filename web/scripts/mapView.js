@@ -335,9 +335,22 @@ define("mapView", ['util'], function(util) {
                     routeBriefHtml += util.getIconHtml('RIGHT');
                 }
                 if (mode == 'TRANSIT'){
-                    console.log(steps[i].transit.line.vehicle.type);
                     transitMode = steps[i].transit.line.vehicle.type;
+                    console.log(transitMode);
+                    console.log(steps[i]);
 					// TODO: bind popup and show transit details!
+					var shortName = steps[i].transit.line.short_name,
+						name = steps[i].transit.line.name,
+						departureStop = steps[i].transit.departure_stop.name,
+						departureTime = steps[i].transit.departure_time.text,
+						arrivalStop = steps[i].transit.arrival_stop.name,
+						arrivalTime = steps[i].transit.arrival_time.text;
+					console.log(shortName);
+					console.log(name);
+					console.log(departureStop);
+					console.log(departureTime);
+					console.log(arrivalStop);
+					console.log(arrivalTime);
 					var transitMarker = L.marker([steps[i].start_location.lat(), steps[i].start_location.lng()],
 						{icon: util.getTransitIcon(transitMode)});
 					transitMarker.addTo(self.map);

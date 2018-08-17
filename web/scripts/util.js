@@ -4,6 +4,13 @@ define("util", [], function() {
 	util.getPopupDiv = function(icon, name){
 		return "<img src='{0}' style='width: 20px; float: left; padding-right: 10px'/><span style='font-size: 14px'>{1}</span>".format(icon, name);
 	}
+	
+	// TODO
+	util.getTransitPopupDiv = function(){
+		return "<div id='transit-popup-title'></div><span id='transit-popup-name'></span>" +
+			"<div style='font-size: 14px'><div id='transit-popup-departure'><span id='transit-popup-dep-stop'></span><span id='transit-popup-dep-time'></span></div>" +
+			"<div id='transit-popup-arrival'><span id='transit-popup-arr-stop'></span><span id='transit-popup-arr-time'></span></div></div>";
+	}
 
 	util.getIcon = function(color){
 		return L.icon({
@@ -20,8 +27,6 @@ define("util", [], function() {
 			iconUrl: 'css/images/marker-transit-{0}.svg'.format(type),
 			iconSize: [20, 20],
 			popupAnchor: [0, -10]
-			//shadowAnchor: [12, 20],
-			//shadowUrl: 'css/images/marker-shadow.png',
 		});
 	}
 	
