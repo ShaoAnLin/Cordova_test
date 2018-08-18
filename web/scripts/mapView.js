@@ -338,21 +338,22 @@ define("mapView", ['util'], function(util) {
                     transitMode = steps[i].transit.line.vehicle.type;
                     console.log(transitMode);
                     console.log(steps[i]);
-					// TODO: bind popup and show transit details!
-					var shortName = steps[i].transit.line.short_name,
-						name = steps[i].transit.line.name,
-						departureStop = steps[i].transit.departure_stop.name,
-						departureTime = steps[i].transit.departure_time.text,
-						arrivalStop = steps[i].transit.arrival_stop.name,
-						arrivalTime = steps[i].transit.arrival_time.text;
-					console.log(shortName);
-					console.log(name);
-					console.log(departureStop);
-					console.log(departureTime);
-					console.log(arrivalStop);
-					console.log(arrivalTime);
+					var transit = {
+                        mode: transitMode,
+                        title: steps[i].transit.line.short_name,
+						name: steps[i].transit.line.name,
+						depStop: steps[i].transit.departure_stop.name,
+						depTime: steps[i].transit.departure_time.text,
+						arrStop: steps[i].transit.arrival_stop.name,
+                        arrTime: steps[i].transit.arrival_time.text
+                    };
+                    var popup = util.getTransitPopupDiv(transit);
 					var transitMarker = L.marker([steps[i].start_location.lat(), steps[i].start_location.lng()],
-						{icon: util.getTransitIcon(transitMode)});
+                        {icon: util.getTransitIcon(transitMode)})
+                        .bindPopup(popup, {minWidth : $(window).width() - 80})
+                        .on('popupopen', function (popup) {
+                            console.log('transit popup');
+                        });
 					transitMarker.addTo(self.map);
 					self.transitMarkers.push(transitMarker);
                 }

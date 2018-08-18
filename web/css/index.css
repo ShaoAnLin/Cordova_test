@@ -460,6 +460,39 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 	padding: 12px 3px 12px 3px;
 }
 
+/* Transit popup */
+#transit-popup-title{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#transit-popup-short-name{
+    font-size: 24px;
+    padding: 0px 10px 0px 10px;
+}
+
+#transit-popup-name{
+    font-size: 20px;
+}
+
+#transit-popup-detail{
+    font-size: 20px;
+}
+
+.popup-row{
+    display: flex;
+    flex-direction: row;
+}
+
+#transit-popup-dep-time{
+    width: 100px;
+}
+
+#transit-popup-arr-time{
+    width: 100px;
+}
+
 .transit-name{
 	font-size: 16px;
 	padding: 12px 3px 12px 3px;
@@ -484,6 +517,11 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 .fa-bus{
 	color: orangered;
 	font-size: 18px;
+}
+.fa-angle-double-down{
+    color: blue;
+    font-size: 18px;
+    margin-left: 100px;
 }
 
 /********** Large devices only **********/
