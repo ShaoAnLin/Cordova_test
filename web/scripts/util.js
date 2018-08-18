@@ -10,18 +10,24 @@ define("util", [], function() {
 					<div id='transit-popup-short-name'>{1}</div>\
 					<div id='transit-popup-name'>{2}</div>\
 				</div>\
+				<div id='transit-popup-instruction'>{3}</div>\
 				<div id='transit-popup-detail'>\
 					<div id='transit-popup-departure' class='popup-row'>\
-						<span id='transit-popup-dep-time'>{3}</span>\
-						<span id='transit-popup-dep-stop'>{4}</span>\
+						<span id='transit-popup-dep-time'>{4}</span>\
+						<span id='transit-popup-dep-stop'>{5}</span>\
 					</div>\
+					<div id='transit-popup-duration'>{6}</div>\
 					<i class='fas fa-angle-double-down'></i>\
 					<div id='transit-popup-arrival' class='popup-row'>\
-						<span id='transit-popup-arr-time'>{5}</span>\
-						<span id='transit-popup-arr-stop'>{6}</span>\
+						<span id='transit-popup-arr-time'>{7}</span>\
+						<span id='transit-popup-arr-stop'>{8}</span>\
 					</div>\
-				</div>".format(this.getIconHtml(transit.mode), transit.title, transit.name,
-							   transit.depTime, transit.depStop, transit.arrTime, transit.arrStop);
+				</div>".format(this.getIconHtml(transit.mode),
+					transit.title, transit.name,
+					transit.instruction,
+					transit.depTime, transit.depStop,
+					transit.duration,
+					transit.arrTime, transit.arrStop);
 	}
 
 	util.getIcon = function(color){
@@ -74,7 +80,7 @@ define("util", [], function() {
 			return {weight: 4, color: '#0000FF'};
 		}
 		else if (mode == 'WALKING'){
-			return {weight: 2, color: '#5f6060', dashArray: "5 10",};
+			return {weight: 4, color: '#5f6060', dashArray: '10 15', lineCap: 'round'};
 		}
 	}
     return util;

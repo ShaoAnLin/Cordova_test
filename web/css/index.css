@@ -476,11 +476,25 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     font-size: 20px;
 }
 
+#transit-popup-instruction{
+    color: dimgray;
+    font-size: 20px;
+    margin: 10px 0px 10px 0;
+}
+
 #transit-popup-detail{
     font-size: 20px;
 }
 
+#transit-popup-duration{
+    color: dimgray;
+    font-size: 16px;
+    float: left;
+    padding: 5px 20px 5px 50px;
+}
+
 .popup-row{
+    clear: both;
     display: flex;
     flex-direction: row;
 }
@@ -521,7 +535,6 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 .fa-angle-double-down{
     color: blue;
     font-size: 18px;
-    margin-left: 100px;
 }
 
 /********** Large devices only **********/

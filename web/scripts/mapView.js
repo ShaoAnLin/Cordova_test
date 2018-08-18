@@ -341,7 +341,9 @@ define("mapView", ['util'], function(util) {
 					var transit = {
                         mode: transitMode,
                         title: steps[i].transit.line.short_name,
-						name: steps[i].transit.line.name,
+                        name: steps[i].transit.line.name,
+                        instruction: steps[i].instructions,
+                        duration: steps[i].duration.text,
 						depStop: steps[i].transit.departure_stop.name,
 						depTime: steps[i].transit.departure_time.text,
 						arrStop: steps[i].transit.arrival_stop.name,
