@@ -4,7 +4,7 @@ define("util", [], function() {
 	util.transitDict = {
 		'BUS': '公車',
 		'SUBWAY': '捷運',
-		'HEACY_RAIL': '火車'
+		'HEAVY_RAIL': '火車'
 	}
 	
 	util.getPopupDiv = function(icon, name){
@@ -15,7 +15,8 @@ define("util", [], function() {
 	}
 	
 	util.getTransitPopupDiv = function(transit){
-		var instruction = '{0} 開往 {1}'.format(this.transitDict[transit.mode], transit.headsign);
+		var name = transit.name == null ? '' : transit.name,
+			instruction = '{0} 開往 {1}'.format(this.transitDict[transit.mode], transit.headsign);
 		return "<div id='transit-popup-title'>{0}\
 					<div id='transit-popup-short-name'>{1}</div>\
 					<div id='transit-popup-name'>{2}</div>\
@@ -33,7 +34,7 @@ define("util", [], function() {
 						<span id='transit-popup-arr-stop'>{8}</span>\
 					</div>\
 				</div>".format(this.getIconHtml(transit.mode),
-					transit.title, transit.name,
+					transit.title, name,
 					instruction,
 					transit.depTime, transit.depStop,
 					transit.duration,

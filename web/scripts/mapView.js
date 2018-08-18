@@ -261,7 +261,7 @@ define("mapView", ['util'], function(util) {
             var location = place.geometry.location,
                 popup = util.getPopupDiv(place.icon, place.name);
             self.routeOriginMarker = L.marker([location.lat(), location.lng()], {icon: util.getIcon('green')})
-                .bindPopup(popup, {minWidth : 100})
+                .bindPopup(popup, {minWidth : 150})
                 .on('popupopen', function (popup) {
                     console.log('origin!');
             });;
@@ -278,7 +278,7 @@ define("mapView", ['util'], function(util) {
             var location = place.geometry.location,
                 popup = util.getPopupDiv(place.icon, place.name);
             self.routeDestinationMarker = L.marker([location.lat(), location.lng()], {icon: util.getIcon('red')})
-                .bindPopup(popup, {minWidth : 100})
+                .bindPopup(popup, {minWidth : 150})
                 .on('popupopen', function (popup) {
                     console.log('desination!');
             });;
@@ -413,16 +413,21 @@ define("mapView", ['util'], function(util) {
 		self.showRouteBrief = function(innerHtml){
 			$('#map').height('calc(100% - 170px)');
 			$('#route-brief-result').html(innerHtml);
-			$('#route-brief-container').show();
+            $('#route-brief-container').show();
+            $('#route-brief-container').on('click', function(){
+                $('#route-complete-detail').show();
+                $('#route-complete-detail').animate({'top': '120px'})
+            });
         }
         
         self.bindTransitBriefEvent = function(){
             for (var i = 0; i < self.routePolylines.length; i++){
-                $('#transit-step-' + i).click({id: i}, function(element){
+                $('#transit-step-' + i).click({id: i}, function(e){
+                    e.stopPropagation();
                     self.map.closePopup();
-                    self.map.flyToBounds(self.routePolylines[element.data.id].getBounds(), {duration: 0.5})
+                    self.map.flyToBounds(self.routePolylines[e.data.id].getBounds(), {duration: 0.5})
                     .once('moveend zoomend', function() {
-                        var idx = self.transitIdMap.indexOf(element.data.id);
+                        var idx = self.transitIdMap.indexOf(e.data.id);
                         if (idx != -1){
                             self.transitMarkers[idx].openPopup();
                         }
@@ -433,6 +438,3 @@ define("mapView", ['util'], function(util) {
     }
     return new MapView();
 });
-
-// TODO list:
-// 1. Able to zoom in/out (either by adding zoom control or enable double click to zoom in?)

@@ -433,6 +433,18 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     font-size: 20px;
 }
 
+/* Route detail */
+#route-complete-detail{
+    display: none;
+    position: absolute;
+    /* top: 120px; */
+    z-index: 1000;
+    background-color: white;
+    width: calc(100% - 40px);
+    height: calc(100% - 210px);
+    padding: 20px;
+}
+
 /* Route brief */
 #route-brief-container{
     display: none;
