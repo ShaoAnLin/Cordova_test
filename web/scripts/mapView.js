@@ -4,6 +4,7 @@ define("mapView", ['util'], function(util) {
             map = null,
             locateMe = null,
             routeMode = false,
+            detailMode = false,
             routeOriginMarker = null,
             routeDestinationMarker = null,
             routeOrigin = null,
@@ -215,17 +216,22 @@ define("mapView", ['util'], function(util) {
             return L.latLngBounds(L.latLng(viewport.f.b, viewport.b.b),
                                   L.latLng(viewport.f.f, viewport.b.f));
         }
+
+        self.setMapHeight = function(height){
+            $('#map').height(height);
+            setTimeout(function(){ self.map.invalidateSize()}, 100);
+        }
         
         self.showSearchResult = function(){
             $('#route-search').hide();
             $('#boxcontainer').show();
 			$('#search-result').css('display', 'flex');
             if (self.routeDestinationMarker){
-                $('#map').height('calc(100% - 140px)');
+                self.setMapHeight('calc(100% - 140px)');
                 $('#searchboxinput').val($('#search-result-title').text());
             }
             else{
-                $('#map').height('100%');
+                self.setMapHeight('100%');
             }
             if (self.routeOriginMarker){
                 self.routeOriginMarker.remove();
@@ -235,10 +241,10 @@ define("mapView", ['util'], function(util) {
 
         self.hideSearchResult = function(){
             if (self.routeMode){
-                $('#map').height('calc(100% - 120px)');
+                self.setMapHeight('calc(100% - 120px)');
             }
             else{
-                $('#map').height('100%');
+                self.setMapHeight('100%');
             }
 			$('#search-result').hide();
             $('#searchboxinput').val('');
@@ -406,17 +412,20 @@ define("mapView", ['util'], function(util) {
             self.transitIdMap = [];
 			$('#route-brief-container').hide();
 			if (self.routeMode){
-				$('#map').height('calc(100% - 120px)');
+				self.setMapHeight('calc(100% - 120px)');
 			}
 		}
 		
 		self.showRouteBrief = function(innerHtml){
-			$('#map').height('calc(100% - 170px)');
+			self.setMapHeight('calc(100% - 170px)');
 			$('#route-brief-result').html(innerHtml);
             $('#route-brief-container').show();
             $('#route-brief-container').on('click', function(){
+                self.detailMode = true;
+                $('#route-search').hide();
+                self.setMapHeight('250px');
                 $('#route-complete-detail').show();
-                $('#route-complete-detail').animate({'top': '120px'})
+                $('#route-complete-detail').animate({'top': '250px'})
             });
         }
         
@@ -428,7 +437,7 @@ define("mapView", ['util'], function(util) {
                     self.map.flyToBounds(self.routePolylines[e.data.id].getBounds(), {duration: 0.5})
                     .once('moveend zoomend', function() {
                         var idx = self.transitIdMap.indexOf(e.data.id);
-                        if (idx != -1){
+                        if (idx != -1 && !self.detailMode){
                             self.transitMarkers[idx].openPopup();
                         }
                     });
