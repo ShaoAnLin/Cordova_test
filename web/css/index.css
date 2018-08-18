@@ -434,7 +434,6 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 }
 
 /* Route brief */
-
 #route-brief-container{
     display: none;
     width: 100%;
@@ -551,6 +550,17 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 .fa-angle-double-down{
     color: blue;
     font-size: 18px;
+}
+
+/* Toast js */
+.toastjs-container{
+    z-index: 1000 !important;
+}
+.toastjs-btn.toastjs-btn--close{
+    display: none !important;
+}
+.toastjs{
+    padding: 10px 15px 10px 15px !important;
 }
 
 /********** Large devices only **********/

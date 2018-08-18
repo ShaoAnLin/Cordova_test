@@ -35,7 +35,10 @@ define("mapView", ['util'], function(util) {
                 console.log("Click: {0}".format(e.latlng));
 				if (!self.routeMode){
 					self.hideSearchResult();
-				}
+                }
+                if ($('.toastjs.danger').length > 0){
+                    $('.toastjs-btn--close').click();
+                }
             });
             
             $('#navigate').on('click', function(){
@@ -307,7 +310,7 @@ define("mapView", ['util'], function(util) {
 	                if (status === 'OK') {
                         self.routeSearchDone(response);
 	                } else {
-	                    window.alert('Directions request failed due to ' + status);
+                        new Toast({message: '找不到路線!', type: 'danger'});
 	                }
 	            });
             }
