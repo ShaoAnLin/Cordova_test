@@ -433,6 +433,8 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     font-size: 20px;
 }
 
+/* Route brief */
+
 #route-brief-container{
     display: none;
     width: 100%;
@@ -445,6 +447,7 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     flex-direction: row;
     text-align: center;
     display: flex;
+    flex-wrap: wrap;
     float: left;
 }
 
@@ -458,6 +461,13 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 
 #route-brief-result > .fas{
 	padding: 12px 3px 12px 3px;
+}
+
+.transit-brief-element{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 44px;
 }
 
 /* Transit popup */
@@ -497,6 +507,12 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     clear: both;
     display: flex;
     flex-direction: row;
+}
+
+.popup-icon{
+    padding-right: 10px;
+    width: auto;
+    height: 30px;
 }
 
 #transit-popup-dep-time{

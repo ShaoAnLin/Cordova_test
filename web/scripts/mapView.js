@@ -9,7 +9,8 @@ define("mapView", ['util'], function(util) {
             routeOrigin = null,
             routeDestination = null,
 			routePolylines = [],
-			transitMarkers = [];
+            transitMarkers = [],
+            transitIdMap = [];
 
         self.init = function(){
             var mapOptions = {
@@ -179,7 +180,7 @@ define("mapView", ['util'], function(util) {
                 
                 var popup = util.getPopupDiv(place.icon, place.name);
                 self.routeDestinationMarker = L.marker([location.lat(), location.lng()], {icon: util.getIcon('red')})
-                    .bindPopup(popup, {minWidth : 100})
+                    .bindPopup(popup, {minWidth : 150})
                     .on('popupopen', function (popup) {
 						if (!self.routeMode){
 							self.showSearchResult();
@@ -321,7 +322,8 @@ define("mapView", ['util'], function(util) {
             //       (2) Show detail result
             console.log(response);
             self.routePolylines = [];
-			self.transitMarkers = [];
+            self.transitMarkers = [];
+            self.transitIdMap = [];
             var steps = response.routes[0].legs[0].steps,
                 duration = response.routes[0].legs[0].duration.text,
                 routeBriefHtml = '';
@@ -342,7 +344,7 @@ define("mapView", ['util'], function(util) {
                         mode: transitMode,
                         title: steps[i].transit.line.short_name,
                         name: steps[i].transit.line.name,
-                        instruction: steps[i].instructions,
+                        headsign: steps[i].transit.headsign,
                         duration: steps[i].duration.text,
 						depStop: steps[i].transit.departure_stop.name,
 						depTime: steps[i].transit.departure_time.text,
@@ -356,22 +358,27 @@ define("mapView", ['util'], function(util) {
                         .on('popupopen', function (popup) {
                             console.log('transit popup');
                         });
-					transitMarker.addTo(self.map);
-					self.transitMarkers.push(transitMarker);
+                    transitMarker.addTo(self.map);
+                    self.transitIdMap.push(i);
+                    self.transitMarkers.push(transitMarker);
+                    var briefId = 'transit-step-' + i;
+                    routeBriefHtml += "<div id='{0}' class='transit-brief-element'>{1}{2}</div>"
+                        .format(briefId,
+                            util.getIconHtml(transitMode),
+                            util.getTransitNameHtml(transit.title));
+                } else{
+                    var briefId = 'transit-step-' + i;
+                    routeBriefHtml += "<div id='{0}' class='transit-brief-element'>{1}</div>"
+                        .format(briefId, util.getIconHtml(transitMode));
                 }
 
-                routeBriefHtml += util.getIconHtml(transitMode);
-                if (mode == 'TRANSIT'){
-                    var shortName = steps[i].transit.line.short_name;
-                    routeBriefHtml += util.getTransitNameHtml(shortName);
-                }
-
-                var points = steps[i].polyline.points;
-                var polyline = L.Polyline.fromEncoded(points, util.getLineStyle(transitMode));
+                var points = steps[i].polyline.points,
+                    polyline = L.Polyline.fromEncoded(points, util.getLineStyle(transitMode));
                 polyline.addTo(self.map);
                 self.routePolylines.push(polyline);
             }
             self.showRouteBrief(routeBriefHtml);
+            self.bindTransitBriefEvent();
             if ($('#route-brief-result')[0].scrollHeight > 50){
                 $('.transit-name').hide();
             } else {
@@ -392,7 +399,8 @@ define("mapView", ['util'], function(util) {
 					marker.remove();
 				});
 			}
-			self.transitMarkers = [];
+            self.transitMarkers = [];
+            self.transitIdMap = [];
 			$('#route-brief-container').hide();
 			if (self.routeMode){
 				$('#map').height('calc(100% - 120px)');
@@ -403,7 +411,22 @@ define("mapView", ['util'], function(util) {
 			$('#map').height('calc(100% - 170px)');
 			$('#route-brief-result').html(innerHtml);
 			$('#route-brief-container').show();
-		}
+        }
+        
+        self.bindTransitBriefEvent = function(){
+            for (var i = 0; i < self.routePolylines.length; i++){
+                $('#transit-step-' + i).click({id: i}, function(element){
+                    self.map.closePopup();
+                    self.map.flyToBounds(self.routePolylines[element.data.id].getBounds(), {duration: 0.5})
+                    .once('moveend zoomend', function() {
+                        var idx = self.transitIdMap.indexOf(element.data.id);
+                        if (idx != -1){
+                            self.transitMarkers[idx].openPopup();
+                        }
+                    });
+                });
+            }
+        }
     }
     return new MapView();
 });

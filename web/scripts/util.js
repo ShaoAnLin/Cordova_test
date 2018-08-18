@@ -1,11 +1,21 @@
 define("util", [], function() {
 	var util = {};
+
+	util.transitDict = {
+		'BUS': '公車',
+		'SUBWAY': '捷運',
+		'HEACY_RAIL': '火車'
+	}
 	
 	util.getPopupDiv = function(icon, name){
-		return "<img src='{0}' style='width: 20px; float: left; padding-right: 10px'/><span style='font-size: 14px'>{1}</span>".format(icon, name);
+		return "<div class='popup-row'>\
+					<div style='float: left;'><img class='popup-icon' src='{0}'/></div>\
+					<span style='font-size: 22px'>{1}</span>\
+				</div>".format(icon, name);
 	}
 	
 	util.getTransitPopupDiv = function(transit){
+		var instruction = '{0} 開往 {1}'.format(this.transitDict[transit.mode], transit.headsign);
 		return "<div id='transit-popup-title'>{0}\
 					<div id='transit-popup-short-name'>{1}</div>\
 					<div id='transit-popup-name'>{2}</div>\
@@ -24,7 +34,7 @@ define("util", [], function() {
 					</div>\
 				</div>".format(this.getIconHtml(transit.mode),
 					transit.title, transit.name,
-					transit.instruction,
+					instruction,
 					transit.depTime, transit.depStop,
 					transit.duration,
 					transit.arrTime, transit.arrStop);
