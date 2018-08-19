@@ -311,7 +311,7 @@ define("mapView", ['util'], function(util) {
             }
             if (points.length == 2){
                 self.routeBound = new L.LatLngBounds(points);
-                self.map.fitBounds(self.routeBound, {padding: [5, 5]});
+                self.map.fitBounds(self.routeBound, {padding: [50, 50]});
                 
 	            var directionsService = new google.maps.DirectionsService;
 	            directionsService.route({
@@ -464,7 +464,8 @@ define("mapView", ['util'], function(util) {
                 $('#transit-step-' + i).click({id: i}, function(e){
                     e.stopPropagation();
                     self.map.closePopup();
-                    self.map.flyToBounds(self.routePolylines[e.data.id].getBounds(), {duration: 0.5})
+                    self.map.flyToBounds(self.routePolylines[e.data.id].getBounds(), 
+                        {duration: 0.5, padding: [50, 50]})
                     .once('moveend zoomend', function() {
                         var idx = self.transitIdMap.indexOf(e.data.id);
                         if (idx != -1 && !self.detailMode){
@@ -488,7 +489,7 @@ define("mapView", ['util'], function(util) {
                     duration: 800,
                     complete: function(){
                         self.setMapHeight('250px');
-                        self.map.fitBounds(self.routeBound, {maxZoom: 18});
+                        self.map.fitBounds(self.routeBound, {maxZoom: 18, padding: [50, 50]});
                     }
                 }
             );

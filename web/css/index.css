@@ -384,6 +384,8 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 #route-search-back {
     color: white;
     font-size: 20px;
+    margin-top: 15px;
+    padding: 10px;
 }
 
 .route-icon {
@@ -397,9 +399,9 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     font-size: 14px;
 }
 .route-input {
-    width: calc(100% - 55px);
+    width: calc(100% - 45px);
 	font-size: 16px;
-    padding: 5px 0px 5px 0px;
+    padding: 7px 0px 5px 0px;
     color: white;
     float: left;
 }
@@ -431,6 +433,8 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 #route-search-switch {
     color: white;
     font-size: 20px;
+    margin-top: 50px;
+    padding: 10px;
 }
 
 /* Route detail */
@@ -487,12 +491,8 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 #route-brief-button{
     width: 20px;
     float: right;
-    font-size: 8px;
+    font-size: 12px;
     color: dimgray;
-}
-
-#route-brief-result > .fas{
-	padding: 12px 3px 12px 3px;
 }
 
 .transit-brief-element{
@@ -500,6 +500,8 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     flex-direction: row;
     align-items: center;
     height: 44px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 /* Transit popup */
@@ -517,6 +519,7 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 
 .transit-name{
     font-size: 16px;
+    padding-left: 3px;
 }
 
 .transit-instruction{
@@ -540,7 +543,7 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 }
 
 .transit-duration{
-    min-width: 60px;
+    min-width: 50px;
     padding-right: 10px;
 }
 
@@ -568,7 +571,7 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 .fa-angle-right{
 	color: #A9A9A9;
 	font-size: 14px;
-	padding: 15px 3px 15px 3px !important;
+	padding-top: 15px !important;
 }
 .fa-walking{
 	color: #5f6060;
