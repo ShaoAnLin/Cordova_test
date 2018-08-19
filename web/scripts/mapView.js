@@ -12,7 +12,9 @@ define("mapView", ['util'], function(util) {
             routeBound = null,
 			routePolylines = [],
             transitMarkers = [],
-            transitIdMap = [];
+            transitIdMap = [],
+            stepDetails = [],
+            routeSummary = null;
 
         self.init = function(){
             var mapOptions = {
@@ -337,9 +339,18 @@ define("mapView", ['util'], function(util) {
             self.routePolylines = [];
             self.transitMarkers = [];
             self.transitIdMap = [];
-            var steps = response.routes[0].legs[0].steps,
-                duration = response.routes[0].legs[0].duration.text,
+            self.stepDetails = [];
+            var leg = response.routes[0].legs[0],
+                steps = leg.steps,
                 routeBriefHtml = '';
+            self.routeSummary = {
+                startPos: $('#route-origin-input').val(),
+                startTime: leg.departure_time == null ? '' : leg.departure_time.text,
+                endPos: $('#route-destination-input').val(),
+                endTime: leg.arrival_time == null ? '' : leg.arrival_time.text,
+                distance: leg.distance.text,
+                duration: leg.duration.text
+            };
             for (var i = 0; i < steps.length; ++i){
                 var mode = steps[i].travel_mode,
                     transitMode = mode;
@@ -349,22 +360,28 @@ define("mapView", ['util'], function(util) {
                 if (self.routePolylines.length > 0){
                     routeBriefHtml += util.getIconHtml('RIGHT');
                 }
+                var step = {
+                    mode: mode,
+                    instruction: steps[i].instructions,
+                    distance: steps[i].distance.text,
+                    duration: steps[i].duration.text
+                };
                 if (mode == 'TRANSIT'){
                     transitMode = steps[i].transit.line.vehicle.type;
                     console.log(transitMode);
                     console.log(steps[i]);
-					var transit = {
-                        mode: transitMode,
-                        title: steps[i].transit.line.short_name,
-                        name: steps[i].transit.line.name,
-                        headsign: steps[i].transit.headsign,
-                        duration: steps[i].duration.text,
-						depStop: steps[i].transit.departure_stop.name,
-						depTime: steps[i].transit.departure_time.text,
-						arrStop: steps[i].transit.arrival_stop.name,
-                        arrTime: steps[i].transit.arrival_time.text
-                    };
-                    var popup = util.getTransitPopupDiv(transit);
+                    step.mode = transitMode;
+                    step.title = steps[i].transit.line.short_name;
+                    step.name = steps[i].transit.line.name;
+                    step.instruction = steps[i].transit.headsign;
+					step.depStop = steps[i].transit.departure_stop.name;
+					step.depTime = steps[i].transit.departure_time.text;
+					step.arrStop = steps[i].transit.arrival_stop.name;
+                    step.arrTime = steps[i].transit.arrival_time.text;
+                    self.transitIdMap.push(i);
+                    self.stepDetails.push(step);
+
+                    var popup = util.getTransitPopupDiv(step);
 					var transitMarker = L.marker([steps[i].start_location.lat(), steps[i].start_location.lng()],
                         {icon: util.getTransitIcon(transitMode)})
                         .bindPopup(popup, {minWidth : $(window).width() - 80})
@@ -372,17 +389,16 @@ define("mapView", ['util'], function(util) {
                             console.log('transit popup');
                         });
                     transitMarker.addTo(self.map);
-                    self.transitIdMap.push(i);
                     self.transitMarkers.push(transitMarker);
-                    var briefId = 'transit-step-' + i;
+
                     routeBriefHtml += "<div id='{0}' class='transit-brief-element'>{1}{2}</div>"
-                        .format(briefId,
+                        .format('transit-step-' + i,
                             util.getIconHtml(transitMode),
-                            util.getTransitNameHtml(transit.title));
+                            util.getTransitNameHtml(step.title));
                 } else{
-                    var briefId = 'transit-step-' + i;
                     routeBriefHtml += "<div id='{0}' class='transit-brief-element'>{1}</div>"
-                        .format(briefId, util.getIconHtml(transitMode));
+                        .format('transit-step-' + i, util.getIconHtml(transitMode));
+                    self.stepDetails.push(step);
                 }
 
                 var points = steps[i].polyline.points,
@@ -397,7 +413,7 @@ define("mapView", ['util'], function(util) {
             } else {
                 $('.transit-name').show();
             }
-            $('#route-brief-duration').text(duration);
+            $('#route-brief-duration').text(self.routeSummary.duration);
         }
 
 		self.clearRouteResult = function(){
@@ -415,6 +431,8 @@ define("mapView", ['util'], function(util) {
             self.routeBound = null;
             self.transitMarkers = [];
             self.transitIdMap = [];
+            self.stepDetails = [];
+            self.routeSummary = null;
 			$('#route-brief-container').hide();
 			if (self.routeMode){
 				self.setMapHeight('calc(100% - 120px)');
@@ -425,7 +443,8 @@ define("mapView", ['util'], function(util) {
 			self.setMapHeight('calc(100% - 170px)');
 			$('#route-brief-result').html(innerHtml);
             $('#route-brief-container').show();
-            $('#route-brief-container').on('click', function(){
+            $('#route-brief-container').on('click', function(e){
+                e.stopPropagation();
                 if (self.detailMode){
                     self.hideRouteDetail();
                 } else{
@@ -453,6 +472,7 @@ define("mapView", ['util'], function(util) {
         self.showRouteDetail = function(){
             self.detailMode = true;
             self.map.closePopup();
+            $('#route-detail').html(util.getRouteDetailDiv(self.routeSummary, self.stepDetails));
             $('#route-search').hide();
             $('#route-detail').show();
             $('#route-detail').animate(
