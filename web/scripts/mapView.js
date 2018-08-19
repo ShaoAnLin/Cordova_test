@@ -23,7 +23,7 @@ define("mapView", ['util'], function(util) {
 			self.map = L.map('map', mapOptions).setView([25.0879,121.5858], 10);
 			L.gridLayer.googleMutant({
                 minZoom: 3,
-				maxZoom: 24,
+				maxZoom: 22,
 				type:'roadmap'
             }).addTo(self.map);
 
@@ -36,7 +36,7 @@ define("mapView", ['util'], function(util) {
         
         self.eventBinding = function(){
             self.map.on('click', function(e) {
-                console.log("Click: {0}".format(e.latlng));
+                console.log("Click: {0}, zoom: {1}".format(e.latlng, self.map.getZoom()));
 				if (self.detailMode){
                     self.hideRouteDetail();
                 } else if (!self.routeMode){
@@ -342,7 +342,8 @@ define("mapView", ['util'], function(util) {
             self.stepDetails = [];
             var leg = response.routes[0].legs[0],
                 steps = leg.steps,
-                routeBriefHtml = '';
+                routeBriefHtml = '',
+                shouldHide = false;
             self.routeSummary = {
                 startPos: $('#route-origin-input').val(),
                 startTime: leg.departure_time == null ? '' : leg.departure_time.text,
@@ -353,13 +354,12 @@ define("mapView", ['util'], function(util) {
             };
             for (var i = 0; i < steps.length; ++i){
                 var mode = steps[i].travel_mode,
-                    transitMode = mode;
-                if (steps.length > 7 && mode == 'WALKING'){
-                    continue;
-                }
-                if (self.routePolylines.length > 0){
+                    transitMode = mode,
+                    thisShouldHide = steps.length > 7 && mode == 'WALKING';
+                if (i > 0 && !shouldHide){
                     routeBriefHtml += util.getIconHtml('RIGHT');
                 }
+                shouldHide = thisShouldHide;
                 var step = {
                     mode: mode,
                     instruction: steps[i].instructions,
@@ -373,7 +373,9 @@ define("mapView", ['util'], function(util) {
                     step.mode = transitMode;
                     step.title = steps[i].transit.line.short_name;
                     step.name = steps[i].transit.line.name;
-                    step.instruction = steps[i].transit.headsign;
+                    step.instruction = '{0}{1}'.format(
+                        transitMode == 'HEAVY_RAIL' ? '' : '往',
+                        steps[i].transit.headsign);
 					step.depStop = steps[i].transit.departure_stop.name;
 					step.depTime = steps[i].transit.departure_time.text;
 					step.arrStop = steps[i].transit.arrival_stop.name;
@@ -391,13 +393,17 @@ define("mapView", ['util'], function(util) {
                     transitMarker.addTo(self.map);
                     self.transitMarkers.push(transitMarker);
 
-                    routeBriefHtml += "<div id='{0}' class='transit-brief-element'>{1}{2}</div>"
-                        .format('transit-step-' + i,
-                            util.getIconHtml(transitMode),
-                            util.getTransitNameHtml(step.title));
+                    if (!shouldHide){
+                        routeBriefHtml += "<div id='{0}' class='transit-brief-element'>{1}{2}</div>"
+                            .format('transit-step-' + i,
+                                util.getIconHtml(transitMode),
+                                util.getTransitNameHtml(step.title));
+                    }
                 } else{
-                    routeBriefHtml += "<div id='{0}' class='transit-brief-element'>{1}</div>"
-                        .format('transit-step-' + i, util.getIconHtml(transitMode));
+                    if (!shouldHide){
+                        routeBriefHtml += "<div id='{0}' class='transit-brief-element'>{1}</div>"
+                            .format('transit-step-' + i, util.getIconHtml(transitMode));
+                    }
                     self.stepDetails.push(step);
                 }
 
@@ -444,10 +450,7 @@ define("mapView", ['util'], function(util) {
 			$('#route-brief-result').html(innerHtml);
             $('#route-brief-container').show();
             $('#route-brief-container').on('click', function(e){
-                e.stopPropagation();
-                if (self.detailMode){
-                    self.hideRouteDetail();
-                } else{
+                if (!self.detailMode){
                     self.showRouteDetail();
                 }
             });
@@ -481,10 +484,13 @@ define("mapView", ['util'], function(util) {
                     duration: 800,
                     complete: function(){
                         self.setMapHeight('250px');
-                        self.map.fitBounds(self.routeBound);
+                        self.map.fitBounds(self.routeBound, {maxZoom: 18});
                     }
                 }
             );
+            $('#route-detail').on('swipedown', function(){
+                self.hideRouteDetail();
+            });
         }
 
         self.hideRouteDetail = function(){
@@ -500,3 +506,4 @@ define("mapView", ['util'], function(util) {
 
 // TODO:
 // 1. Route not found from 壢新醫院 to 武陵高中
+// 2. Google autocomplete: make text shorter!
