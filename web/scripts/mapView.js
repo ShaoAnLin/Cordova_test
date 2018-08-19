@@ -246,7 +246,7 @@ define("mapView", ['util'], function(util) {
 
         self.hideSearchResult = function(){
             if (self.routeMode){
-                self.setMapHeight('calc(100% - 120px)');
+                self.setMapHeight('calc(100% - 100px)');
             }
             else{
                 self.setMapHeight('100%');
@@ -441,17 +441,21 @@ define("mapView", ['util'], function(util) {
             self.routeSummary = null;
 			$('#route-brief-container').hide();
 			if (self.routeMode){
-				self.setMapHeight('calc(100% - 120px)');
+				self.setMapHeight('calc(100% - 100px)');
 			}
 		}
 		
 		self.showRouteBrief = function(innerHtml){
-			self.setMapHeight('calc(100% - 170px)');
+			self.setMapHeight('calc(100% - 150px)');
 			$('#route-brief-result').html(innerHtml);
             $('#route-brief-container').show();
-            $('#route-brief-container').on('click', function(e){
+            $('#route-brief-right').on('click', function(e){
+                e.stopPropagation();
+                e.preventDefault();
                 if (!self.detailMode){
                     self.showRouteDetail();
+                } else{
+                    self.hideRouteDetail();
                 }
             });
         }
@@ -476,6 +480,7 @@ define("mapView", ['util'], function(util) {
             self.detailMode = true;
             self.map.closePopup();
             $('#route-detail').html(util.getRouteDetailDiv(self.routeSummary, self.stepDetails));
+            $('#route-brief-button').html(util.getIconHtml('DOWN'));
             $('#route-search').hide();
             $('#route-detail').show();
             $('#route-detail').animate(
@@ -488,17 +493,15 @@ define("mapView", ['util'], function(util) {
                     }
                 }
             );
-            $('#route-detail').on('swipedown', function(){
-                self.hideRouteDetail();
-            });
         }
 
         self.hideRouteDetail = function(){
             self.detailMode = false;
+            $('#route-brief-button').html(util.getIconHtml('UP'));
             $('#route-search').show();
             $('#route-detail').hide();
             $('#route-detail').css('top', '400px');
-            self.setMapHeight('calc(100% - 170px)');
+            self.setMapHeight('calc(100% - 150px)');
         }
     }
     return new MapView();

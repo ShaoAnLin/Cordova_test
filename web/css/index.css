@@ -362,22 +362,22 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 }
 
 #route-search{
-    height: 120px;
+    height: 100px;
     width: 100%;
     display: none;
     background-color: #4285F4;
 }
 
 #route-search-left{
-    height: 120px;
+    height: 100px;
     width: 40px;
 }
 #route-search-center {
-    height: 120px;
+    height: 100px;
     width: calc(100% - 80px);
 }
 #route-search-right {
-    height: 120px;
+    height: 100px;
     width: 40px;
 }
 
@@ -387,19 +387,19 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 }
 
 .route-icon {
-    padding: 12px 5px 10px 5px;
+    padding: 10px 5px 10px 5px;
     float: left;
-    font-size: 18px;
+    font-size: 14px;
 }
 .input-remove-icon{
-    padding: 12px 5px 10px 5px;
+    padding: 10px 5px 10px 5px;
     color: white;
-    font-size: 18px;
+    font-size: 14px;
 }
 .route-input {
     width: calc(100% - 55px);
-	font-size: 20px;
-    padding: 10px 0px 10px 0px;
+	font-size: 16px;
+    padding: 5px 0px 5px 0px;
     color: white;
     float: left;
 }
@@ -460,7 +460,7 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 }
 
 #route-brief-result{
-    width: calc(100% - 120px);
+    width: calc(100% - 150px);
     padding: 0px 10px 0px 10px;
     flex-direction: row;
     text-align: center;
@@ -469,12 +469,26 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     float: left;
 }
 
+#route-brief-right{
+    width: 130px;
+    float: right;
+    padding: 14px 0px 14px 0px;
+    font-size: 14px;
+    align-content: center;
+}
+
 #route-brief-duration{
     width: 100px;
     float: right;
-    padding: 12px 0px 12px 0px;
-    font-size: 16px;
-    align-content: center;
+    text-align: right;
+    padding-right: 10px;
+}
+
+#route-brief-button{
+    width: 20px;
+    float: right;
+    font-size: 8px;
+    color: dimgray;
 }
 
 #route-brief-result > .fas{
@@ -538,7 +552,7 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 .popup-icon{
     padding-right: 10px;
     width: auto;
-    height: 30px;
+    height: 20px;
 }
 
 .transit-time-col{

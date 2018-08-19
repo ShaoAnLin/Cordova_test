@@ -10,7 +10,7 @@ define("util", [], function() {
 	util.getPopupDiv = function(icon, name){
 		return "<div class='div-row'>\
 					<div style='float: left;'><img class='popup-icon' src='{0}'/></div>\
-					<span style='font-size: 22px'>{1}</span>\
+					<span style='font-size: 18px'>{1}</span>\
 				</div>".format(icon, name);
 	}
 	
@@ -42,9 +42,7 @@ define("util", [], function() {
 					transit.arrTime, transit.arrStop);
 	}
 
-	// TODO:
-	// 1. make layout more beautiful
-	// 2. bind click event to fitBounds
+	// TODO: bind click event to fitBounds
 	util.getRouteDetailDiv = function(summary, steps){
 		var html = this.getRouteStepDiv(summary.startTime, summary.startPos);
 		for (var i = 0; i < steps.length; ++i){
@@ -115,6 +113,10 @@ define("util", [], function() {
 			return '<i class="fas fa-bus"></i>';
 		} else if (type == 'HEAVY_RAIL'){
 			return '<i class="fas fa-train"></i>';
+		} else if (type == 'UP'){
+			return '<i class="fas fa-chevron-up"></i>';
+		} else if (type = 'DOWN'){
+			return '<i class="fas fa-chevron-down"></i>';
 		}
 	}
 	
