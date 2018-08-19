@@ -41,6 +41,14 @@ define("util", [], function() {
 					transit.arrTime, transit.arrStop);
 	}
 
+	util.getRouteDetailDiv = function(posInfo){
+
+	}
+
+	util.getRouteDetailTransitDiv = function(transit){
+
+	}
+
 	util.getIcon = function(color){
 		return L.icon({
 			iconUrl: 'css/images/marker-{0}.svg'.format(color),
@@ -54,6 +62,10 @@ define("util", [], function() {
 	util.getTransitIcon = function(type){
 		if (type == 'HEAVY_RAIL'){
 			type = 'train';
+		} else if (type == 'BUS'){
+			type = 'bus';
+		} else if (type == 'SUBWAY'){
+			type = 'subway';
 		}
 		return L.icon({
 			iconUrl: 'css/images/marker-transit-{0}.svg'.format(type),

@@ -9,6 +9,7 @@ define("mapView", ['util'], function(util) {
             routeDestinationMarker = null,
             routeOrigin = null,
             routeDestination = null,
+            routeBound = null,
 			routePolylines = [],
             transitMarkers = [],
             transitIdMap = [];
@@ -34,7 +35,9 @@ define("mapView", ['util'], function(util) {
         self.eventBinding = function(){
             self.map.on('click', function(e) {
                 console.log("Click: {0}".format(e.latlng));
-				if (!self.routeMode){
+				if (self.detailMode){
+                    self.hideRouteDetail();
+                } else if (!self.routeMode){
 					self.hideSearchResult();
                 }
                 if ($('.toastjs.danger').length > 0){
@@ -305,7 +308,8 @@ define("mapView", ['util'], function(util) {
                 points.push(new L.LatLng(destinationLocation.lat(), destinationLocation.lng()));
             }
             if (points.length == 2){
-                self.map.fitBounds(new L.LatLngBounds(points), {padding: [5, 5]});
+                self.routeBound = new L.LatLngBounds(points);
+                self.map.fitBounds(self.routeBound, {padding: [5, 5]});
                 
 	            var directionsService = new google.maps.DirectionsService;
 	            directionsService.route({
@@ -407,7 +411,8 @@ define("mapView", ['util'], function(util) {
 				self.transitMarkers.forEach(function(marker){
 					marker.remove();
 				});
-			}
+            }
+            self.routeBound = null;
             self.transitMarkers = [];
             self.transitIdMap = [];
 			$('#route-brief-container').hide();
@@ -421,11 +426,11 @@ define("mapView", ['util'], function(util) {
 			$('#route-brief-result').html(innerHtml);
             $('#route-brief-container').show();
             $('#route-brief-container').on('click', function(){
-                self.detailMode = true;
-                $('#route-search').hide();
-                self.setMapHeight('250px');
-                $('#route-complete-detail').show();
-                $('#route-complete-detail').animate({'top': '250px'})
+                if (self.detailMode){
+                    self.hideRouteDetail();
+                } else{
+                    self.showRouteDetail();
+                }
             });
         }
         
@@ -444,6 +449,34 @@ define("mapView", ['util'], function(util) {
                 });
             }
         }
+
+        self.showRouteDetail = function(){
+            self.detailMode = true;
+            self.map.closePopup();
+            $('#route-search').hide();
+            $('#route-detail').show();
+            $('#route-detail').animate(
+                {'top': '250px'},
+                {
+                    duration: 800,
+                    complete: function(){
+                        self.setMapHeight('250px');
+                        self.map.fitBounds(self.routeBound);
+                    }
+                }
+            );
+        }
+
+        self.hideRouteDetail = function(){
+            self.detailMode = false;
+            $('#route-search').show();
+            $('#route-detail').hide();
+            $('#route-detail').css('top', '400px');
+            self.setMapHeight('calc(100% - 170px)');
+        }
     }
     return new MapView();
 });
+
+// TODO:
+// 1. Route not found from 壢新醫院 to 武陵高中
