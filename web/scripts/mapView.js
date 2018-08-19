@@ -357,7 +357,7 @@ define("mapView", ['util'], function(util) {
                     transitMode = mode,
                     thisShouldHide = steps.length > 7 && mode == 'WALKING';
                 if (i > 0 && !shouldHide){
-                    routeBriefHtml += util.getIconHtml('RIGHT');
+                    routeBriefHtml += util.iconHtml['RIGHT'];
                 }
                 shouldHide = thisShouldHide;
                 var step = {
@@ -396,19 +396,19 @@ define("mapView", ['util'], function(util) {
                     if (!shouldHide){
                         routeBriefHtml += "<div id='{0}' class='transit-brief-element'>{1}{2}</div>"
                             .format('transit-step-' + i,
-                                util.getIconHtml(transitMode),
+                                util.iconHtml[transitMode],
                                 util.getTransitNameHtml(step.title));
                     }
                 } else{
                     if (!shouldHide){
                         routeBriefHtml += "<div id='{0}' class='transit-brief-element'>{1}</div>"
-                            .format('transit-step-' + i, util.getIconHtml(transitMode));
+                            .format('transit-step-' + i, util.iconHtml[transitMode]);
                     }
                     self.stepDetails.push(step);
                 }
 
                 var points = steps[i].polyline.points,
-                    polyline = L.Polyline.fromEncoded(points, util.getLineStyle(transitMode));
+                    polyline = L.Polyline.fromEncoded(points, util.lineStyle[transitMode]);
                 polyline.addTo(self.map);
                 self.routePolylines.push(polyline);
             }
@@ -480,7 +480,7 @@ define("mapView", ['util'], function(util) {
             self.detailMode = true;
             self.map.closePopup();
             $('#route-detail').html(util.getRouteDetailDiv(self.routeSummary, self.stepDetails));
-            $('#route-brief-button').html(util.getIconHtml('DOWN'));
+            $('#route-brief-button').html(util.iconHtml['DOWN']);
             $('#route-search').hide();
             $('#route-detail').show();
             $('#route-detail').animate(
@@ -497,7 +497,7 @@ define("mapView", ['util'], function(util) {
 
         self.hideRouteDetail = function(){
             self.detailMode = false;
-            $('#route-brief-button').html(util.getIconHtml('UP'));
+            $('#route-brief-button').html(util.iconHtml['UP']);
             $('#route-search').show();
             $('#route-detail').hide();
             $('#route-detail').css('top', '400px');

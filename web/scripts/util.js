@@ -5,14 +5,31 @@ define("util", [], function() {
 		'BUS': '#FFC0CB',
 		'SUBWAY': '#CFE886',
 		'HEAVY_RAIL': '#ADD8E6'
-	}
+	};
+
+	util.iconHtml = {
+		'WALKING': '<i class="fas fa-walking"></i>',
+		'RIGHT': '<i class="fas fa-angle-right"></i>',
+		'SUBWAY': '<i class="fas fa-subway"></i>',
+		'BUS': '<i class="fas fa-bus"></i>', 
+		'HEAVY_RAIL': '<i class="fas fa-train"></i>',
+		'UP': '<i class="fas fa-chevron-up"></i>',
+		'DOWN': '<i class="fas fa-chevron-down"></i>'
+	};
+
+	util.lineStyle = {
+		'SUBWAY': {weight: 4, color: '#008800'},
+		'BUS': {weight: 4, color: '#FF4500'},
+		'HEAVY_RAIL': {weight: 4, color: '#0000FF'},
+		'WALKING': {weight: 4, color: '#5f6060', dashArray: '10 15', lineCap: 'round'}
+	};
 	
 	util.getPopupDiv = function(icon, name){
 		return "<div class='div-row'>\
 					<div style='float: left;'><img class='popup-icon' src='{0}'/></div>\
 					<span style='font-size: 18px'>{1}</span>\
 				</div>".format(icon, name);
-	}
+	};
 	
 	util.getTransitPopupDiv = function(transit){
 		var name = transit.name == null ? '' : transit.name;
@@ -34,13 +51,13 @@ define("util", [], function() {
 						<span class='transit-time-col'>{7}</span>\
 						<span>{8}</span>\
 					</div>\
-				</div>".format(this.getIconHtml(transit.mode),
+				</div>".format(this.iconHtml[transit.mode],
 					transit.title, name,
 					transit.instruction,
 					transit.depTime, transit.depStop,
 					transit.duration,
 					transit.arrTime, transit.arrStop);
-	}
+	};
 
 	// TODO: bind click event to fitBounds
 	util.getRouteDetailDiv = function(summary, steps){
@@ -59,14 +76,14 @@ define("util", [], function() {
 		}
 		html += endDiv = this.getRouteStepDiv(summary.endTime, summary.endPos);
 		return html;
-	}
+	};
 
 	util.getRouteStepDiv = function(time, pos){
 		return "<div class='div-row'>\
 					<span class='transit-time-col' style='font-size: 14px'>{0}</span>\
 					<span style='font-size: 16px'>{1}</span>\
 				</div>".format(time, pos);
-	}
+	};
 
 	util.getRouteTransitDiv = function(step){
 		var instruction = step.mode == 'WALKING' ? step.distance : step.instruction;
@@ -74,8 +91,8 @@ define("util", [], function() {
 					<span class='transit-duration'>{0}</span>\
 					<i class='fas fa-angle-double-down'></i>{1}\
 					<span class='transit-instruction'>{2}</span>\
-				</div>".format(step.duration, this.getIconHtml(step.mode), instruction);
-	}
+				</div>".format(step.duration, this.iconHtml[step.mode], instruction);
+	};
 
 	util.getIcon = function(color){
 		return L.icon({
@@ -85,7 +102,7 @@ define("util", [], function() {
 			shadowAnchor: [12, 20],
 			shadowUrl: 'css/images/marker-shadow.png'
 		});
-	}
+	};
 	
 	util.getTransitIcon = function(type){
 		if (type == 'HEAVY_RAIL'){
@@ -100,43 +117,10 @@ define("util", [], function() {
 			iconSize: [20, 20],
 			popupAnchor: [0, -10]
 		});
-	}
-	
-	util.getIconHtml = function(type){
-		if (type == 'WALKING'){
-			return '<i class="fas fa-walking"></i>';
-		}else if (type == 'RIGHT'){
-			return '<i class="fas fa-angle-right"></i>';
-		} else if (type == 'SUBWAY'){
-			return '<i class="fas fa-subway"></i>';
-		} else if (type == 'BUS'){
-			return '<i class="fas fa-bus"></i>';
-		} else if (type == 'HEAVY_RAIL'){
-			return '<i class="fas fa-train"></i>';
-		} else if (type == 'UP'){
-			return '<i class="fas fa-chevron-up"></i>';
-		} else if (type = 'DOWN'){
-			return '<i class="fas fa-chevron-down"></i>';
-		}
-	}
+	};
 	
 	util.getTransitNameHtml = function(text){
 		return '<div class="transit-name">{0}</div>'.format(text);
-	}
-	
-	util.getLineStyle = function(mode){
-		if (mode == 'SUBWAY'){
-			return {weight: 4, color: '#008800'};
-		}
-		else if (mode == 'BUS'){
-			return {weight: 4, color: '#FF4500'};
-		}
-		else if (mode == 'HEAVY_RAIL'){
-			return {weight: 4, color: '#0000FF'};
-		}
-		else if (mode == 'WALKING'){
-			return {weight: 4, color: '#5f6060', dashArray: '10 15', lineCap: 'round'};
-		}
-	}
+	};
     return util;
 });
