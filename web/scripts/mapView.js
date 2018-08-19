@@ -181,7 +181,7 @@ define("mapView", ['util'], function(util) {
             if (self.routeDestinationMarker){
                 self.routeDestinationMarker.remove();
             }
-
+            $('#searchboxinput').val(place.name);
             if (typeof(place.geometry) != "undefined"){
                 self.routeDestination = place;
                 var location = place.geometry.location,
@@ -267,7 +267,7 @@ define("mapView", ['util'], function(util) {
             if (self.routeOriginMarker){
                 self.routeOriginMarker.remove();
             }
-
+            $('#route-origin-input').val(place.name);
             self.routeOrigin = place;
             var location = place.geometry.location,
                 popup = util.getPopupDiv(place.icon, place.name);
@@ -284,7 +284,7 @@ define("mapView", ['util'], function(util) {
             if (self.routeDestinationMarker){
                 self.routeDestinationMarker.remove();
             }
-
+            $('#route-destination-input').val(place.name);
             self.routeDestination = place;
             var location = place.geometry.location,
                 popup = util.getPopupDiv(place.icon, place.name);
@@ -333,8 +333,6 @@ define("mapView", ['util'], function(util) {
         }
 
         self.routeSearchDone = function(response){
-            // TODO: (1) Show more results
-            //       (2) Show detail result
             console.log(response);
             self.routePolylines = [];
             self.transitMarkers = [];
@@ -386,7 +384,7 @@ define("mapView", ['util'], function(util) {
                     var popup = util.getTransitPopupDiv(step);
 					var transitMarker = L.marker([steps[i].start_location.lat(), steps[i].start_location.lng()],
                         {icon: util.getTransitIcon(transitMode)})
-                        .bindPopup(popup, {minWidth : $(window).width() - 80})
+                        .bindPopup(popup, {minWidth : Math.min($(window).width() - 80, 350)})
                         .on('popupopen', function (popup) {
                             console.log('transit popup');
                         });
@@ -477,6 +475,9 @@ define("mapView", ['util'], function(util) {
         }
 
         self.showRouteDetail = function(){
+            if (self.detailMode){
+                return;
+            }
             self.detailMode = true;
             self.map.closePopup();
             $('#route-detail').html(util.getRouteDetailDiv(self.routeSummary, self.stepDetails));
@@ -496,6 +497,9 @@ define("mapView", ['util'], function(util) {
         }
 
         self.hideRouteDetail = function(){
+            if (!self.detailMode){
+                return;
+            }
             self.detailMode = false;
             $('#route-brief-button').html(util.iconHtml['UP']);
             $('#route-search').show();
@@ -508,5 +512,11 @@ define("mapView", ['util'], function(util) {
 });
 
 // TODO:
-// 1. Route not found from 壢新醫院 to 武陵高中
-// 2. Google autocomplete: make text shorter!
+// (1) Google route
+// Route not found from 壢新醫院 to 武陵高中
+// *Use MRT's actual color
+// Bind route detail step transit event
+// Add arrow on path
+// *Customize departure/arrival date time
+// Show more route options
+// (2) Add leaflet control to add Bus route?

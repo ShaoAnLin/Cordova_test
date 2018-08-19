@@ -274,12 +274,12 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 }
 
 .pac-item-query {
-    font-size: 20px;
+    font-size: 18px;
     width: 100%;
 }
 
 .pac-item {
-    height: 36px;
+    height: 24px;
     font-size: 14px;
     padding: 10px;
 }
