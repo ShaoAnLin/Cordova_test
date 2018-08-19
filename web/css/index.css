@@ -446,7 +446,7 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 }
 
 .detail-single-transit{
-    padding: 10px 0px 10px 0px;
+    padding-bottom: 10px;
 }
 
 /* Route brief */
@@ -507,15 +507,16 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     display: flex;
     flex-direction: row;
     align-items: center;
+    padding: 10px 5px 10px 5px;
 }
 
 #transit-popup-short-name{
-    font-size: 22px;
+    font-size: 18px;
     padding: 0px 10px 0px 10px;
 }
 
 #transit-popup-name{
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .transit-instruction{

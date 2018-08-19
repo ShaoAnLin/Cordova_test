@@ -449,13 +449,12 @@ define("mapView", ['util'], function(util) {
 			self.setMapHeight('calc(100% - 150px)');
 			$('#route-brief-result').html(innerHtml);
             $('#route-brief-container').show();
-            $('#route-brief-right').on('click', function(e){
+            $('#route-brief-right').bind('click', function(e){
                 e.stopPropagation();
-                e.preventDefault();
                 if (!self.detailMode){
-                    self.showRouteDetail();
+                    setTimeout(function(){ self.showRouteDetail() }, 100);
                 } else{
-                    self.hideRouteDetail();
+                    setTimeout(function(){ self.hideRouteDetail() }, 100);
                 }
             });
         }

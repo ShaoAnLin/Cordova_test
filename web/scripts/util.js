@@ -66,8 +66,9 @@ define("util", [], function() {
 			if (steps[i].mode == 'WALKING'){
 				html += this.getRouteTransitDiv(steps[i]);
 			} else{
-				var stepHtml = "<div class='detail-single-transit' style='background-color: {0}'>{1}{2}{3}</div>"
+				var stepHtml = "<div class='detail-single-transit' style='background-color: {0}'>{1}{2}{3}{4}</div>"
 					.format(this.transitBackgroundColor[steps[i].mode],
+							this.getRouteSummaryDiv(steps[i].mode, steps[i].title, steps[i].name),
 							this.getRouteStepDiv(steps[i].depTime, steps[i].depStop),
 							this.getRouteTransitDiv(steps[i]),
 							this.getRouteStepDiv(steps[i].arrTime, steps[i].arrStop));
@@ -77,6 +78,13 @@ define("util", [], function() {
 		html += endDiv = this.getRouteStepDiv(summary.endTime, summary.endPos);
 		return html;
 	};
+
+	util.getRouteSummaryDiv = function(mode, title, name){
+		return "<div id='transit-popup-title'>{0}\
+					<div id='transit-popup-short-name'>{1}</div>\
+					<div id='transit-popup-name'>{2}</div>\
+				</div>".format(this.iconHtml[mode], title, name);
+	}
 
 	util.getRouteStepDiv = function(time, pos){
 		return "<div class='div-row'>\
