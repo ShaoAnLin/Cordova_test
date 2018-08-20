@@ -6,22 +6,41 @@ define("util", [], function() {
 		'SUBWAY': '#CFE886',
 		'HEAVY_RAIL': '#ADD8E6'
 	};
+	
+	util.defaultColor = {
+		'SUBWAY': '#008800',
+		'BUS': '#FF4500',
+		'HEAVY_RAIL': '#0000FF'
+	}
 
 	util.iconHtml = {
 		'WALKING': '<i class="fas fa-walking"></i>',
 		'RIGHT': '<i class="fas fa-angle-right"></i>',
-		'SUBWAY': '<i class="fas fa-subway"></i>',
-		'BUS': '<i class="fas fa-bus"></i>', 
-		'HEAVY_RAIL': '<i class="fas fa-train"></i>',
+		'SUBWAY': '<i class="fas fa-subway" style="color: {0}"></i>',
+		'BUS': '<i class="fas fa-bus" style="color: {0}"></i>', 
+		'HEAVY_RAIL': '<i class="fas fa-train" style="color: {0}"></i>',
 		'UP': '<i class="fas fa-chevron-up"></i>',
 		'DOWN': '<i class="fas fa-chevron-down"></i>'
 	};
+	
+	util.getIconHtml = function(mode, color){
+		if (color == null){
+			color = this.defaultColor[mode];
+		}
+		if (mode == 'SUBWAY' || mode == 'BUS' || mode == 'HEAVY_RAIL'){
+			return this.iconHtml[mode].format(color);
+		} else {
+			return this.iconHtml[mode];
+		}
+	}
 
-	util.lineStyle = {
-		'SUBWAY': {weight: 4, color: '#008800'},
-		'BUS': {weight: 4, color: '#FF4500'},
-		'HEAVY_RAIL': {weight: 4, color: '#0000FF'},
-		'WALKING': {weight: 4, color: '#5f6060', dashArray: '10 15', lineCap: 'round'}
+	util.getLineStyle = function(mode, color){
+		if (mode == 'WALKING'){
+			return {weight: 4, color: '#5f6060', dashArray: '10 15', lineCap: 'round'};
+		} else if (color == null){
+			color = this.defaultColor[mode];
+		}
+		return {weight: 4, color: color};
 	};
 	
 	util.getPopupDiv = function(icon, name){
@@ -67,7 +86,7 @@ define("util", [], function() {
 		return "<div class='transit-title'>{0}\
 					<div class='transit-short-name'>{1}</div>\
 					<div class='transit-name'>{2}</div>\
-				</div>".format(this.iconHtml[step.mode], step.title, name);
+				</div>".format(this.getIconHtml(step.mode, step.color), step.title, name);
 	}
 
 	util.getRouteStepDiv = function(time, pos){
@@ -82,7 +101,7 @@ define("util", [], function() {
 		if (showInstruction){
 			var instruction = step.mode == 'WALKING' ? step.distance : step.instruction;
 			html = "{0}<span class='transit-instruction'>{1}</span>".format(
-				this.iconHtml[step.mode], instruction);
+				this.getIconHtml(step.mode, step.color), instruction);
 		}
 		return "<div class='transit-duration-container'>\
 					<span class='transit-duration'>{0}</span>\
