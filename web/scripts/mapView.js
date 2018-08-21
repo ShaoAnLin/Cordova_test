@@ -384,7 +384,7 @@ define("mapView", ['util'], function(util) {
 
                     var popup = util.getTransitPopupDiv(step);
 					var transitMarker = L.marker([steps[i].start_location.lat(), steps[i].start_location.lng()],
-                        {icon: util.getTransitIcon(transitMode)})
+                        {icon: util.getTransitIcon(transitMode, step.color)})
                         .bindPopup(popup, {minWidth : Math.min($(window).width() - 80, 350)})
                         .on('popupopen', function (popup) {
                             console.log('transit popup');

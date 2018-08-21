@@ -40,7 +40,7 @@ define("util", [], function() {
 		} else if (color == null){
 			color = this.defaultColor[mode];
 		}
-		return {weight: 4, color: color};
+		return {weight: 10, color: color};
 	};
 	
 	util.getPopupDiv = function(icon, name){
@@ -123,19 +123,16 @@ define("util", [], function() {
 		});
 	};
 	
-	util.getTransitIcon = function(type){
-		if (type == 'HEAVY_RAIL'){
-			type = 'train';
-		} else if (type == 'BUS'){
-			type = 'bus';
-		} else if (type == 'SUBWAY'){
-			type = 'subway';
-		}
-		return L.icon({
-			iconUrl: 'css/images/marker-transit-{0}.svg'.format(type),
-			iconSize: [20, 20],
-			popupAnchor: [0, -10]
-		});
+	util.getTransitIcon = function(type, color){
+		var iconColor = color == null ? this.defaultColor[type] : color;
+		const iconHtml = "<div ='marker-container'><span class='marker-background'></span><div class='transit-marker'>{0}</div></div>".format(
+			this.iconHtml[type].format(iconColor));
+
+		return L.divIcon({
+			className: "myIcon",
+			popupAnchor: [7, -5],
+			html: iconHtml
+		})
 	};
 	
 	util.getTransitNameHtml = function(text){

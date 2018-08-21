@@ -579,7 +579,7 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 .fa-subway{
 	color: green;
 	font-size: 18px;
-}f
+}
 .fa-train{
 	color: blue;
 	font-size: 18px;
@@ -603,6 +603,22 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 }
 .toastjs{
     padding: 10px 15px 10px 15px !important;
+}
+
+.marker-background{
+	background-color: white;
+	width: 1rem;
+    height: 1rem;
+    display: block;
+    left: -0.5rem;
+    top: -0.5rem;
+	border-radius: 1rem 1rem 1rem 1rem;
+	border: 1px solid #FFFFFF;
+}
+.transit-marker{
+    left: 5px;
+    top: 3px;
+    position: absolute;
 }
 
 /********** Large devices only **********/
