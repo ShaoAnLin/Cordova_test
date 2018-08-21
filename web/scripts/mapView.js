@@ -514,10 +514,18 @@ define("mapView", ['util'], function(util) {
 
 // TODO:
 // (1) Google route
-// Route not found from 壢新醫院 to 武陵高中
-// *Use MRT's actual color: marker and background color
-// Bind route detail step transit event
-// Add arrow on path
+// *Remove animation
 // *Customize departure/arrival date time
+// Bind route detail step transit event
+// Add arrow on path, add border of the path
 // Show more route options
-// (2) Add leaflet control to add Bus route?
+// Add origin/destination marker in detail map?
+//
+// (2) Get Bus information
+// Make detail transit able to collapse
+// Display in detail mode and add button in transit popup to link to detail mode
+//
+// Bug:
+// Route not found from 壢新醫院 to 武陵高中
+// fitBounds sometimes fail when showing detail view
+// Route result should be clear when conducting another search
