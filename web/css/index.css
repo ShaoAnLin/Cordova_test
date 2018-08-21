@@ -525,8 +525,7 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 .transit-instruction{
     color: dimgray;
     font-size: 16px;
-    margin: 5px 0px 5px 0;
-    padding-left: 10px;
+    margin: 5px 0px 5px 10px;
 }
 
 #transit-popup-detail{
@@ -580,7 +579,7 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 .fa-subway{
 	color: green;
 	font-size: 18px;
-}
+}f
 .fa-train{
 	color: blue;
 	font-size: 18px;
@@ -592,7 +591,7 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 .fa-angle-double-down{
     color: blue;
     font-size: 18px;
-    width: 30px;
+    width: 20px;
 }
 
 /* Toast js */

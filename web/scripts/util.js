@@ -100,9 +100,12 @@ define("util", [], function() {
 	util.getRouteTransitDiv = function(step, showInstruction){
 		var html = "";
 		if (showInstruction){
-			var instruction = step.mode == 'WALKING' ? step.distance : step.instruction;
-			html = "{0}<span class='transit-instruction'>{1}</span>".format(
-				this.getIconHtml(step.mode, step.color), instruction);
+			if (step.mode == 'WALKING'){
+				html = "{0}<span class='transit-instruction'>{1}</span>".format(
+					this.getIconHtml(step.mode, step.color), step.distance);
+			} else{
+				html = "<span class='transit-instruction'>{0}</span>".format(step.instruction);
+			}
 		}
 		return "<div class='transit-duration-container'>\
 					<span class='transit-duration'>{0}</span>\
