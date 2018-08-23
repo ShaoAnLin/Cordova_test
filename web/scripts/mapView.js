@@ -333,11 +333,8 @@ define("mapView", ['util'], function(util) {
         }
 
         self.routeSearchDone = function(response){
+            self.clearRouteResult();
             console.log(response);
-            self.routePolylines = [];
-            self.transitMarkers = [];
-            self.transitIdMap = [];
-            self.stepDetails = [];
             var leg = response.routes[0].legs[0],
                 steps = leg.steps,
                 routeBriefHtml = '',
@@ -517,4 +514,3 @@ define("mapView", ['util'], function(util) {
 //
 // Bug:
 // Route not found from 壢新醫院 to 武陵高中
-// Route result should be clear when conducting another search
