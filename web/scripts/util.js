@@ -70,7 +70,7 @@ define("util", [], function() {
 			} else{
 				var color = (steps[i].color == null) ? this.defaultColor[steps[i].mode] : steps[i].color,
 					stepHtml = "<div class='detail-single-transit' style='background-color: {0}'>{1}{2}{3}{4}</div>"
-					.format(pSBC(0.8, color),
+					.format(pSBC(0.9, color),
 							this.getRouteSummaryDiv(steps[i]),
 							this.getRouteStepDiv(steps[i].depTime, steps[i].depStop),
 							this.getRouteTransitDiv(steps[i], true),

@@ -481,20 +481,12 @@ define("mapView", ['util'], function(util) {
             }
             self.detailMode = true;
             self.map.closePopup();
+            self.setMapHeight('250px');
             $('#route-detail').html(util.getRouteDetailDiv(self.routeSummary, self.stepDetails));
             $('#route-brief-button').html(util.getIconHtml('DOWN'));
             $('#route-search').hide();
             $('#route-detail').show();
-            $('#route-detail').animate(
-                {'top': '250px'},
-                {
-                    duration: 800,
-                    complete: function(){
-                        self.setMapHeight('250px');
-                        self.map.fitBounds(self.routeBound, {maxZoom: 18, padding: [50, 50]});
-                    }
-                }
-            );
+            setTimeout(function(){ self.map.fitBounds(self.routeBound, {maxZoom: 18, padding: [50, 50]}) }, 100);
         }
 
         self.hideRouteDetail = function(){
@@ -505,7 +497,6 @@ define("mapView", ['util'], function(util) {
             $('#route-brief-button').html(util.getIconHtml('UP'));
             $('#route-search').show();
             $('#route-detail').hide();
-            $('#route-detail').css('top', '400px');
             self.setMapHeight('calc(100% - 150px)');
         }
     }
@@ -514,7 +505,6 @@ define("mapView", ['util'], function(util) {
 
 // TODO:
 // (1) Google route
-// *Remove animation
 // *Customize departure/arrival date time
 // Bind route detail step transit event
 // Add arrow on path, add border of the path
@@ -527,5 +517,4 @@ define("mapView", ['util'], function(util) {
 //
 // Bug:
 // Route not found from 壢新醫院 to 武陵高中
-// fitBounds sometimes fail when showing detail view
 // Route result should be clear when conducting another search
