@@ -17,6 +17,7 @@ requirejs.config({
             'lib/Polyline.encoded',
             'lib/JavascriptStrings',
             'lib/Toast.min',
+            'busService',
             'async!https://maps.googleapis.com/maps/api/js?key=AIzaSyC4BOUHAJHQLFcg4OPRvvF3SeTsGThYZZs&libraries=geometry,places'],
         'util': ['lib/JavascriptStrings', 
 			'lib/pSBC']

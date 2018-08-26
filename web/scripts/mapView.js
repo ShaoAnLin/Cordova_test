@@ -1,4 +1,4 @@
-define("mapView", ['util'], function(util) {
+define("mapView", ['util', 'busService'], function(util, busService) {
     function MapView(){
         var self = this,
             map = null,
@@ -378,6 +378,10 @@ define("mapView", ['util'], function(util) {
                     self.transitIdMap.push(i);
                     self.stepDetails.push(step);
 
+                    if (step.mode === 'BUS'){
+                        busService.getBusDetail(step);
+                    }
+
                     var popup = util.getTransitPopupDiv(step);
 					var transitMarker = L.marker([steps[i].start_location.lat(), steps[i].start_location.lng()],
                         {icon: util.getTransitIcon(transitMode, step.color)})
@@ -501,6 +505,10 @@ define("mapView", ['util'], function(util) {
 });
 
 // TODO:
+// (0) Google search
+// Show more details (markers) on map, instead of just select the first result
+// => may fix the "Route not found" bug
+//
 // (1) Google route
 // *Customize departure/arrival date time
 // Bind route detail step transit event
@@ -509,7 +517,7 @@ define("mapView", ['util'], function(util) {
 // Add origin/destination marker in detail map?
 //
 // (2) Get Bus information
-// Make detail transit able to collapse
+// Make detail transit able to expand and collapse
 // Display in detail mode and add button in transit popup to link to detail mode
 //
 // Bug:
