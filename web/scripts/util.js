@@ -40,7 +40,7 @@ define("util", [], function() {
 		} else if (color == null){
 			color = this.defaultColor[mode];
 		}
-		return {weight: 10, color: color};
+		return {weight: 8, color: color};
 	};
 	
 	util.getPopupDiv = function(icon, name){

@@ -310,9 +310,6 @@ define("mapView", ['util'], function(util) {
                 points.push(new L.LatLng(destinationLocation.lat(), destinationLocation.lng()));
             }
             if (points.length == 2){
-                self.routeBound = new L.LatLngBounds(points);
-                self.map.fitBounds(self.routeBound, {padding: [50, 50]});
-                
 	            var directionsService = new google.maps.DirectionsService;
 	            directionsService.route({
 	            	origin: {lat: originLocation.lat(), lng: originLocation.lng()},
@@ -321,6 +318,8 @@ define("mapView", ['util'], function(util) {
 	            }, function(response, status) {
 	                if (status === 'OK') {
                         self.routeSearchDone(response);
+                        self.routeBound = new L.LatLngBounds(points);
+                        self.map.fitBounds(self.routeBound, {padding: [50, 50]});
 	                } else {
                         new Toast({message: '找不到路線!', type: 'danger'});
 	                }
@@ -495,6 +494,7 @@ define("mapView", ['util'], function(util) {
             $('#route-search').show();
             $('#route-detail').hide();
             self.setMapHeight('calc(100% - 150px)');
+            setTimeout(function(){ self.map.fitBounds(self.routeBound, {maxZoom: 18, padding: [50, 50]}) }, 100);
         }
     }
     return new MapView();
