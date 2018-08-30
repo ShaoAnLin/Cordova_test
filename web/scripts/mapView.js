@@ -14,7 +14,8 @@ define("mapView", ['util', 'busService'], function(util, busService) {
             transitMarkers = [],
             transitIdMap = [],
             stepDetails = [],
-            routeSummary = null;
+            routeSummary = null,
+			googleService = null;
 
         self.init = function(){
             var mapOptions = {
@@ -32,6 +33,19 @@ define("mapView", ['util', 'busService'], function(util, busService) {
 
             self.addSearchBox();
             self.eventBinding();
+			
+			var googleMap = new google.maps.Map(document.getElementById('google-map'), {
+				center: new google.maps.LatLng(25,121),
+				zoom: 15
+			});
+			var request = {
+				query: 'Taipei 101',
+				fields: ['photos', 'formatted_address', 'name', 'rating', 'opening_hours', 'geometry'],
+			};
+			self.googleService = new google.maps.places.PlacesService(googleMap);
+			self.googleService.findPlaceFromQuery(request, function(result){
+				console.log(result);
+			});
         }
         
         self.eventBinding = function(){
@@ -519,6 +533,7 @@ define("mapView", ['util', 'busService'], function(util, busService) {
 // (2) Get Bus information
 // Make detail transit able to expand and collapse
 // Display in detail mode and add button in transit popup to link to detail mode
+// Google place search: https://developers.google.com/maps/documentation/javascript/reference/places-service
 //
 // Bug:
 // Route not found from 壢新醫院 to 武陵高中
