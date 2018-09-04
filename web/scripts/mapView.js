@@ -1,4 +1,5 @@
-define("mapView", ['util', 'busService'], function(util, busService) {
+define("mapView", ['util', 'busService', 'googleService'],
+    function(util, busService, googleService) {
     function MapView(){
         var self = this,
             map = null,
@@ -14,8 +15,7 @@ define("mapView", ['util', 'busService'], function(util, busService) {
             transitMarkers = [],
             transitIdMap = [],
             stepDetails = [],
-            routeSummary = null,
-			googleService = null;
+            routeSummary = null;
 
         self.init = function(){
             var mapOptions = {
@@ -34,18 +34,7 @@ define("mapView", ['util', 'busService'], function(util, busService) {
             self.addSearchBox();
             self.eventBinding();
 			
-			var googleMap = new google.maps.Map(document.getElementById('google-map'), {
-				center: new google.maps.LatLng(25,121),
-				zoom: 15
-			});
-			var request = {
-				query: 'Taipei 101',
-				fields: ['photos', 'formatted_address', 'name', 'rating', 'opening_hours', 'geometry'],
-			};
-			self.googleService = new google.maps.places.PlacesService(googleMap);
-			self.googleService.findPlaceFromQuery(request, function(result){
-				console.log(result);
-			});
+            googleService.init(document.getElementById('google-map'));
         }
         
         self.eventBinding = function(){
@@ -393,6 +382,7 @@ define("mapView", ['util', 'busService'], function(util, busService) {
                     self.stepDetails.push(step);
 
                     if (step.mode === 'BUS'){
+                        googleService.search(step.depStop);
                         busService.getBusDetail(step);
                     }
 
