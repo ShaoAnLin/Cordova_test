@@ -65,6 +65,7 @@ define("util", [], function() {
 	util.getRouteDetailDiv = function(summary, steps){
 		var html = this.getRouteStepDiv(summary.startTime, summary.startPos);
 		for (var i = 0; i < steps.length; ++i){
+			steps[i].idx = i;
 			if (steps[i].mode == 'WALKING'){
 				html += this.getRouteTransitDiv(steps[i], true);
 			} else{
@@ -98,7 +99,8 @@ define("util", [], function() {
 	};
 
 	util.getRouteTransitDiv = function(step, showInstruction){
-		var html = "";
+		var html = "",
+			htmlId = "";
 		if (showInstruction){
 			if (step.mode == 'WALKING'){
 				html = "{0}<span class='transit-instruction'>{1}</span>".format(
@@ -106,11 +108,12 @@ define("util", [], function() {
 			} else{
 				html = "<span class='transit-instruction'>{0}</span>".format(step.instruction);
 			}
+			htmlId = "id='transit-detail-step-{0}' ".format(step.idx);
 		}
-		return "<div class='transit-duration-container'>\
-					<span class='transit-duration'>{0}</span>\
-					<i class='fas fa-angle-double-down'></i>{1}\
-				</div>".format(step.duration, html);
+		return "<div {0}class='transit-duration-container'>\
+					<span class='transit-duration'>{1}</span>\
+					<i class='fas fa-angle-double-down'></i>{2}\
+				</div>".format(htmlId, step.duration, html);
 	};
 
 	util.getIcon = function(color){

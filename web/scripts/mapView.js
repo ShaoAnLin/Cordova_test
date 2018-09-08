@@ -461,20 +461,33 @@ define("mapView", ['util', 'busService', 'googleService'],
                 }
             });
         }
+
+        self.flyToTransit = function(e){
+            e.stopPropagation();
+            self.map.closePopup();
+            self.map.flyToBounds(
+                self.routePolylines[e.data.id].getBounds(),
+                {duration: 0.5, padding: [50, 50]}
+            ).once('moveend zoomend', function() {
+                var idx = self.transitIdMap.indexOf(e.data.id);
+                if (idx != -1 && !self.detailMode){
+                    self.transitMarkers[idx].openPopup();
+                }
+            });
+        }
         
         self.bindTransitBriefEvent = function(){
             for (var i = 0; i < self.routePolylines.length; i++){
                 $('#transit-step-' + i).click({id: i}, function(e){
-                    e.stopPropagation();
-                    self.map.closePopup();
-                    self.map.flyToBounds(self.routePolylines[e.data.id].getBounds(), 
-                        {duration: 0.5, padding: [50, 50]})
-                    .once('moveend zoomend', function() {
-                        var idx = self.transitIdMap.indexOf(e.data.id);
-                        if (idx != -1 && !self.detailMode){
-                            self.transitMarkers[idx].openPopup();
-                        }
-                    });
+                    self.flyToTransit(e);
+                });
+            }
+        }
+
+        self.bindTransitDetailEvent = function(){
+            for (var i = 0; i < self.routePolylines.length; i++){
+                $('#transit-detail-step-' + i).click({id: i}, function(e){
+                    self.flyToTransit(e);
                 });
             }
         }
@@ -491,6 +504,7 @@ define("mapView", ['util', 'busService', 'googleService'],
             $('#route-search').hide();
             $('#route-detail').show();
             setTimeout(function(){ self.map.fitBounds(self.routeBound, {maxZoom: 18, padding: [50, 50]}) }, 100);
+            self.bindTransitDetailEvent();
         }
 
         self.hideRouteDetail = function(){
@@ -515,7 +529,6 @@ define("mapView", ['util', 'busService', 'googleService'],
 //
 // (1) Google route
 // *Customize departure/arrival date time
-// Bind route detail step transit event
 // Add arrow on path, add border of the path
 // Show more route options
 // Add origin/destination marker in detail map?
