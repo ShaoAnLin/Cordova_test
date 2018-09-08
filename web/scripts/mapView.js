@@ -382,7 +382,7 @@ define("mapView", ['util', 'busService', 'googleService'],
                     self.stepDetails.push(step);
 
                     if (step.mode === 'BUS'){
-                        googleService.search(step.depStop);
+                        googleService.searchByLocation(steps[i].transit.departure_stop.location);
                         busService.getBusDetail(step);
                     }
 
