@@ -441,9 +441,9 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 #route-detail{
     display: none;
     background-color: white;
-    width: calc(100% - 40px);
+    width: calc(100% - 24px);
     height: calc(100% - 340px);
-    padding: 20px;
+    padding: 12px;
     z-index: 1000;
     position: absolute;
     overflow-y: scroll;
@@ -484,9 +484,8 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 
 #route-brief-duration{
     width: 100px;
-    float: right;
+    float: left;
     text-align: right;
-    padding-right: 10px;
 }
 
 #route-brief-button{
@@ -494,13 +493,15 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     float: right;
     font-size: 12px;
     color: dimgray;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .transit-brief-element{
     display: flex;
     flex-direction: row;
     align-items: center;
-    height: 44px;
+    height: 50px;
     padding-left: 5px;
     padding-right: 5px;
 }
@@ -511,6 +512,7 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     flex-direction: row;
     align-items: center;
     padding: 5px;
+    float: left;
 }
 
 .transit-short-name{
@@ -524,6 +526,7 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 }
 
 .transit-instruction{
+    clear: both;
     color: dimgray;
     font-size: 16px;
     margin: 5px 0px 5px 10px;
@@ -536,7 +539,7 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 .transit-duration-container{
     color: dimgray;
     font-size: 14px;
-    padding: 5px 5px 5px 5px;
+    padding: 5px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -563,6 +566,7 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 .transit-time-col{
     width: 80px;
     font-size: 14px;
+    padding-left: 5px;
 }
 
 .transit-name{
@@ -593,6 +597,12 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     color: blue;
     font-size: 18px;
     width: 20px;
+}
+.fa-info-circle{
+    color: gray;
+    font-size: 20px;
+    float: right;
+    padding: 7px 5px 7px 0px;
 }
 
 /* Toast js */

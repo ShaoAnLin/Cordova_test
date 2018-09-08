@@ -51,30 +51,28 @@ define("util", [], function() {
 	};
 	
 	util.getTransitPopupDiv = function(transit){
-		var html = this.getRouteSummaryDiv(transit);
+		var html = this.getRouteSummaryDiv(transit, true);
 		html += "<div class='transit-instruction'>{0}</div>".format(transit.instruction);
 		html += "<div id='transit-popup-detail'>{0}{1}{2}</div>".format(
 			this.getRouteStepDiv(transit.depTime, transit.depStop),
-			this.getRouteTransitDiv(transit, false),
+			this.getRouteTransitDiv(transit, true),
 			this.getRouteStepDiv(transit.arrTime, transit.arrStop)
 		);
 		return html;
 	};
 
-	// TODO: bind click event to fitBounds
 	util.getRouteDetailDiv = function(summary, steps){
 		var html = this.getRouteStepDiv(summary.startTime, summary.startPos);
 		for (var i = 0; i < steps.length; ++i){
-			steps[i].idx = i;
 			if (steps[i].mode == 'WALKING'){
-				html += this.getRouteTransitDiv(steps[i], true);
+				html += this.getRouteTransitDiv(steps[i], false);
 			} else{
 				var color = (steps[i].color == null) ? this.defaultColor[steps[i].mode] : steps[i].color,
 					stepHtml = "<div class='detail-single-transit' style='background-color: {0}'>{1}{2}{3}{4}</div>"
 					.format(pSBC(0.9, color),
-							this.getRouteSummaryDiv(steps[i]),
+							this.getRouteSummaryDiv(steps[i], false),
 							this.getRouteStepDiv(steps[i].depTime, steps[i].depStop),
-							this.getRouteTransitDiv(steps[i], true),
+							this.getRouteTransitDiv(steps[i], false),
 							this.getRouteStepDiv(steps[i].arrTime, steps[i].arrStop));
 				html += stepHtml;
 			}
@@ -83,12 +81,19 @@ define("util", [], function() {
 		return html;
 	};
 
-	util.getRouteSummaryDiv = function(step){
-		var name = step.name == null ? '' : step.name;
-		return "<div class='transit-title'>{0}\
-					<div class='transit-short-name'>{1}</div>\
-					<div class='transit-name'>{2}</div>\
-				</div>".format(this.getIconHtml(step.mode, step.color), step.title, name);
+	util.getRouteSummaryDiv = function(step, isPopup){
+		var name = step.name == null ? '' : step.name,
+			infoId = isPopup ? 'transit-popup-info-' + step.idx : 'transit-info-' + step.idx;
+		return "<div class='transit-title-container'>\
+					<div class='transit-title'>{0}\
+						<div class='transit-short-name'>{1}</div>\
+						<div class='transit-name'>{2}</div>\
+					</div>\
+					<div id='{3}'>\
+						<button class='fas fa-info-circle'></button>\
+					</div>\
+				</div>".format(this.getIconHtml(step.mode, step.color),
+					step.title, name, infoId);
 	}
 
 	util.getRouteStepDiv = function(time, pos){
@@ -98,10 +103,11 @@ define("util", [], function() {
 				</div>".format(time, pos);
 	};
 
-	util.getRouteTransitDiv = function(step, showInstruction){
+	util.getRouteTransitDiv = function(step, isPopup){
 		var html = "",
-			htmlId = "";
-		if (showInstruction){
+			htmlId = "",
+			htmlType = isPopup ? "div" : "button";
+		if (!isPopup){
 			if (step.mode == 'WALKING'){
 				html = "{0}<span class='transit-instruction'>{1}</span>".format(
 					this.getIconHtml(step.mode, step.color), step.distance);
@@ -110,10 +116,10 @@ define("util", [], function() {
 			}
 			htmlId = "id='transit-detail-step-{0}' ".format(step.idx);
 		}
-		return "<div {0}class='transit-duration-container'>\
+		return "<{3} {0}class='transit-duration-container'>\
 					<span class='transit-duration'>{1}</span>\
 					<i class='fas fa-angle-double-down'></i>{2}\
-				</div>".format(htmlId, step.duration, html);
+				</{3}>".format(htmlId, step.duration, html, htmlType);
 	};
 
 	util.getIcon = function(color){

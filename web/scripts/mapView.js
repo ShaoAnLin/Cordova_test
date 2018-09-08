@@ -361,7 +361,8 @@ define("mapView", ['util', 'busService', 'googleService'],
                     mode: mode,
                     instruction: steps[i].instructions,
                     distance: steps[i].distance.text,
-                    duration: steps[i].duration.text
+                    duration: steps[i].duration.text,
+                    idx: i
                 };
                 if (mode == 'TRANSIT'){
                     transitMode = steps[i].transit.line.vehicle.type;
@@ -386,25 +387,31 @@ define("mapView", ['util', 'busService', 'googleService'],
                         busService.getBusDetail(step);
                     }
 
-                    var popup = util.getTransitPopupDiv(step);
-					var transitMarker = L.marker([steps[i].start_location.lat(), steps[i].start_location.lng()],
+                    var popup = util.getTransitPopupDiv(step),
+                        popupOptions = {
+                            minWidth: Math.min($(window).width() - 80, 350),
+                            stepIdx: step.idx},
+					    transitMarker = L.marker([steps[i].start_location.lat(), steps[i].start_location.lng()],
                         {icon: util.getTransitIcon(transitMode, step.color)})
-                        .bindPopup(popup, {minWidth : Math.min($(window).width() - 80, 350)})
-                        .on('popupopen', function (popup) {
-                            console.log('transit popup');
+                        .bindPopup(popup, popupOptions)
+                        .on('popupopen', function (e) {
+                            var idx = e.popup.options.stepIdx;
+                            $('#transit-popup-info-' + idx).click({id: idx}, function(e){
+                                self.showTransitInfo(e.data.id);
+                            });
                         });
                     transitMarker.addTo(self.map);
                     self.transitMarkers.push(transitMarker);
 
                     if (!shouldHide){
-                        routeBriefHtml += "<div id='{0}' class='transit-brief-element'>{1}{2}</div>"
+                        routeBriefHtml += "<button id='{0}' class='transit-brief-element'>{1}{2}</button>"
                             .format('transit-step-' + i,
                                 util.getIconHtml(transitMode, step.color),
                                 util.getTransitNameHtml(step.title));
                     }
                 } else{
                     if (!shouldHide){
-                        routeBriefHtml += "<div id='{0}' class='transit-brief-element'>{1}</div>"
+                        routeBriefHtml += "<button id='{0}' class='transit-brief-element'>{1}</button>"
                             .format('transit-step-' + i, util.getIconHtml(transitMode));
                     }
                     self.stepDetails.push(step);
@@ -492,6 +499,14 @@ define("mapView", ['util', 'busService', 'googleService'],
             }
         }
 
+        self.bindTransitDetailInfoEvent = function(){
+            for (var i = 0; i < self.routePolylines.length; i++){
+                $('#transit-info-' + i).click({id: i}, function(e){
+                    self.showTransitInfo(e.data.id);
+                });
+            }
+        }
+
         self.showRouteDetail = function(){
             if (self.detailMode){
                 return;
@@ -505,6 +520,7 @@ define("mapView", ['util', 'busService', 'googleService'],
             $('#route-detail').show();
             setTimeout(function(){ self.map.fitBounds(self.routeBound, {maxZoom: 18, padding: [50, 50]}) }, 100);
             self.bindTransitDetailEvent();
+            self.bindTransitDetailInfoEvent();
         }
 
         self.hideRouteDetail = function(){
@@ -517,6 +533,10 @@ define("mapView", ['util', 'busService', 'googleService'],
             $('#route-detail').hide();
             self.setMapHeight('calc(100% - 150px)');
             setTimeout(function(){ self.map.fitBounds(self.routeBound, {maxZoom: 18, padding: [50, 50]}) }, 100);
+        }
+
+        self.showTransitInfo = function(transitIdx){
+            console.log(transitIdx);
         }
     }
     return new MapView();
