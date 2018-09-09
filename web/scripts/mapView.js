@@ -1,5 +1,5 @@
-define("mapView", ['util', 'busService', 'googleService'],
-    function(util, busService, googleService) {
+define("mapView", ['util', 'transportSvc', 'googleSvc'],
+    function(util, transportSvc, googleSvc) {
     function MapView(){
         var self = this,
             map = null,
@@ -34,7 +34,7 @@ define("mapView", ['util', 'busService', 'googleService'],
             self.addSearchBox();
             self.eventBinding();
 			
-            googleService.init(document.getElementById('google-map'));
+            googleSvc.init(document.getElementById('google-map'));
         }
         
         self.eventBinding = function(){
@@ -379,13 +379,9 @@ define("mapView", ['util', 'busService', 'googleService'],
 					step.arrStop = steps[i].transit.arrival_stop.name;
                     step.arrTime = steps[i].transit.arrival_time.text;
                     step.color = steps[i].transit.line.color;
+                    step.depLocation = steps[i].transit.departure_stop.location;
                     self.transitIdMap.push(i);
                     self.stepDetails.push(step);
-
-                    if (step.mode === 'BUS'){
-                        googleService.searchByLocation(steps[i].transit.departure_stop.location);
-                        busService.getBusDetail(step);
-                    }
 
                     var popup = util.getTransitPopupDiv(step),
                         popupOptions = {
@@ -536,7 +532,11 @@ define("mapView", ['util', 'busService', 'googleService'],
         }
 
         self.showTransitInfo = function(transitIdx){
-            console.log(transitIdx);
+            console.log("Show transit info " + transitIdx);
+            var step = self.stepDetails[transitIdx];
+            googleSvc.searchByLocation(step.depLocation, function(address){
+                transportSvc.getTransportDetail(step, address);
+            });
         }
     }
     return new MapView();
@@ -555,8 +555,7 @@ define("mapView", ['util', 'busService', 'googleService'],
 //
 // (2) Get Bus information
 // Make detail transit able to expand and collapse
-// Display in detail mode and add button in transit popup to link to detail mode
-// Google place search: https://developers.google.com/maps/documentation/javascript/reference/places-service
+// Display transit info
 //
 // Bug:
 // Route not found from 壢新醫院 to 武陵高中

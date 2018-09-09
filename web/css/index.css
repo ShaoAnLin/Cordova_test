@@ -442,7 +442,7 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     display: none;
     background-color: white;
     width: calc(100% - 24px);
-    height: calc(100% - 340px);
+    height: calc(100% - 320px);
     padding: 12px;
     z-index: 1000;
     position: absolute;

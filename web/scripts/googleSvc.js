@@ -1,4 +1,4 @@
-define('googleService', [], function() {
+define('googleSvc', [], function() {
     var instance = {};
 
     instance.googleService = null;
@@ -23,7 +23,7 @@ define('googleService', [], function() {
         });
     };
 
-    instance.searchByLocation = function(location){
+    instance.searchByLocation = function(location, callback){
         if (!this.geocoder){
             this.geocoder = new google.maps.Geocoder;
         }
@@ -36,7 +36,7 @@ define('googleService', [], function() {
                     fields: ['address_components']
                 };
                 this.googleService.getDetails(request, function(result){
-                    console.log(result.address_components);
+                    callback(result.address_components);
                 });
             }
         }.bind(this));
