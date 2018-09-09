@@ -41,19 +41,19 @@ define('transportSvc', [], function() {
         return null;
     }
 
-    instance.getTransportDetail = function(step, address){
+    instance.getTransportDetail = function(step, address, callback){
         var city = this.getCity(address);
         console.log(step);
         if (step.mode == 'BUS'){
-            this.getBusRouteStops(step.title, city);
+            this.getBusRouteStops(step.title, city, callback);
         } else if (step.mode == 'SUBWAY'){
-            this.getMetroRouteStops(step.title, city);
+            this.getMetroRouteStops(step.title, city, callback);
         } else if (step.mode == 'HEAVY_RAIL'){
-            this.getRailRouteStops(step.title, city);
+            this.getRailRouteStops(step.title, city, callback);
         }
     }
 
-    instance.getBusRouteStops = function(routeId, city){
+    instance.getBusRouteStops = function(routeId, city, callback){
         if (city == null){
             city = 'Taipei';
         }
@@ -66,33 +66,33 @@ define('transportSvc', [], function() {
             url: url,
             success: function(result){
                 if (result.length > 0){
-                    console.log(result);
+                    callback(result);
                 } else {
-                    this.getInterCityBusRouteStops(routeId);
+                    this.getInterCityBusRouteStops(routeId, callback);
                 }
             }.bind(this)
         });
     }
 
-    instance.getInterCityBusRouteStops = function(routeId){
+    instance.getInterCityBusRouteStops = function(routeId, callback){
         var url = '{0}/Bus/StopOfRoute/InterCity/{1}'
             .format(this.baseUrl, routeId);
 
         $.ajax({
             url: url,
             success: function(result){
-                console.log(result);
+                callback(result);
             }
         });
     }
 
     // TODO
-    instance.getMetroRouteStops = function(routeId, city){
+    instance.getMetroRouteStops = function(routeId, city, callback){
 
     }
 
     // TODO
-    instance.getRailRouteStops = function(routeId, city){
+    instance.getRailRouteStops = function(routeId, city, callback){
         
     }
 

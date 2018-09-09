@@ -535,7 +535,9 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
             console.log("Show transit info " + transitIdx);
             var step = self.stepDetails[transitIdx];
             googleSvc.searchByLocation(step.depLocation, function(address){
-                transportSvc.getTransportDetail(step, address);
+                transportSvc.getTransportDetail(step, address, function (detail){
+                    console.log(detail);
+                });
             });
         }
     }
