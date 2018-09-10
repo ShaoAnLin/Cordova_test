@@ -4,8 +4,8 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
         var self = this,
             map = null,
             locateMe = null,
-            routeMode = false,
-            detailMode = false,
+            VIEW_MODE = {'Search': 0, 'Route': 1, 'Detail': 2, 'Info': 3},
+            viewMode = VIEW_MODE.Search,
             routeOriginMarker = null,
             routeDestinationMarker = null,
             routeOrigin = null,
@@ -40,10 +40,12 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
         self.eventBinding = function(){
             self.map.on('click', function(e) {
                 console.log("Click: {0}, zoom: {1}".format(e.latlng, self.map.getZoom()));
-				if (self.detailMode){
-                    self.hideRouteDetail();
-                } else if (!self.routeMode){
+				if (self.viewMode === VIEW_MODE.Search){
 					self.hideSearchResult();
+                } else if (self.viewMode === VIEW_MODE.Detail){
+                    self.hideRouteDetail();
+                } else if (self.viewMode === VIEW_MODE.Info){
+                    self.hideTransitInfo();
                 }
                 if ($('.toastjs.danger').length > 0){
                     $('.toastjs-btn--close').click();
@@ -51,7 +53,7 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
             });
             
             $('#navigate').on('click', function(){
-				self.routeMode = true;
+                self.viewMode = VIEW_MODE.Route;
                 $('#route-search').css('display', 'flex');
                 $('#boxcontainer').hide();
                 $('#route-destination-input').val($('#search-result-title').text());
@@ -63,7 +65,7 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
             });
             
         	$('#route-search-back').on('click', function(){
-                self.routeMode = false;
+                self.viewMode = VIEW_MODE.Search;
                 self.showSearchResult();
                 self.locateMe.addTo(self.map);
                 $('#route-origin-input').val('');
@@ -194,7 +196,7 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
                 self.routeDestinationMarker = L.marker([location.lat(), location.lng()], {icon: util.getIcon('red')})
                     .bindPopup(popup, {minWidth : 150})
                     .on('popupopen', function (popup) {
-						if (!self.routeMode){
+						if (self.viewMode === VIEW_MODE.Search){
 							self.showSearchResult();
 						}
                     });
@@ -248,22 +250,21 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
         }
 
         self.hideSearchResult = function(){
-            if (self.routeMode){
+            if (self.viewMode === VIEW_MODE.Route){
                 self.setMapHeight('calc(100% - 100px)');
-            }
-            else{
+            } else if (self.viewMode === VIEW_MODE.Search){
                 self.setMapHeight('100%');
             }
 			$('#search-result').hide();
             $('#searchboxinput').val('');
             $('#searchboxinput').attr('placeholder', '');
-            if (!self.routeMode){
-	            self.routeDestination = null;
-	            if (self.routeDestinationMarker){
-	                self.routeDestinationMarker.remove();
-	                self.routeDestinationMarker = null;
-	            }
-        	}
+            if (self.viewMode === VIEW_MODE.Search){
+                self.routeDestination = null;
+                if (self.routeDestinationMarker){
+                    self.routeDestinationMarker.remove();
+                    self.routeDestinationMarker = null;
+                }
+            }
         }
 
         self.originSet = function(place){
@@ -393,7 +394,7 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
                         .on('popupopen', function (e) {
                             var idx = e.popup.options.stepIdx;
                             $('#transit-popup-info-' + idx).click({id: idx}, function(e){
-                                self.showTransitInfo(e.data.id);
+                                self.getTransitInfo(e.data.id);
                             });
                         });
                     transitMarker.addTo(self.map);
@@ -446,7 +447,7 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
             self.stepDetails = [];
             self.routeSummary = null;
 			$('#route-brief-container').hide();
-			if (self.routeMode){
+			if (self.viewMode === VIEW_MODE.Route){
 				self.setMapHeight('calc(100% - 100px)');
 			}
 		}
@@ -457,10 +458,12 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
             $('#route-brief-container').show();
             $('#route-brief-right').bind('click', function(e){
                 e.stopPropagation();
-                if (!self.detailMode){
-                    setTimeout(function(){ self.showRouteDetail() }, 100);
-                } else{
+                if (self.viewMode === VIEW_MODE.Detail){
                     setTimeout(function(){ self.hideRouteDetail() }, 100);
+                } else if (self.viewMode === VIEW_MODE.Route){
+                    setTimeout(function(){ self.showRouteDetail() }, 100);
+                } else if (self.viewMode === VIEW_MODE.Info){
+                    setTimeout(function(){ self.hideTransitInfo() }, 100);
                 }
             });
         }
@@ -473,7 +476,7 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
                 {duration: 0.5, padding: [50, 50]}
             ).once('moveend zoomend', function() {
                 var idx = self.transitIdMap.indexOf(e.data.id);
-                if (idx != -1 && !self.detailMode){
+                if (idx != -1 && self.viewMode === VIEW_MODE.Route){
                     self.transitMarkers[idx].openPopup();
                 }
             });
@@ -498,47 +501,59 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
         self.bindTransitDetailInfoEvent = function(){
             for (var i = 0; i < self.routePolylines.length; i++){
                 $('#transit-info-' + i).click({id: i}, function(e){
-                    self.showTransitInfo(e.data.id);
+                    self.getTransitInfo(e.data.id);
                 });
             }
         }
 
         self.showRouteDetail = function(){
-            if (self.detailMode){
-                return;
+            if (self.viewMode === VIEW_MODE.Route){
+                self.viewMode = VIEW_MODE.Detail;
+                self.map.closePopup();
+                self.setMapHeight('250px');
+                $('#route-detail').html(util.getRouteDetailDiv(self.routeSummary, self.stepDetails));
+                $('#route-brief-button').html(util.getIconHtml('DOWN'));
+                $('#route-search').hide();
+                $('#route-detail').show();
+                setTimeout(function(){ self.map.fitBounds(self.routeBound, {maxZoom: 18, padding: [50, 50]}) }, 100);
+                self.bindTransitDetailEvent();
+                self.bindTransitDetailInfoEvent();
             }
-            self.detailMode = true;
-            self.map.closePopup();
-            self.setMapHeight('250px');
-            $('#route-detail').html(util.getRouteDetailDiv(self.routeSummary, self.stepDetails));
-            $('#route-brief-button').html(util.getIconHtml('DOWN'));
-            $('#route-search').hide();
-            $('#route-detail').show();
-            setTimeout(function(){ self.map.fitBounds(self.routeBound, {maxZoom: 18, padding: [50, 50]}) }, 100);
-            self.bindTransitDetailEvent();
-            self.bindTransitDetailInfoEvent();
         }
 
         self.hideRouteDetail = function(){
-            if (!self.detailMode){
-                return;
+            if (self.viewMode === VIEW_MODE.Detail){
+                self.viewMode = VIEW_MODE.Route;
+                $('#route-brief-button').html(util.getIconHtml('UP'));
+                $('#route-search').show();
+                $('#route-detail').hide();
+                self.setMapHeight('calc(100% - 150px)');
+                setTimeout(function(){ self.map.fitBounds(self.routeBound, {maxZoom: 18, padding: [50, 50]}) }, 100);
             }
-            self.detailMode = false;
-            $('#route-brief-button').html(util.getIconHtml('UP'));
-            $('#route-search').show();
-            $('#route-detail').hide();
-            self.setMapHeight('calc(100% - 150px)');
-            setTimeout(function(){ self.map.fitBounds(self.routeBound, {maxZoom: 18, padding: [50, 50]}) }, 100);
         }
 
-        self.showTransitInfo = function(transitIdx){
+        self.getTransitInfo = function(transitIdx){
             console.log("Show transit info " + transitIdx);
             var step = self.stepDetails[transitIdx];
             googleSvc.searchByLocation(step.depLocation, function(address){
-                transportSvc.getTransportDetail(step, address, function (detail){
-                    console.log(detail);
+                transportSvc.getTransportDetail(step, address, function (info){
+                    self.showTransitInfo(info);
                 });
             });
+        }
+
+        self.showTransitInfo = function(info){
+            console.log(info);
+            $('#transport-info').show();
+            if (self.viewMode === VIEW_MODE.Route){
+                self.showRouteDetail();
+            }
+            self.viewMode = VIEW_MODE.Info;
+        }
+
+        self.hideTransitInfo = function(){
+            self.viewMode = VIEW_MODE.Detail;
+            $('#transport-info').hide();
         }
     }
     return new MapView();

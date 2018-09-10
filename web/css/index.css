@@ -442,7 +442,7 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     display: none;
     background-color: white;
     width: calc(100% - 24px);
-    height: calc(100% - 320px);
+    height: calc(100% - 324px);
     padding: 12px;
     z-index: 1000;
     position: absolute;
@@ -532,7 +532,7 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     margin: 5px 0px 5px 10px;
 }
 
-#transit-popup-detail{
+.transit-popup-detail{
     font-size: 16px;
 }
 
@@ -572,6 +572,7 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 .transit-name{
 	font-size: 16px;
 }
+
 .fa-angle-right{
 	color: #A9A9A9;
 	font-size: 14px;
@@ -632,6 +633,16 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
     position: absolute;
 }
 
+/* Transport information */
+#transport-info{
+    position: absolute;
+    z-index: 1001;
+    top: 250px;
+    height: calc(100% - 300px);
+    width: 100%;
+    background-color: silver;
+    display: none;
+}
 /********** Large devices only **********/
 @media (min-width: 992px) {
 }

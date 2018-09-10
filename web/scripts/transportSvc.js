@@ -88,12 +88,12 @@ define('transportSvc', [], function() {
 
     // TODO
     instance.getMetroRouteStops = function(routeId, city, callback){
-
+        callback("Get metro stops");
     }
 
     // TODO
     instance.getRailRouteStops = function(routeId, city, callback){
-        
+        callback("Get rail stops");
     }
 
     return instance;

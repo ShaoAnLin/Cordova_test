@@ -53,7 +53,7 @@ define("util", [], function() {
 	util.getTransitPopupDiv = function(transit){
 		var html = this.getRouteSummaryDiv(transit, true);
 		html += "<div class='transit-instruction'>{0}</div>".format(transit.instruction);
-		html += "<div id='transit-popup-detail'>{0}{1}{2}</div>".format(
+		html += "<div class='transit-popup-detail'>{0}{1}{2}</div>".format(
 			this.getRouteStepDiv(transit.depTime, transit.depStop),
 			this.getRouteTransitDiv(transit, true),
 			this.getRouteStepDiv(transit.arrTime, transit.arrStop)
