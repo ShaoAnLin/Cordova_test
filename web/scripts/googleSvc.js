@@ -23,12 +23,18 @@ define('googleSvc', [], function() {
         });
     };
 
-    instance.searchByLocation = function(location, callback){
+    instance.searchByLocations = function(locations, addresses, callback){
+        if (locations.length == 0){
+            callback(addresses);
+            return;
+        }
+
         if (!this.geocoder){
             this.geocoder = new google.maps.Geocoder;
         }
 
-        var latlng = {lat: location.lat(), lng: location.lng()};
+        var latlng = {lat: locations[0].lat(), lng: locations[0].lng()};
+        locations.splice(0, 1);
         this.geocoder.geocode({'location': latlng}, function(results, status) {
             if (status === google.maps.GeocoderStatus.OK && results[1]) {
                 var request = {
@@ -36,8 +42,9 @@ define('googleSvc', [], function() {
                     fields: ['address_components']
                 };
                 this.googleService.getDetails(request, function(result){
-                    callback(result.address_components);
-                });
+                    addresses.push(result.address_components);
+                    this.searchByLocations(locations, addresses, callback);
+                }.bind(this));
             }
         }.bind(this));
     };

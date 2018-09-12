@@ -41,22 +41,22 @@ define('transportSvc', [], function() {
         return null;
     }
 
-    instance.getTransportDetail = function(step, address, callback){
-        var city = this.getCity(address);
-        console.log(step);
+    instance.getTransportDetail = function(step, addresses, callback){
+        var cities = [];
+        for (var i = 0; i < addresses.length; ++i){
+            cities.push(this.getCity(addresses[i]));
+        }
         if (step.mode == 'BUS'){
-            this.getBusRouteStops(step.title, city, callback);
+            this.getBusRouteStops(step.title, cities, callback);
         } else if (step.mode == 'SUBWAY'){
-            this.getMetroRouteStops(step.title, city, callback);
+            this.getMetroRouteStops(step.title, cities, callback);
         } else if (step.mode == 'HEAVY_RAIL'){
-            this.getRailRouteStops(step.title, city, callback);
+            this.getRailRouteStops(step.title, cities, callback);
         }
     }
 
-    instance.getBusRouteStops = function(routeId, city, callback){
-        if (city == null){
-            city = 'Taipei';
-        }
+    instance.getBusRouteStops = function(routeId, cities, callback){
+        var city = cities.length == 0 ? 'Taipei' : cities[0];
         var apiType = (city === 'Taipei' || city === 'NewTaipei')
             ? 'DisplayStopOfRoute' : 'StopOfRoute';
         var url = '{0}/Bus/{1}/City/{2}/{3}'
@@ -67,7 +67,10 @@ define('transportSvc', [], function() {
             success: function(result){
                 if (result.length > 0){
                     callback(result);
-                } else {
+                } else if (cities.length > 1) {
+                    cities.splice(0, 1);
+                    this.getBusRouteStops(routeId, cities, callback);
+                } else{
                     this.getInterCityBusRouteStops(routeId, callback);
                 }
             }.bind(this)

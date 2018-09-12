@@ -381,6 +381,7 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
                     step.arrTime = steps[i].transit.arrival_time.text;
                     step.color = steps[i].transit.line.color;
                     step.depLocation = steps[i].transit.departure_stop.location;
+                    step.arrLocation = steps[i].transit.arrival_stop.location;
                     self.transitIdMap.push(i);
                     self.stepDetails.push(step);
 
@@ -535,25 +536,63 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
         self.getTransitInfo = function(transitIdx){
             console.log("Show transit info " + transitIdx);
             var step = self.stepDetails[transitIdx];
-            googleSvc.searchByLocation(step.depLocation, function(address){
+            var locations = [],
+                addresses = [];
+            locations.push(step.depLocation);
+            locations.push(step.arrLocation);
+            googleSvc.searchByLocations([step.depLocation, step.arrLocation], addresses, function(address){
                 transportSvc.getTransportDetail(step, address, function (info){
-                    self.showTransitInfo(info);
+                    self.showTransitInfo(info, step);
                 });
             });
         }
 
-        self.showTransitInfo = function(info){
-            console.log(info);
+        self.showTransitInfo = function(info, step){
             $('#transport-info').show();
             if (self.viewMode === VIEW_MODE.Route){
                 self.showRouteDetail();
             }
             self.viewMode = VIEW_MODE.Info;
+
+            console.log(info);
+            console.log(step);
+            var idxList = self.getRouteInfoIdxList(step, info);
+            console.log(idxList);
         }
 
         self.hideTransitInfo = function(){
             self.viewMode = VIEW_MODE.Detail;
             $('#transport-info').hide();
+        }
+
+        self.getRouteInfoIdxList = function(step, info){
+            var direction = null,
+                idxList = [];
+            for (var i = 0; i < info.length; ++i){
+                if (direction != null && info[i].Direction != direction){
+                    continue;
+                }
+                var stops = info[i].Stops,
+                    depIdx = -1;
+                for (var j = 0; j < stops.length; ++j){
+                    if (stops[j].StopName.Zh_tw == step.depStop){
+                        depIdx = j;
+                    } else if (stops[j].StopName.Zh_tw == step.arrStop){
+                        if (depIdx != -1){
+                            direction = info[i].Direction;
+                            idxList.push({
+                                'infoIdx': i,
+                                'depIdx': depIdx,
+                                'arrIdx': j
+                            });
+                        } else{
+                            direction = (info[i].Direction == 0) ? 1 : 0;
+                        }
+                        break;
+                    }
+                }
+            }
+            return idxList;
         }
     }
     return new MapView();
