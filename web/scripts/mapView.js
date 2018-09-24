@@ -15,7 +15,9 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
             transitMarkers = [],
             transitIdMap = [],
             stepDetails = [],
-            routeSummary = null;
+            routeSummary = null,
+            routeStopList = [],
+            routeStopMarkers = [];
 
         self.init = function(){
             var mapOptions = {
@@ -553,11 +555,30 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
                 self.showRouteDetail();
             }
             self.viewMode = VIEW_MODE.Info;
+            self.routeStopList = info;
+            self.routeStopMarkers = [];
 
             console.log(info);
             console.log(step);
             var idxList = self.getRouteInfoIdxList(step, info);
             console.log(idxList);
+
+            var stops = info[idxList[0].infoIdx].Stops;
+            for (var i = idxList[0].depIdx - 3; i <= idxList[0].arrIdx + 3; ++i){
+                if (i < 0){
+                    continue;
+                } else if (i >= stops.length){
+                    break;
+                }
+
+                var iconStyle = (i == idxList[0].depIdx || i == idxList[0].arrIdx)
+                    ? 'dot' : 'dot-light',
+                    position = [stops[i].StopPosition.PositionLat,
+                                stops[i].StopPosition.PositionLon],
+                    marker = L.marker(position, {icon: util.getIcon(iconStyle)});
+                marker.addTo(self.map);
+                self.routeStopMarkers.push(marker);
+            }
         }
 
         self.hideTransitInfo = function(){

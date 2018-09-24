@@ -44,10 +44,11 @@ define("util", [], function() {
 	};
 	
 	util.getPopupDiv = function(icon, name){
+		var imgHtml = icon == null ? '' : "<img class='popup-icon' src='{0}'/>".format(icon);
 		return "<div class='div-row'>\
-					<div style='float: left;'><img class='popup-icon' src='{0}'/></div>\
+					<div style='float: left;'>{0}</div>\
 					<span style='font-size: 18px'>{1}</span>\
-				</div>".format(icon, name);
+				</div>".format(imgHtml, name);
 	};
 	
 	util.getTransitPopupDiv = function(transit){
