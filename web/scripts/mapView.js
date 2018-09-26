@@ -554,9 +554,11 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
             if (self.viewMode === VIEW_MODE.Route){
                 self.showRouteDetail();
             }
+            setTimeout(function(){ self.map.fitBounds(self.routeBound, {maxZoom: 18, padding: [50, 50]}) }, 100);
             self.viewMode = VIEW_MODE.Info;
             self.routeStopList = info;
             self.routeStopMarkers = [];
+            self.map.options.maxZoom = 18;
 
             console.log(info);
             console.log(step);
@@ -570,12 +572,16 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
                 } else if (i >= stops.length){
                     break;
                 }
-
-                var iconStyle = (i == idxList[0].depIdx || i == idxList[0].arrIdx)
-                    ? 'dot' : 'dot-light',
-                    position = [stops[i].StopPosition.PositionLat,
-                                stops[i].StopPosition.PositionLon],
-                    marker = L.marker(position, {icon: util.getIcon(iconStyle)});
+                
+                var style = {radius: 5, color: '#696969', fillColor: '#696969', fillOpacity: 0.5};
+                if (i == idxList[0].depIdx || i == idxList[0].arrIdx){
+                	style = {radius: 5, color: '#DC143C', fillColor: '#DC143C', fillOpacity: 1};
+                } else if (i < idxList[0].depIdx || i > idxList[0].arrIdx){
+        			style = {radius: 5, color: '#C0C0C0', fillColor: '#C0C0C0', fillOpacity: 0.5}
+                }
+                var position = L.latLng(stops[i].StopPosition.PositionLat,
+                                stops[i].StopPosition.PositionLon),
+                    marker = L.circleMarker(position, style);
                 marker.addTo(self.map);
                 self.routeStopMarkers.push(marker);
             }
@@ -584,6 +590,14 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
         self.hideTransitInfo = function(){
             self.viewMode = VIEW_MODE.Detail;
             $('#transport-info').hide();
+            
+			if (self.routeStopMarkers){
+				self.routeStopMarkers.forEach(function(marker){
+					marker.remove();
+				});
+			}
+			self.routeStopMarkers = [];
+            self.map.options.maxZoom = 22;
         }
 
         self.getRouteInfoIdxList = function(step, info){
