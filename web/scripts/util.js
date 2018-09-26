@@ -6,7 +6,7 @@ define("util", [], function() {
 		'SUBWAY': '#CFE886',
 		'HEAVY_RAIL': '#ADD8E6'
 	};
-	
+
 	util.defaultColor = {
 		'SUBWAY': '#008800',
 		'BUS': '#FF4500',
@@ -22,7 +22,7 @@ define("util", [], function() {
 		'UP': '<i class="fas fa-chevron-up"></i>',
 		'DOWN': '<i class="fas fa-chevron-down"></i>'
 	};
-	
+
 	util.getIconHtml = function(mode, color){
 		if (color == null){
 			color = this.defaultColor[mode];
@@ -42,7 +42,7 @@ define("util", [], function() {
 		}
 		return {weight: 8, color: color};
 	};
-	
+
 	util.getPopupDiv = function(icon, name){
 		var imgHtml = icon == null ? '' : "<img class='popup-icon' src='{0}'/>".format(icon);
 		return "<div class='div-row'>\
@@ -50,7 +50,7 @@ define("util", [], function() {
 					<span style='font-size: 18px'>{1}</span>\
 				</div>".format(imgHtml, name);
 	};
-	
+
 	util.getTransitPopupDiv = function(transit){
 		var html = this.getRouteSummaryDiv(transit, true, true);
 		html += "<div class='transit-instruction'>{0}</div>".format(transit.instruction);
@@ -123,7 +123,7 @@ define("util", [], function() {
 					<i class='fas fa-angle-double-down'></i>{2}\
 				</{3}>".format(htmlId, step.duration, html, htmlType);
 	};
-	
+
 	util.getTransitInfoDiv = function(info, step, idxList){
 		if (info.length == 0 || idxList.length == 0){
 			return '';
@@ -142,7 +142,7 @@ define("util", [], function() {
 			shadowUrl: 'css/images/marker-shadow.png'
 		});
 	};
-	
+
 	util.getTransitIcon = function(type, color){
 		var iconColor = color == null ? this.defaultColor[type] : color;
 		const iconHtml = "<div ='marker-container'><span class='marker-background'></span><div class='transit-marker'>{0}</div></div>".format(
@@ -154,9 +154,9 @@ define("util", [], function() {
 			html: iconHtml
 		})
 	};
-	
+
 	util.getTransitNameHtml = function(text){
 		return '<div class="transit-name">{0}</div>'.format(text);
 	};
-    return util;
+	return util;
 });
