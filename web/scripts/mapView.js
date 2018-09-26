@@ -616,20 +616,18 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
 		}
 
 		self.addStopMarkers = function(){
-			var route = self.routeInfoIdxList[0],
-				stops = self.routeStopList[route.infoIdx].Stops;
-			for (var i = route.depIdx - 3; i <= route.arrIdx + 3; ++i){
-				if (i < 0){
-					continue;
-				} else if (i >= stops.length){
+			var infoObj = self.routeInfoIdxList[0],
+				stops = self.routeStopList[infoObj.infoIdx].Stops;
+			for (var i = infoObj.depIdx; i <= infoObj.arrIdx; ++i){
+				if (i >= stops.length){
 					break;
 				}
 
 				var style = {radius: 5, color: '#696969', fillColor: '#696969', fillOpacity: 0.5};
-				if (i == route.depIdx || i == route.arrIdx){
+				if (i == infoObj.depIdx || i == infoObj.arrIdx){
 					style = {radius: 5, color: '#DC143C', fillColor: '#DC143C', fillOpacity: 1};
-				} else if (i < route.depIdx || i > route.arrIdx){
-					style = {radius: 5, color: '#C0C0C0', fillColor: '#C0C0C0', fillOpacity: 0.5}
+				// } else if (i < infoObj.depIdx || i > infoObj.arrIdx){
+					// style = {radius: 5, color: '#C0C0C0', fillColor: '#C0C0C0', fillOpacity: 0.5}
 				}
 				var position = L.latLng(stops[i].StopPosition.PositionLat,
 								stops[i].StopPosition.PositionLon),

@@ -124,12 +124,17 @@ define("util", [], function() {
 				</{3}>".format(htmlId, step.duration, html, htmlType);
 	};
 
-	util.getTransitInfoDiv = function(info, step, idxList){
-		if (info.length == 0 || idxList.length == 0){
+	util.getTransitInfoDiv = function(routeStopList, step, idxList){
+		if (routeStopList.length == 0 || idxList.length == 0){
 			return '';
 		}
-		var route = info[idxList[0].infoIdx],
-			html = this.getRouteSummaryDiv(step, false, false);
+		var infoObj = idxList[0],
+			route = routeStopList[infoObj.infoIdx],
+			html = this.getRouteSummaryDiv(step, false, false),
+			stops = route.Stops;
+		for (var i = infoObj.depIdx; i <= infoObj.arrIdx; ++i){
+			html += this.getRouteStepDiv('', stops[i].StopName.Zh_tw);
+		}
 		return html;
 	}
 
