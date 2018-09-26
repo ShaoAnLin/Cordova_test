@@ -17,7 +17,8 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
             stepDetails = [],
             routeSummary = null,
             routeStopList = [],
-            routeStopMarkers = [];
+            routeStopMarkers = [],
+			routeInfoIdxList = [];
 
         self.init = function(){
             var mapOptions = {
@@ -544,47 +545,29 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
             locations.push(step.arrLocation);
             googleSvc.searchByLocations([step.depLocation, step.arrLocation], addresses, function(address){
                 transportSvc.getTransportDetail(step, address, function (info){
-                    self.showTransitInfo(info, step);
+					self.routeStopList = info;
+                    self.showTransitInfo(step);
                 });
             });
         }
 
-        self.showTransitInfo = function(info, step){
-            $('#transport-info').show();
+        self.showTransitInfo = function(step){
             if (self.viewMode === VIEW_MODE.Route){
                 self.showRouteDetail();
             }
             setTimeout(function(){ self.map.fitBounds(self.routeBound, {maxZoom: 18, padding: [50, 50]}) }, 100);
             self.viewMode = VIEW_MODE.Info;
-            self.routeStopList = info;
             self.routeStopMarkers = [];
             self.map.options.maxZoom = 18;
 
-            console.log(info);
+            console.log(self.routeStopList);
             console.log(step);
-            var idxList = self.getRouteInfoIdxList(step, info);
-            console.log(idxList);
-
-            var stops = info[idxList[0].infoIdx].Stops;
-            for (var i = idxList[0].depIdx - 3; i <= idxList[0].arrIdx + 3; ++i){
-                if (i < 0){
-                    continue;
-                } else if (i >= stops.length){
-                    break;
-                }
-                
-                var style = {radius: 5, color: '#696969', fillColor: '#696969', fillOpacity: 0.5};
-                if (i == idxList[0].depIdx || i == idxList[0].arrIdx){
-                	style = {radius: 5, color: '#DC143C', fillColor: '#DC143C', fillOpacity: 1};
-                } else if (i < idxList[0].depIdx || i > idxList[0].arrIdx){
-        			style = {radius: 5, color: '#C0C0C0', fillColor: '#C0C0C0', fillOpacity: 0.5}
-                }
-                var position = L.latLng(stops[i].StopPosition.PositionLat,
-                                stops[i].StopPosition.PositionLon),
-                    marker = L.circleMarker(position, style);
-                marker.addTo(self.map);
-                self.routeStopMarkers.push(marker);
-            }
+            self.getRouteInfoIdxList(step);
+            console.log(self.routeInfoIdxList);
+			
+			$('#transport-info').html(util.getTransitInfoDiv(self.routeStopList, step, self.routeInfoIdxList));
+            $('#transport-info').show();
+			self.addStopMarkers();
         }
 
         self.hideTransitInfo = function(){
@@ -600,35 +583,59 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
             self.map.options.maxZoom = 22;
         }
 
-        self.getRouteInfoIdxList = function(step, info){
-            var direction = null,
-                idxList = [];
-            for (var i = 0; i < info.length; ++i){
-                if (direction != null && info[i].Direction != direction){
+        self.getRouteInfoIdxList = function(step){
+            self.routeInfoIdxList = [];
+            var direction = null;
+            for (var i = 0; i < self.routeStopList.length; ++i){
+				var routeInfo = self.routeStopList[i];
+                if (direction != null && routeInfo.Direction != direction){
                     continue;
                 }
-                var stops = info[i].Stops,
+                var stops = routeInfo.Stops,
                     depIdx = -1;
                 for (var j = 0; j < stops.length; ++j){
                     if (stops[j].StopName.Zh_tw == step.depStop){
                         depIdx = j;
                     } else if (stops[j].StopName.Zh_tw == step.arrStop){
                         if (depIdx != -1){
-                            direction = info[i].Direction;
-                            idxList.push({
+                            direction = routeInfo.Direction;
+                            self.routeInfoIdxList.push({
                                 'infoIdx': i,
                                 'depIdx': depIdx,
                                 'arrIdx': j
                             });
                         } else{
-                            direction = (info[i].Direction == 0) ? 1 : 0;
+                            direction = (routeInfo.Direction == 0) ? 1 : 0;
                         }
                         break;
                     }
                 }
             }
-            return idxList;
         }
+		
+		self.addStopMarkers = function(){
+			var route = self.routeInfoIdxList[0],
+				stops = self.routeStopList[route.infoIdx].Stops;
+            for (var i = route.depIdx - 3; i <= route.arrIdx + 3; ++i){
+                if (i < 0){
+                    continue;
+                } else if (i >= stops.length){
+                    break;
+                }
+                
+                var style = {radius: 5, color: '#696969', fillColor: '#696969', fillOpacity: 0.5};
+                if (i == route.depIdx || i == route.arrIdx){
+                	style = {radius: 5, color: '#DC143C', fillColor: '#DC143C', fillOpacity: 1};
+                } else if (i < route.depIdx || i > route.arrIdx){
+        			style = {radius: 5, color: '#C0C0C0', fillColor: '#C0C0C0', fillOpacity: 0.5}
+                }
+                var position = L.latLng(stops[i].StopPosition.PositionLat,
+                                stops[i].StopPosition.PositionLon),
+                    marker = L.circleMarker(position, style);
+                marker.addTo(self.map);
+                self.routeStopMarkers.push(marker);
+            }
+		}
     }
     return new MapView();
 });

@@ -52,7 +52,7 @@ define("util", [], function() {
 	};
 	
 	util.getTransitPopupDiv = function(transit){
-		var html = this.getRouteSummaryDiv(transit, true);
+		var html = this.getRouteSummaryDiv(transit, true, true);
 		html += "<div class='transit-instruction'>{0}</div>".format(transit.instruction);
 		html += "<div class='transit-popup-detail'>{0}{1}{2}</div>".format(
 			this.getRouteStepDiv(transit.depTime, transit.depStop),
@@ -71,7 +71,7 @@ define("util", [], function() {
 				var color = (steps[i].color == null) ? this.defaultColor[steps[i].mode] : steps[i].color,
 					stepHtml = "<div class='detail-single-transit' style='background-color: {0}'>{1}{2}{3}{4}</div>"
 					.format(pSBC(0.9, color),
-							this.getRouteSummaryDiv(steps[i], false),
+							this.getRouteSummaryDiv(steps[i], false, true),
 							this.getRouteStepDiv(steps[i].depTime, steps[i].depStop),
 							this.getRouteTransitDiv(steps[i], false),
 							this.getRouteStepDiv(steps[i].arrTime, steps[i].arrStop));
@@ -82,20 +82,21 @@ define("util", [], function() {
 		return html;
 	};
 
-	util.getRouteSummaryDiv = function(step, isPopup){
+	util.getRouteSummaryDiv = function(step, isPopup, showInfoIcon){
 		var name = step.name == null ? '' : step.name,
-			infoId = isPopup ? 'transit-popup-info-' + step.idx : 'transit-info-' + step.idx;
+			infoId = isPopup ? 'transit-popup-info-' + step.idx : 'transit-info-' + step.idx,
+			infoIcon = !showInfoIcon ? '' :
+				"<div id='{0}'>\
+					<button class='fas fa-info-circle'></button>\
+				</div>".format(infoId);
 		return "<div class='transit-title-container'>\
 					<div class='transit-title'>{0}\
 						<div class='transit-short-name'>{1}</div>\
 						<div class='transit-name'>{2}</div>\
-					</div>\
-					<div id='{3}'>\
-						<button class='fas fa-info-circle'></button>\
-					</div>\
+					</div>{3}\
 				</div>".format(this.getIconHtml(step.mode, step.color),
-					step.title, name, infoId);
-	}
+					step.title, name, infoIcon);
+	};
 
 	util.getRouteStepDiv = function(time, pos){
 		return "<div class='div-row'>\
@@ -122,6 +123,15 @@ define("util", [], function() {
 					<i class='fas fa-angle-double-down'></i>{2}\
 				</{3}>".format(htmlId, step.duration, html, htmlType);
 	};
+	
+	util.getTransitInfoDiv = function(info, step, idxList){
+		if (info.length == 0 || idxList.length == 0){
+			return '';
+		}
+		var route = info[idxList[0].infoIdx],
+			html = this.getRouteSummaryDiv(step, false, false);
+		return html;
+	}
 
 	util.getIcon = function(color){
 		return L.icon({
