@@ -48,8 +48,8 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
                 } else if (self.viewMode === VIEW_MODE.Detail){
                     self.hideRouteDetail();
                 } else if (self.viewMode === VIEW_MODE.Info){
-                    self.hideTransitInfo();
-                }
+					self.hideTransitInfo();
+				}
                 if ($('.toastjs.danger').length > 0){
                     $('.toastjs-btn--close').click();
                 }
@@ -555,7 +555,9 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
             if (self.viewMode === VIEW_MODE.Route){
                 self.showRouteDetail();
             }
-            setTimeout(function(){ self.map.fitBounds(self.routeBound, {maxZoom: 18, padding: [50, 50]}) }, 100);
+			var bound = new L.LatLngBounds([step.depLocation.lat(), step.depLocation.lng()],
+				[step.arrLocation.lat(), step.arrLocation.lng()]);
+            setTimeout(function(){ self.map.fitBounds(bound, {maxZoom: 18, padding: [50, 50]}) }, 100);
             self.viewMode = VIEW_MODE.Info;
             self.routeStopMarkers = [];
             self.map.options.maxZoom = 18;
