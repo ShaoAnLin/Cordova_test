@@ -673,11 +673,9 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
 					break;
 				}
 
-				var style = {radius: 5, color: '#696969', fillColor: '#696969', fillOpacity: 0.5};
+				var style = {radius: 5, weight: 1, color: '#0967A4', fillColor: '#A0CFED', fillOpacity: 1};
 				if (i == infoObj.depIdx || i == infoObj.arrIdx){
-					style = {radius: 5, color: '#DC143C', fillColor: '#DC143C', fillOpacity: 1};
-				// } else if (i < infoObj.depIdx || i > infoObj.arrIdx){
-					// style = {radius: 5, color: '#C0C0C0', fillColor: '#C0C0C0', fillOpacity: 0.5}
+					style = {radius: 5, weight: 2, color: '#7B7412', fillColor: '#F6E938', fillOpacity: 1};
 				}
 				var position = L.latLng(stops[i].StopPosition.PositionLat,
 								stops[i].StopPosition.PositionLon),
