@@ -31,7 +31,7 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
 			var mapOptions = {
 				zoomControl: false
 			};
-			self.map = L.map('map', mapOptions).setView([25.0879,121.5858], 10);
+			self.map = L.map('map', mapOptions).setView([25.0595, 121.5515], 12);
 			L.gridLayer.googleMutant({
 				minZoom: 3,
 				maxZoom: 22,
@@ -54,9 +54,6 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
 					self.hideSearchResult();
 				} else if (self.viewMode === VIEW_MODE.Detail){
 					self.hideRouteDetail();
-				} else if (self.viewMode === VIEW_MODE.Info){
-					self.hideTransitInfo();
-					self.showRouteDetail();
 				}
 				if ($('.toastjs.danger').length > 0){
 					$('.toastjs-btn--close').click();
@@ -595,9 +592,14 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
 			console.log(step);
 			self.getRouteInfoIdxList(step);
 			console.log(self.routeInfoIdxList);
+
+			$('#transit-info').html(util.getTransitInfoDiv(self.routeStopList, step, self.routeInfoIdxList));
+			$('#transit-info').show();
+			$('#transit-info-back').bind('click', function(e){
+				self.hideTransitInfo();
+			});
 			
-			$('#transport-info').html(util.getTransitInfoDiv(self.routeStopList, step, self.routeInfoIdxList));
-			$('#transport-info').show();
+			$('#transit-info-bottom').show();
 			self.addStopMarkers();
 
 			// Hide other markers
@@ -623,7 +625,8 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
 
 		self.hideTransitInfo = function(){
 			self.viewMode = VIEW_MODE.Detail;
-			$('#transport-info').hide();
+			$('#transit-info').hide();
+			$('#transit-info-bottom').hide();
 			
 			if (self.routeStopMarkers){
 				self.routeStopMarkers.forEach(function(marker){
@@ -633,6 +636,8 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
 			self.routeStopMarkers = [];
 			self.transitIdx = null;
 			self.map.options.maxZoom = 22;
+
+			self.showRouteDetail();
 		}
 
 		self.getRouteInfoIdxList = function(step){
