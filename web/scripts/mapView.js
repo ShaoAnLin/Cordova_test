@@ -664,7 +664,9 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
 
 		self.getRouteInfoIdxList = function(step){
 			self.routeInfoIdxList = [];
-			var direction = null;
+			var direction = null,
+				depPos = new L.LatLng(step.depLocation.lat(), step.depLocation.lng()),
+				arrPos = new L.LatLng(step.arrLocation.lat(), step.arrLocation.lng());
 			for (var i = 0; i < self.routeStopList.length; ++i){
 				var routeInfo = self.routeStopList[i];
 				if (direction != null && routeInfo.Direction != direction){
@@ -673,9 +675,13 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
 				var stops = routeInfo.Stops,
 					depIdx = -1;
 				for (var j = 0; j < stops.length; ++j){
-					if (stops[j].StopName.Zh_tw == step.depStop){
+					var stopPos = new L.LatLng(stops[j].StopPosition.PositionLat,
+						stops[j].StopPosition.PositionLon);
+					if (stops[j].StopName.Zh_tw == step.depStop ||
+						stopPos.distanceTo(depPos) < 50){
 						depIdx = j;
-					} else if (stops[j].StopName.Zh_tw == step.arrStop){
+					} else if (stops[j].StopName.Zh_tw == step.arrStop ||
+						stopPos.distanceTo(arrPos) < 50){
 						if (depIdx != -1){
 							direction = routeInfo.Direction;
 							self.routeInfoIdxList.push({

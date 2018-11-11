@@ -469,7 +469,7 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 	float: left;
 }
 
-.bottom-right{
+#route-brief-right{
 	width: 130px;
 	float: right;
 	padding: 14px 0px 14px 0px;
@@ -642,6 +642,10 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 }
 #transit-info-bottom{
 	display: none;
+}
+#transit-info-back{
+	padding: 14px 20px 14px 20px;
+	font-size: 14px;
 }
 .bottom-container{
 	width: 100%;
