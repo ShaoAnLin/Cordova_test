@@ -6,16 +6,23 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
 			locateMe = null,
 			VIEW_MODE = {'Search': 0, 'Route': 1, 'Detail': 2, 'Info': 3},
 			viewMode = VIEW_MODE.Search,
-			routeOriginMarker = null,
-			routeDestinationMarker = null,
 			routeOrigin = null,
+			routeOriginMarker = null,
+
+			// === Route view === //
 			routeDestination = null,
+			routeDestinationMarker = null,
 			routeBound = null,
 			routePolylines = [],
 			transitMarkers = [],
+
+			// === Detail view === //
 			transitIdMap = [],
 			stepDetails = [],
 			routeSummary = null,
+
+			// === Info view === ///
+			transitIdx = null,
 			routeStopList = [],
 			routeStopMarkers = [],
 			routeInfoIdxList = [];
@@ -49,6 +56,7 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
 					self.hideRouteDetail();
 				} else if (self.viewMode === VIEW_MODE.Info){
 					self.hideTransitInfo();
+					self.showRouteDetail();
 				}
 				if ($('.toastjs.danger').length > 0){
 					$('.toastjs-btn--close').click();
@@ -523,6 +531,26 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
 				self.bindTransitDetailEvent();
 				self.bindTransitDetailInfoEvent();
 			}
+			else if (self.viewMode === VIEW_MODE.Detail){
+				if (self.routeOriginMarker){
+					self.routeOriginMarker.addTo(self.map);
+				}
+				if (self.routeDestinationMarker){
+					self.routeDestinationMarker.addTo(self.map);
+				}
+				if (self.transitMarkers){
+					self.transitMarkers.forEach(function(marker){
+						marker.addTo(self.map);
+					});
+				}
+				if (self.routePolylines){
+					for (var i = 0; i < self.routePolylines.length; ++i){
+						if (i != self.transitIdx){
+							self.routePolylines[i].addTo(self.map);
+						}
+					}
+				}
+			}
 		}
 
 		self.hideRouteDetail = function(){
@@ -538,6 +566,7 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
 
 		self.getTransitInfo = function(transitIdx){
 			console.log("Show transit info " + transitIdx);
+			self.transitIdx = transitIdx;
 			var step = self.stepDetails[transitIdx];
 			var locations = [],
 				addresses = [];
@@ -570,6 +599,26 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
 			$('#transport-info').html(util.getTransitInfoDiv(self.routeStopList, step, self.routeInfoIdxList));
 			$('#transport-info').show();
 			self.addStopMarkers();
+
+			// Hide other markers
+			if (self.routeOriginMarker){
+				self.routeOriginMarker.remove();
+			}
+			if (self.routeDestinationMarker){
+				self.routeDestinationMarker.remove();
+			}
+			if (self.transitMarkers){
+				self.transitMarkers.forEach(function(marker){
+					marker.remove();
+				});
+			}
+			if (self.routePolylines){
+				for (var i = 0; i < self.routePolylines.length; ++i){
+					if (i != self.transitIdx){
+						self.routePolylines[i].remove();
+					}
+				}
+			}
 		}
 
 		self.hideTransitInfo = function(){
@@ -582,6 +631,7 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
 				});
 			}
 			self.routeStopMarkers = [];
+			self.transitIdx = null;
 			self.map.options.maxZoom = 22;
 		}
 

@@ -643,6 +643,7 @@ a, button, h1, h2, h3, h4, h5, h6, input, ol, p, textarea, th, ul {
 	background-color: white;
 	padding: 15px;
 	display: none;
+	overflow-y: scroll;
 }
 /********** Large devices only **********/
 @media (min-width: 992px) {
