@@ -98,11 +98,15 @@ define("util", [], function() {
 					step.title, name, infoIcon);
 	};
 
-	util.getRouteStepDiv = function(time, pos){
-		return "<div class='div-row'>\
-					<span class='transit-time-col' style='font-size: 14px'>{0}</span>\
-					<span style='font-size: 16px'>{1}</span>\
-				</div>".format(time, pos);
+	util.getRouteStepDiv = function(time, pos, idx){
+		var divId = "";
+		if (typeof idx !== "undefined"){
+			divId = " id='route-step-{0}'".format(idx);
+		}
+		return "<div class='div-row'{0}>\
+					<span class='transit-time-col' style='font-size: 14px'>{1}</span>\
+					<span style='font-size: 16px'>{2}</span>\
+				</div>".format(divId, time, pos);
 	};
 
 	util.getRouteTransitDiv = function(step, isPopup){
@@ -133,7 +137,7 @@ define("util", [], function() {
 			html = this.getRouteSummaryDiv(step, false, false),
 			stops = route.Stops;
 		for (var i = infoObj.depIdx; i <= infoObj.arrIdx; ++i){
-			html += this.getRouteStepDiv('', stops[i].StopName.Zh_tw);
+			html += this.getRouteStepDiv('', stops[i].StopName.Zh_tw, i);
 		}
 		return html;
 	}

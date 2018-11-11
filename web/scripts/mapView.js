@@ -26,6 +26,7 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
 			routeStopList = [],
 			routeStopMarkers = [],
 			routeInfoIdxList = [];
+			currentStops = [];
 
 		self.init = function(){
 			var mapOptions = {
@@ -491,6 +492,12 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
 			});
 		}
 
+		self.flyToRouteStop = function(id){
+			var theStop = self.currentStops[id],
+				pos = new L.LatLng(theStop.StopPosition.PositionLat, theStop.StopPosition.PositionLon);
+			self.map.setView(pos, 17);
+		}
+
 		self.bindTransitBriefEvent = function(){
 			for (var i = 0; i < self.routePolylines.length; i++){
 				$('#transit-step-' + i).click({id: i}, function(e){
@@ -499,6 +506,7 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
 			}
 		}
 
+		// Click the "double down" button between two transits in detail view
 		self.bindTransitDetailEvent = function(){
 			for (var i = 0; i < self.routePolylines.length; i++){
 				$('#transit-detail-step-' + i).click({id: i}, function(e){
@@ -507,10 +515,20 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
 			}
 		}
 
+		// Click the transit "i" button
 		self.bindTransitDetailInfoEvent = function(){
 			for (var i = 0; i < self.routePolylines.length; i++){
 				$('#transit-info-' + i).click({id: i}, function(e){
 					self.getTransitInfo(e.data.id);
+				});
+			}
+		}
+
+		// Click each stop in info view
+		self.bindRouteStepEvent = function(){
+			for (var i = 0; i < self.currentStops.length; i++){
+				$('#route-step-' + i).click({id: i}, function(e){
+					self.flyToRouteStop(e.data.id);
 				});
 			}
 		}
@@ -588,9 +606,11 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
 			self.routeStopMarkers = [];
 			self.map.options.maxZoom = 18;
 
+			console.log("routeStopList");
 			console.log(self.routeStopList);
 			console.log(step);
 			self.getRouteInfoIdxList(step);
+			console.log("routeInfoIdxList:");
 			console.log(self.routeInfoIdxList);
 
 			$('#transit-info').html(util.getTransitInfoDiv(self.routeStopList, step, self.routeInfoIdxList));
@@ -601,6 +621,7 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
 			
 			$('#transit-info-bottom').show();
 			self.addStopMarkers();
+			self.bindRouteStepEvent();
 
 			// Hide other markers
 			if (self.routeOriginMarker){
@@ -634,6 +655,7 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
 				});
 			}
 			self.routeStopMarkers = [];
+			self.currentStops = [];
 			self.transitIdx = null;
 			self.map.options.maxZoom = 22;
 
@@ -673,6 +695,7 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
 		self.addStopMarkers = function(){
 			var infoObj = self.routeInfoIdxList[0],
 				stops = self.routeStopList[infoObj.infoIdx].Stops;
+			self.currentStops = stops;
 			for (var i = infoObj.depIdx; i <= infoObj.arrIdx; ++i){
 				if (i >= stops.length){
 					break;
