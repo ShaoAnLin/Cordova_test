@@ -89,9 +89,43 @@ define('transportSvc', [], function() {
 		});
 	}
 
-	// TODO
-	instance.getMetroRouteStops = function(routeId, city, callback){
-		callback("Get metro stops");
+	instance.getMetroRouteStops = function(lineTitle, cities, callback){
+		var city = cities.length == 0 ? 'Taipei' : cities[0];
+		var operator = "TRTC";
+		if (city === "Taoyuan"){
+			operator = "TYMC";
+		} else if (city === "Kaohsiung"){
+			operator = "KRTC";
+		}
+
+		var url = '{0}Rail/Metro/Line/{1}'
+			.format(this.baseUrl, operator);
+		$.ajax({
+			url: url,
+			success: function(result){
+				for (var i = 0; i < result.length; ++i){
+					if (result[i].LineName.Zh_tw === lineTitle){
+						this.getMetroStationOfRoute(
+							operator, result[i].LineID, callback);
+					}
+				}
+			}.bind(this)
+		});
+	}
+
+	instance.getMetroStationOfRoute = function(operator, lineId, callback){
+		var query = "?$filter=LineID eq '{0}'".format(lineId),
+			url = '{0}Rail/Metro/StationOfRoute/{1}{2}'
+			.format(this.baseUrl, operator, query);
+
+		$.ajax({
+			url: url,
+			success: function(result){
+				if (result.length > 0){
+					callback(result);
+				}
+			}.bind(this)
+		});
 	}
 
 	// TODO
