@@ -1,7 +1,7 @@
 define('transportSvc', [], function() {
 	var instance = {};
 
-	instance.baseUrl = 'http://ptx.transportdata.tw/MOTC/v2/';
+	instance.baseUrl = 'https://ptx.transportdata.tw/MOTC/v2/';
 
 	instance.cityList = ['台北市', '新北市', '桃園市', '台中市', '台南市', '高雄市', '基隆市',
 		'新竹市', '新竹縣', '苗栗縣', '彰化縣', '南投縣', '雲林縣', '嘉義縣', '嘉義市', '屏東縣',
