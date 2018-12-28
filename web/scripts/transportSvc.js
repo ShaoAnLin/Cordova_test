@@ -1,7 +1,7 @@
 define('transportSvc', [], function() {
 	var instance = {};
 
-	instance.baseUrl = 'https://ptx.transportdata.tw/MOTC/v2/';
+	instance.baseUrl = 'https://ptx.transportdata.tw/MOTC/v2';
 
 	instance.cityList = ['台北市', '新北市', '桃園市', '台中市', '台南市', '高雄市', '基隆市',
 		'新竹市', '新竹縣', '苗栗縣', '彰化縣', '南投縣', '雲林縣', '嘉義縣', '嘉義市', '屏東縣',
@@ -98,7 +98,7 @@ define('transportSvc', [], function() {
 			operator = "KRTC";
 		}
 
-		var url = '{0}Rail/Metro/Line/{1}'
+		var url = '{0}/Rail/Metro/Line/{1}'
 			.format(this.baseUrl, operator);
 		$.ajax({
 			url: url,
@@ -115,7 +115,7 @@ define('transportSvc', [], function() {
 
 	instance.getMetroStationOfRoute = function(operator, lineId, callback){
 		var query = "?$filter=LineID eq '{0}'".format(lineId),
-			url = '{0}Rail/Metro/StationOfRoute/{1}{2}'
+			url = '{0}/Rail/Metro/StationOfRoute/{1}{2}'
 			.format(this.baseUrl, operator, query);
 
 		$.ajax({
