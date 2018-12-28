@@ -232,8 +232,8 @@ define("mapView", ['util', 'transportSvc', 'googleSvc'],
 
 		self.getPlaceBound = function(place){
 			var viewport = place.geometry.viewport;
-			return L.latLngBounds(L.latLng(viewport.l.j, viewport.j.j),
-								  L.latLng(viewport.l.l, viewport.j.l));
+			return L.latLngBounds(L.latLng(viewport.ma.j, viewport.fa.j),
+								  L.latLng(viewport.ma.l, viewport.fa.l));
 		}
 
 		self.setMapHeight = function(height){
